@@ -250,7 +250,7 @@ $(document).ready(function () {
         selectedModel1 === "F 150" &&
         selectedYear1 <= 2024 &&
         selectedYear1 >= 2021 &&
-        sku1 === "33"
+        sku1 === 33
       ) {
         console.log("MODEL MATCH");
         if (types.includes(normalizedModelType)) {

@@ -232,9 +232,9 @@ $(document).ready(function () {
 
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");
-      console.log("SKU:", sku === "33"); // Should be true if sku is "33"
+      var sku1 = $(this).data("sku");
+      console.log("SKU:", sku1 === "33"); // Should be true if sku is "33"
 
-      var sku = $(this).data("sku");
       if (includedTypes) {
         // Split and normalize included types
         var types = includedTypes
@@ -250,7 +250,7 @@ $(document).ready(function () {
         selectedModel1 === "F 150" &&
         selectedYear1 <= 2024 &&
         selectedYear1 >= 2021 &&
-        sku === "33"
+        sku1 === "33"
       ) {
         console.log("MODEL MATCH");
         if (types.includes(normalizedModelType)) {

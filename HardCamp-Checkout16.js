@@ -219,6 +219,9 @@ $(document).ready(function () {
     var selectedMake1 = localStorage.getItem("selectedMake");
     var selectedModel1 = localStorage.getItem("selectedModel");
     var selectedYear1 = parseInt(localStorage.getItem("selectedYear"), 10);
+    console.log("Selected Make:", selectedMake1);
+    console.log("Selected Model:", selectedModel1);
+    console.log("Selected Year:", selectedYear1);
 
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");
@@ -240,6 +243,7 @@ $(document).ready(function () {
         selectedYear1 <= 2021 &&
         sku === "33"
       ) {
+        console.log("MODEL MATCH");
         if (types.includes(normalizedModelType)) {
           $(this).click(); // Trigger click to select and add the add-on
           $(this).hide();

@@ -317,8 +317,8 @@ $(document).ready(function () {
       activeProducts.push(newProduct);
     }
 
-    console.log("Product added/updated:", newProduct || existingProduct);
-    console.log("Active Products Array after update:", activeProducts);
+    // console.log("Product added/updated:", newProduct || existingProduct);
+    // console.log("Active Products Array after update:", activeProducts);
     updateUI();
   }
 
@@ -355,7 +355,7 @@ $(document).ready(function () {
       if (product.sku) {
         newDiv.attr("data-sku", product.sku);
       } else {
-        console.error("Product SKU is undefined or empty");
+        // console.error("Product SKU is undefined or empty");
       }
       newDiv.find(".add-on-name").text(product.name); // Update product name
       newDiv.find(".quantity-number").text(product.quantity); // Update quantity
@@ -388,19 +388,19 @@ $(document).ready(function () {
 
   function removeProductFromArray(productElement) {
     var productSKU = productElement.data("sku"); // Get the SKU from data attribute
-    console.log("Removing product with SKU:", productSKU);
+    // console.log("Removing product with SKU:", productSKU);
 
     activeProducts = activeProducts.filter(
       (product) => product.sku !== productSKU
     );
-    console.log("Updated activeProducts array after removal:", activeProducts);
+    // console.log("Updated activeProducts array after removal:", activeProducts);
 
     $(".add-on-placeholder")
       .filter(function () {
         return $(this).data("sku") === productSKU;
       })
       .remove();
-    console.log("Removed product element from UI for SKU:", productSKU);
+    // console.log("Removed product element from UI for SKU:", productSKU);
 
     updateUI();
   }
@@ -455,7 +455,7 @@ $(document).ready(function () {
       document.getElementById("year-selected").textContent = value;
     }
 
-    console.log(truckInfo);
+    // console.log(truckInfo);
   }
 
   document
@@ -538,7 +538,7 @@ $(document).ready(function () {
   });
 
   $("#foxy-cart-form").on("submit", function (event) {
-    console.log("Form data being submitted:", $(this).serializeArray());
+    // console.log("Form data being submitted:", $(this).serializeArray());
     // Keep this line if you want to prevent the actual submission for testing
     // event.preventDefault();
   });

@@ -239,8 +239,8 @@ $(document).ready(function () {
       if (
         selectedMake1 === "Ford" &&
         selectedModel1 === "F 150" &&
-        selectedYear1 >= 2004 &&
-        selectedYear1 <= 2021 &&
+        selectedYear1 <= 2024 &&
+        selectedYear1 >= 2021 &&
         sku === "33"
       ) {
         console.log("MODEL MATCH");
@@ -351,7 +351,7 @@ $(document).ready(function () {
     // Iterate over each product in activeProducts and update the UI
     activeProducts.forEach((product) => {
       var newDiv = $(templateHTML).clone();
-      console.log("Checking product SKU:", product.sku);
+      //   console.log("Checking product SKU:", product.sku);
       if (product.sku) {
         newDiv.attr("data-sku", product.sku);
       } else {

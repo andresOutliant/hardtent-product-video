@@ -233,7 +233,6 @@ $(document).ready(function () {
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");
       var sku1 = $(this).data("sku");
-      console.log("SKU:", sku1 === "33"); // Should be true if sku is "33"
 
       if (includedTypes) {
         // Split and normalize included types
@@ -245,6 +244,7 @@ $(document).ready(function () {
         }
       }
 
+      //Remove the following SKU=33 addon from Ford F150 2021-2024
       if (
         selectedMake1 === "Ford" &&
         selectedModel1 === "F 150" &&
@@ -252,7 +252,6 @@ $(document).ready(function () {
         selectedYear1 >= 2021 &&
         sku1 === 33
       ) {
-        console.log("MODEL MATCH");
         if (types.includes(normalizedModelType)) {
           $(this).click(); // Trigger click to select and add the add-on
           $(this).hide();

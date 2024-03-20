@@ -229,10 +229,11 @@ $(document).ready(function () {
       "Selected Year Range:",
       selectedYear1 <= 2024 && selectedYear1 >= 2021
     ); // Should be true for years 2021-2024
-    console.log("SKU:", sku === "33"); // Should be true if sku is "33"
 
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");
+      console.log("SKU:", sku === "33"); // Should be true if sku is "33"
+
       var sku = $(this).data("sku");
       if (includedTypes) {
         // Split and normalize included types

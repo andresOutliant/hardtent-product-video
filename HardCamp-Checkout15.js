@@ -240,8 +240,10 @@ $(document).ready(function () {
         selectedYear1 <= 2021 &&
         sku === "33"
       ) {
-        $(this).click();
-        $(this).hide();
+        if (types.includes(normalizedModelType)) {
+          $(this).click(); // Trigger click to select and add the add-on
+          $(this).hide();
+        }
       }
     });
   }

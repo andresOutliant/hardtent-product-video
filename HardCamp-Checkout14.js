@@ -216,9 +216,9 @@ $(document).ready(function () {
   function selectModelTypeAddOns(modelType) {
     // Normalize modelType for comparison
     var normalizedModelType = normalizeModelType(modelType);
-    var selectedMake1 = localStorage.getItem("selectedMake1");
-    var selectedModel1 = localStorage.getItem("selectedModel1");
-    var selectedYear1 = parseInt(localStorage.getItem("selectedYear1"), 10);
+    var selectedMake1 = localStorage.getItem("selectedMake");
+    var selectedModel1 = localStorage.getItem("selectedModel");
+    var selectedYear1 = parseInt(localStorage.getItem("selectedYear"), 10);
 
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");

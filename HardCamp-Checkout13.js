@@ -92,14 +92,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-$('.starting-price-copy').each(function() {
+$(".starting-price-copy").each(function () {
   // Check if the first child is a div and perform actions
-  var $firstChildDiv = $(this).children('div:first');
+  var $firstChildDiv = $(this).children("div:first");
   if ($firstChildDiv.length > 0) {
-    $firstChildDiv.text('$');
+    $firstChildDiv.text("$");
   }
 });
-
 
 $(document).ready(function () {
   // Initially hide all categories except 'included'
@@ -217,9 +216,13 @@ $(document).ready(function () {
   function selectModelTypeAddOns(modelType) {
     // Normalize modelType for comparison
     var normalizedModelType = normalizeModelType(modelType);
+    var selectedMake1 = localStorage.getItem("selectedMake1");
+    var selectedModel1 = localStorage.getItem("selectedModel1");
+    var selectedYear1 = parseInt(localStorage.getItem("selectedYear1"), 10);
 
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");
+      var sku = $(this).data("sku");
       if (includedTypes) {
         // Split and normalize included types
         var types = includedTypes
@@ -228,6 +231,17 @@ $(document).ready(function () {
         if (types.includes(normalizedModelType)) {
           $(this).click(); // Trigger click to select and add the add-on
         }
+      }
+
+      if (
+        selectedMake1 === "Ford" &&
+        selectedModel1 === "F150" &&
+        selectedYear1 >= 2004 &&
+        selectedYear1 <= 2021 &&
+        sku === "33"
+      ) {
+        $(this).click();
+        $(this).hide();
       }
     });
   }
@@ -469,8 +483,7 @@ $(document).ready(function () {
       `<input type='hidden' class='dynamic-input' name='price' value='${
         zeroPricingEnabled ? 0 : modelPrice
       }'>`,
-      `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`,
-
+      `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
     );
 
     // Add each product with zero pricing or actual pricing
@@ -495,7 +508,6 @@ $(document).ready(function () {
       `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
       `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`,
       `<input type='hidden' class='dynamic-input' name='sub_frequency' value='1m'>`
-
     );
   }
 
@@ -534,42 +546,44 @@ $(document).ready(function () {
     });
   };
 
-
   function adjustDescriptionText() {
     // Determine word limits for different screen sizes
     let wordLimit = Infinity; // No limit for screens wider than 1390px
     const screenWidth = window.innerWidth;
 
-    if (screenWidth <= 768) { // Mobile devices
-        wordLimit = 8; // Example limit
-    } else if (screenWidth <= 1024) { // Tablets
-        wordLimit = 20; // Example limit
-    } else if (screenWidth <= 1390) { // Small laptops
-        wordLimit = 40; // Example limit
+    if (screenWidth <= 768) {
+      // Mobile devices
+      wordLimit = 8; // Example limit
+    } else if (screenWidth <= 1024) {
+      // Tablets
+      wordLimit = 20; // Example limit
+    } else if (screenWidth <= 1390) {
+      // Small laptops
+      wordLimit = 40; // Example limit
     }
 
     // Adjust text for each .add-description element
-    document.querySelectorAll('.add-description').forEach(function(elem) {
-        const originalText = elem.getAttribute('data-original-text') || elem.innerText;
-        elem.setAttribute('data-original-text', originalText); // Store original text if not already stored
-        const words = originalText.split(' ');
+    document.querySelectorAll(".add-description").forEach(function (elem) {
+      const originalText =
+        elem.getAttribute("data-original-text") || elem.innerText;
+      elem.setAttribute("data-original-text", originalText); // Store original text if not already stored
+      const words = originalText.split(" ");
 
-        if (words.length > wordLimit) {
-            const trimmedText = words.slice(0, wordLimit).join(' ') + '...';
-            elem.innerText = trimmedText;
-        } else {
-            // If the full text doesn't exceed the limit, display it without ellipsis
-            elem.innerText = originalText;
-        }
+      if (words.length > wordLimit) {
+        const trimmedText = words.slice(0, wordLimit).join(" ") + "...";
+        elem.innerText = trimmedText;
+      } else {
+        // If the full text doesn't exceed the limit, display it without ellipsis
+        elem.innerText = originalText;
+      }
     });
-}
+  }
 
-// Initial adjustment
-adjustDescriptionText();
+  // Initial adjustment
+  adjustDescriptionText();
 
-// Adjust on window resize
-window.addEventListener('resize', adjustDescriptionText);
-
+  // Adjust on window resize
+  window.addEventListener("resize", adjustDescriptionText);
 
   $(".learn-more-btn").on("click", function (event) {
     event.stopPropagation();
@@ -619,11 +633,11 @@ window.addEventListener('resize', adjustDescriptionText);
   });
 });
 
-
-(function($) {
-    $.fx.prototype.curOriginal = $.fx.prototype.cur;
-    $.fx.prototype.cur = function(force) {
-        if ($(this.elem).is("body") && this.prop == "scrollTop") return $(window).scrollTop();
-        return this.curOriginal(force);
-    }
+(function ($) {
+  $.fx.prototype.curOriginal = $.fx.prototype.cur;
+  $.fx.prototype.cur = function (force) {
+    if ($(this.elem).is("body") && this.prop == "scrollTop")
+      return $(window).scrollTop();
+    return this.curOriginal(force);
+  };
 })(jQuery);

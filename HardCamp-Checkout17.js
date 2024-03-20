@@ -238,7 +238,7 @@ $(document).ready(function () {
 
       if (
         selectedMake1 === "Ford" &&
-        selectedModel1 === "F150" &&
+        selectedModel1 === "F 150" &&
         selectedYear1 >= 2004 &&
         selectedYear1 <= 2021 &&
         sku === "33"

@@ -223,6 +223,14 @@ $(document).ready(function () {
     console.log("Selected Model:", selectedModel1);
     console.log("Selected Year:", selectedYear1);
 
+    console.log("Selected Make:", selectedMake1 === "Ford"); // Should be true
+    console.log("Selected Model:", selectedModel1 === "F 150"); // Should be true
+    console.log(
+      "Selected Year Range:",
+      selectedYear1 <= 2024 && selectedYear1 >= 2021
+    ); // Should be true for years 2021-2024
+    console.log("SKU:", sku === "33"); // Should be true if sku is "33"
+
     $(".checkout-adds-wrapper").each(function () {
       var includedTypes = $(this).data("included");
       var sku = $(this).data("sku");

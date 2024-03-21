@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+setTimeout(() => {
   if (video.readyState >= 2) {
     setupVideoInteractions();
   } else {
@@ -150,6 +151,8 @@ document.addEventListener("DOMContentLoaded", function () {
       once: true,
     });
   }
+}, 1000); // 1000 milliseconds = 1 second
+
 
   // Remove the element that is not being used
   const elementToRemoveId =

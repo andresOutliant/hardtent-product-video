@@ -161,6 +161,8 @@ setTimeout(() => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+
   //   window.scrollTo(0, 0);
   let videoElement = document.getElementById("scroll-video");
   videoElement.muted = true;
@@ -256,6 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   ScrollTrigger.refresh();
+      }, 1500);
 });
 
 function fadeElement(element, action) {

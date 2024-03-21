@@ -508,7 +508,6 @@ $(document).ready(function () {
         `<input type='hidden' class='dynamic-input' name='${idx}:price' value='${
           zeroPricingEnabled ? 0 : product.price
         }'>`,
-        `<input type='hidden' class='dynamic-input' name='sub_frequency' value='1m'>`,
         `<input type='hidden' class='dynamic-input' name='${idx}:quantity' value='${product.quantity}'>`,
         product.imageUrl
           ? `<input type='hidden' class='dynamic-input' name='${idx}:image' value='${product.imageUrl}'>`
@@ -521,7 +520,7 @@ $(document).ready(function () {
       `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
       `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
       `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`,
-      `<input type='hidden' class='dynamic-input' name='sub_frequency' value='1m'>`
+     
     );
   }
 

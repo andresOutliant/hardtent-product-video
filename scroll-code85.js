@@ -27,12 +27,12 @@ $(document).ready(function () {
 
     setTimeout(function () {
       $(".toggle-open").click();
-    }, 90);
+    }, 135);
 
     // Optionally, set a delay before triggering 'toggle-close'
     setTimeout(function () {
       $(".toggle-close").click();
-    }, 110); // Delay of 1000 milliseconds (1 second)
+    }, 155); // Delay of 1000 milliseconds (1 second)
   } else {
   }
 });

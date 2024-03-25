@@ -68,8 +68,107 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// document.addEventListener("DOMContentLoaded", function () {
+//   const videoElementId = $(window).width() >= 768 ? "myVideo" : "mobile-hero";
+//   const video = document.getElementById(videoElementId);
+
+//   function setupVideoInteractions() {
+//     const toggleClose = document.querySelector(".toggle-close");
+//     const toggleOpen = document.querySelector(".toggle-open");
+//     const toggleCircles = document.querySelectorAll(".toggle-circle");
+//     let reverseIntervalId = null;
+
+//     function reverseVideo() {
+//       const isMobile = window.innerWidth < 768;
+//       const reverseInterval = isMobile ? 50 : 42;
+//       const stepBack = isMobile ? 0.02 : 0.04;
+
+//       if (video.playbackRate !== 1) {
+//         video.playbackRate = 1;
+//       }
+
+//       reverseIntervalId = setInterval(function () {
+//         if (video.currentTime <= 0) {
+//           clearInterval(reverseIntervalId);
+//           video.pause();
+//           video.currentTime = 0;
+//         } else {
+//           video.currentTime -= stepBack;
+//         }
+//       }, reverseInterval);
+//     }
+
+//     toggleOpen.addEventListener("click", function () {
+//       if (reverseIntervalId) {
+//         clearInterval(reverseIntervalId);
+//       }
+//       video.play();
+
+//       toggleOpen.classList.add("active");
+//       toggleClose.classList.remove("active");
+//       toggleCircles[0].classList.remove("active");
+//       toggleCircles[1].classList.add("active");
+//     });
+
+//     toggleCircles[1].addEventListener("click", function () {
+//       if (!this.classList.contains("active")) {
+//         if (reverseIntervalId) {
+//           clearInterval(reverseIntervalId);
+//         }
+//         video.play();
+
+//         toggleOpen.classList.add("active");
+//         toggleClose.classList.remove("active");
+//         toggleCircles[0].classList.remove("active");
+//         this.classList.add("active");
+//       }
+//     });
+
+//     toggleClose.addEventListener("click", function () {
+//       if (reverseIntervalId) {
+//         clearInterval(reverseIntervalId);
+//       }
+//       reverseVideo();
+
+//       toggleClose.classList.add("active");
+//       toggleOpen.classList.remove("active");
+//       toggleCircles[0].classList.add("active");
+//       toggleCircles[1].classList.remove("active");
+//     });
+
+//     toggleCircles[0].addEventListener("click", function () {
+//       if (!this.classList.contains("active")) {
+//         if (reverseIntervalId) {
+//           clearInterval(reverseIntervalId);
+//         }
+//         reverseVideo();
+
+//         toggleClose.classList.add("active");
+//         toggleOpen.classList.remove("active");
+//         this.classList.add("active");
+//         toggleCircles[1].classList.remove("active");
+//       }
+//     });
+//   }
+
+//   setTimeout(() => {
+//     if (video.readyState >= 2) {
+//       setupVideoInteractions();
+//     } else {
+//       video.addEventListener("loadedmetadata", setupVideoInteractions, {
+//         once: true,
+//       });
+//     }
+//   }, 1000); // 1000 milliseconds = 1 second
+
+//   // Remove the element that is not being used
+//   const elementToRemoveId =
+//     videoElementId === "myVideo" ? "mobile-hero" : "myVideo";
+//   $("#" + elementToRemoveId).remove();
+// });
+
 document.addEventListener("DOMContentLoaded", function () {
-  const videoElementId = $(window).width() >= 768 ? "myVideo" : "mobile-hero";
+  const videoElementId = window.innerWidth >= 768 ? "myVideo" : "mobile-hero";
   const video = document.getElementById(videoElementId);
 
   function setupVideoInteractions() {
@@ -98,7 +197,13 @@ document.addEventListener("DOMContentLoaded", function () {
       }, reverseInterval);
     }
 
-    toggleOpen.addEventListener("click", function () {
+    // Refactored function for adding event listeners
+    function addEventListeners(element, callback) {
+      element.addEventListener("click", callback);
+      element.addEventListener("touchend", callback); // Added touch event listener
+    }
+
+    addEventListeners(toggleOpen, function () {
       if (reverseIntervalId) {
         clearInterval(reverseIntervalId);
       }
@@ -110,21 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
       toggleCircles[1].classList.add("active");
     });
 
-    toggleCircles[1].addEventListener("click", function () {
-      if (!this.classList.contains("active")) {
-        if (reverseIntervalId) {
-          clearInterval(reverseIntervalId);
-        }
-        video.play();
-
-        toggleOpen.classList.add("active");
-        toggleClose.classList.remove("active");
-        toggleCircles[0].classList.remove("active");
-        this.classList.add("active");
-      }
-    });
-
-    toggleClose.addEventListener("click", function () {
+    addEventListeners(toggleClose, function () {
       if (reverseIntervalId) {
         clearInterval(reverseIntervalId);
       }
@@ -136,18 +227,26 @@ document.addEventListener("DOMContentLoaded", function () {
       toggleCircles[1].classList.remove("active");
     });
 
-    toggleCircles[0].addEventListener("click", function () {
-      if (!this.classList.contains("active")) {
-        if (reverseIntervalId) {
-          clearInterval(reverseIntervalId);
-        }
-        reverseVideo();
+    // Applying the same strategy for toggle circles
+    toggleCircles.forEach((circle, index) => {
+      addEventListeners(circle, function () {
+        if (!this.classList.contains("active")) {
+          if (reverseIntervalId) {
+            clearInterval(reverseIntervalId);
+          }
+          if (index === 0) {
+            reverseVideo();
+          } else {
+            video.play();
+          }
 
-        toggleClose.classList.add("active");
-        toggleOpen.classList.remove("active");
-        this.classList.add("active");
-        toggleCircles[1].classList.remove("active");
-      }
+          toggleCircles.forEach((c, i) => {
+            c.classList.toggle("active", i === index);
+          });
+          toggleOpen.classList.toggle("active", index !== 0);
+          toggleClose.classList.toggle("active", index === 0);
+        }
+      });
     });
   }
 
@@ -164,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Remove the element that is not being used
   const elementToRemoveId =
     videoElementId === "myVideo" ? "mobile-hero" : "myVideo";
-  $("#" + elementToRemoveId).remove();
+  document.getElementById(elementToRemoveId).remove();
 });
 
 document.addEventListener("DOMContentLoaded", () => {

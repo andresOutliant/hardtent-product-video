@@ -26,12 +26,12 @@ $(document).ready(function () {
     // Trigger click on 'toggle-open'
 
     setTimeout(function () {
-      $(".toggle-open").click();
+      //$(".toggle-open").click();
     }, 20);
 
     // Optionally, set a delay before triggering 'toggle-close'
     setTimeout(function () {
-      $(".toggle-close").click();
+      //$(".toggle-close").click();
     }, 155); // Delay of 1000 milliseconds (1 second)
   } else {
   }

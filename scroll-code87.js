@@ -27,7 +27,7 @@ $(document).ready(function () {
 
     setTimeout(function () {
       $(".toggle-open").click();
-    }, 135);
+    }, 20);
 
     // Optionally, set a delay before triggering 'toggle-close'
     setTimeout(function () {

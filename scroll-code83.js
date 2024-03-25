@@ -11,6 +11,14 @@ gsap.registerPlugin(ScrollTrigger);
 //     $(window).scrollTop(0);
 // });
 
+$(document).ready(function () {
+  768 > $(window).width() &&
+    ($(".toggle-open").click(),
+    setTimeout(function () {
+      $(".toggle-close").click();
+    }, 110));
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   // Find the link by its class
   const link = document.querySelector(".navbar22_link");
@@ -42,23 +50,23 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-$(document).ready(function () {
-  // Check if screen width indicates a mobile device
-  if ($(window).width() < 768) {
-    // 768px is a common breakpoint for mobile devices
-    // Trigger click on 'toggle-open'
+// $(document).ready(function () {
+//   // Check if screen width indicates a mobile device
+//   if ($(window).width() < 768) {
+//     // 768px is a common breakpoint for mobile devices
+//     // Trigger click on 'toggle-open'
 
-    setTimeout(function () {
-      $(".toggle-open").click();
-    }, 50);
+//     setTimeout(function () {
+//       $(".toggle-open").click();
+//     }, 50);
 
-    // Optionally, set a delay before triggering 'toggle-close'
-    setTimeout(function () {
-      $(".toggle-close").click();
-    }, 100); // Delay of 1000 milliseconds (1 second)
-  } else {
-  }
-});
+//     // Optionally, set a delay before triggering 'toggle-close'
+//     setTimeout(function () {
+//       $(".toggle-close").click();
+//     }, 100); // Delay of 1000 milliseconds (1 second)
+//   } else {
+//   }
+// });
 
 document.addEventListener("DOMContentLoaded", function () {
   const videoElementId = $(window).width() >= 768 ? "myVideo" : "mobile-hero";
@@ -143,16 +151,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-setTimeout(() => {
-  if (video.readyState >= 2) {
-    setupVideoInteractions();
-  } else {
-    video.addEventListener("loadedmetadata", setupVideoInteractions, {
-      once: true,
-    });
-  }
-}, 1000); // 1000 milliseconds = 1 second
-
+  setTimeout(() => {
+    if (video.readyState >= 2) {
+      setupVideoInteractions();
+    } else {
+      video.addEventListener("loadedmetadata", setupVideoInteractions, {
+        once: true,
+      });
+    }
+  }, 1000); // 1000 milliseconds = 1 second
 
   // Remove the element that is not being used
   const elementToRemoveId =
@@ -161,104 +168,103 @@ setTimeout(() => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
+  setTimeout(() => {
+    //   window.scrollTo(0, 0);
+    let videoElement = document.getElementById("scroll-video");
+    videoElement.muted = true;
 
-  //   window.scrollTo(0, 0);
-  let videoElement = document.getElementById("scroll-video");
-  videoElement.muted = true;
+    let screenWidth = window.innerWidth;
+    let isMobile = screenWidth < 768;
 
-  let screenWidth = window.innerWidth;
-  let isMobile = screenWidth < 768;
+    let windowHeight = window.innerHeight;
+    let scrollAreaHeight, endValue;
 
-  let windowHeight = window.innerHeight;
-  let scrollAreaHeight, endValue;
+    if (isMobile) {
+      scrollAreaHeight = windowHeight + 2000;
+      endValue = "+=3000px";
+    } else {
+      scrollAreaHeight = windowHeight * 2 + 2760;
+      endValue = "+=3560px";
+    }
 
-  if (isMobile) {
-    scrollAreaHeight = windowHeight + 2000;
-    endValue = "+=3000px";
-  } else {
-    scrollAreaHeight = windowHeight * 2 + 2760;
-    endValue = "+=3560px";
-  }
+    let videoContainer = document.querySelector(".scroll-video-container");
+    videoContainer.style.height = `${scrollAreaHeight}px`;
 
-  let videoContainer = document.querySelector(".scroll-video-container");
-  videoContainer.style.height = `${scrollAreaHeight}px`;
+    let videoTimeline = gsap.timeline();
 
-  let videoTimeline = gsap.timeline();
+    videoTimeline
+      .to(videoElement, { currentTime: 4.2, duration: 4.2, ease: "none" }) // Normal playback to 4.2s
+      .to(videoElement, { currentTime: 4.3, duration: 1.7, ease: "none" }) // First slow down: Slight progress over a long duration
+      // Assuming a brief period of normal playback to transition from the first slow down to the second
+      .to(videoElement, { currentTime: 5.5, duration: 1.2, ease: "none" }) // Transition to 5.5s for the next slow down
+      .to(videoElement, { currentTime: 5.501, duration: 1, ease: "none" }) // Second slow down: Similar slight progress over a long duration
+      .to(videoElement, {
+        currentTime: videoElement.duration,
+        duration: videoElement.duration - 5.6,
+        ease: "none",
+      }); // Continue to the end
 
-  videoTimeline
-    .to(videoElement, { currentTime: 4.2, duration: 4.2, ease: "none" }) // Normal playback to 4.2s
-    .to(videoElement, { currentTime: 4.3, duration: 1.7, ease: "none" }) // First slow down: Slight progress over a long duration
-    // Assuming a brief period of normal playback to transition from the first slow down to the second
-    .to(videoElement, { currentTime: 5.5, duration: 1.2, ease: "none" }) // Transition to 5.5s for the next slow down
-    .to(videoElement, { currentTime: 5.501, duration: 1, ease: "none" }) // Second slow down: Similar slight progress over a long duration
-    .to(videoElement, {
-      currentTime: videoElement.duration,
-      duration: videoElement.duration - 5.6,
-      ease: "none",
-    }); // Continue to the end
+    ScrollTrigger.create({
+      trigger: ".scroll-video-container",
+      start: "top top",
+      end: endValue,
+      pin: true,
+      pinSpacing: false,
+      scrub: true,
+      animation: videoTimeline,
+    });
 
-  ScrollTrigger.create({
-    trigger: ".scroll-video-container",
-    start: "top top",
-    end: endValue,
-    pin: true,
-    pinSpacing: false,
-    scrub: true,
-    animation: videoTimeline,
-  });
+    gsap.set(".text-element", { opacity: 0 });
 
-  gsap.set(".text-element", { opacity: 0 });
+    let multiplier = 1.034; // Assuming this remains constant
 
-  let multiplier = 1.034; // Assuming this remains constant
+    let textFadeInPositions = [
+      { start: 100 * multiplier, end: 1240 },
+      { start: 1950 * multiplier, end: 2650 * multiplier },
+      { start: 2970 * multiplier, end: 3465 * multiplier },
+      { start: 3590 * multiplier, end: 4600 * multiplier },
+    ];
 
-  let textFadeInPositions = [
-    { start: 100 * multiplier, end: 1240 },
-    { start: 1950 * multiplier, end: 2650 * multiplier },
-    { start: 2970 * multiplier, end: 3465 * multiplier },
-    { start: 3590 * multiplier, end: 4600 * multiplier },
-  ];
+    let textElements = gsap.utils.toArray(".text-element");
+    textElements.forEach((element, index) => {
+      let { start, end } = textFadeInPositions[index];
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: element,
+            start: () => `${element.offsetTop + start}px bottom`,
+            end: () => `${element.offsetTop + end}px bottom`,
+            scrub: true,
+          },
+        })
+        .fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.27 })
+        .to(element, { opacity: 0, duration: 0.27 }, "+=0.5"); // Hide again outside the specified range
+    });
 
-  let textElements = gsap.utils.toArray(".text-element");
-  textElements.forEach((element, index) => {
-    let { start, end } = textFadeInPositions[index];
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: element,
-          start: () => `${element.offsetTop + start}px bottom`,
-          end: () => `${element.offsetTop + end}px bottom`,
-          scrub: true,
-        },
-      })
-      .fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.27 })
-      .to(element, { opacity: 0, duration: 0.27 }, "+=0.5"); // Hide again outside the specified range
-  });
-
-  let circleJumpPositions = [100, 1950, 2970, 3590];
-  let circleElements = document.querySelectorAll(".scroll-circle");
-  circleElements.forEach((circle, index) => {
-    circle.addEventListener("click", () => {
-      window.scrollTo({
-        top: circleJumpPositions[index] - 250,
-        behavior: "smooth",
+    let circleJumpPositions = [100, 1950, 2970, 3590];
+    let circleElements = document.querySelectorAll(".scroll-circle");
+    circleElements.forEach((circle, index) => {
+      circle.addEventListener("click", () => {
+        window.scrollTo({
+          top: circleJumpPositions[index] - 250,
+          behavior: "smooth",
+        });
       });
     });
-  });
 
-  window.addEventListener("scroll", () => {
-    let scrollPosition = window.scrollY + 250;
-    circleElements.forEach((circle, index) => {
-      if (scrollPosition >= circleJumpPositions[index]) {
-        circle.classList.add("active");
-      } else {
-        circle.classList.remove("active");
-      }
+    window.addEventListener("scroll", () => {
+      let scrollPosition = window.scrollY + 250;
+      circleElements.forEach((circle, index) => {
+        if (scrollPosition >= circleJumpPositions[index]) {
+          circle.classList.add("active");
+        } else {
+          circle.classList.remove("active");
+        }
+      });
     });
-  });
 
-  ScrollTrigger.refresh();
-      }, 1500);
+    ScrollTrigger.refresh();
+  }, 1500);
 });
 
 function fadeElement(element, action) {
@@ -438,23 +444,14 @@ function syncOptions(e) {
   });
 }
 
-$(document).ready(function () {
-  768 > $(window).width() &&
-    ($(".toggle-open").click(),
-    setTimeout(function () {
-      $(".toggle-close").click();
-    }, 100));
+document.querySelectorAll(".size-option").forEach((e) => {
+  e.addEventListener("click", function () {
+    this.classList.contains("active") ||
+      (document.querySelector(".size-option.active").classList.remove("active"),
+      this.classList.add("active"),
+      updateDisplay());
+  });
 }),
-  document.querySelectorAll(".size-option").forEach((e) => {
-    e.addEventListener("click", function () {
-      this.classList.contains("active") ||
-        (document
-          .querySelector(".size-option.active")
-          .classList.remove("active"),
-        this.classList.add("active"),
-        updateDisplay());
-    });
-  }),
   document.querySelectorAll(".option-two").forEach((e) => {
     e.querySelectorAll(".option-button").forEach((e) => {
       e.addEventListener("click", function () {
@@ -598,6 +595,3 @@ $(document).ready(function () {
     },
   });
 });
-
-
-

@@ -11,12 +11,30 @@ gsap.registerPlugin(ScrollTrigger);
 //     $(window).scrollTop(0);
 // });
 
+// $(document).ready(function () {
+//   768 > $(window).width() &&
+//     ($(".toggle-open").click(),
+//     setTimeout(function () {
+//       $(".toggle-close").click();
+//     }, 110));
+// });
+
 $(document).ready(function () {
-  768 > $(window).width() &&
-    ($(".toggle-open").click(),
+  // Check if screen width indicates a mobile device
+  if ($(window).width() < 768) {
+    // 768px is a common breakpoint for mobile devices
+    // Trigger click on 'toggle-open'
+
+    setTimeout(function () {
+      $(".toggle-open").click();
+    }, 90);
+
+    // Optionally, set a delay before triggering 'toggle-close'
     setTimeout(function () {
       $(".toggle-close").click();
-    }, 110));
+    }, 110); // Delay of 1000 milliseconds (1 second)
+  } else {
+  }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -49,24 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
-// $(document).ready(function () {
-//   // Check if screen width indicates a mobile device
-//   if ($(window).width() < 768) {
-//     // 768px is a common breakpoint for mobile devices
-//     // Trigger click on 'toggle-open'
-
-//     setTimeout(function () {
-//       $(".toggle-open").click();
-//     }, 50);
-
-//     // Optionally, set a delay before triggering 'toggle-close'
-//     setTimeout(function () {
-//       $(".toggle-close").click();
-//     }, 100); // Delay of 1000 milliseconds (1 second)
-//   } else {
-//   }
-// });
 
 document.addEventListener("DOMContentLoaded", function () {
   const videoElementId = $(window).width() >= 768 ? "myVideo" : "mobile-hero";

@@ -246,8 +246,8 @@ $(document).ready(function () {
 
       //Remove the following SKU=33 addon from Ford F150 2021-2024
       if (
-        selectedMake1 === "Ford" &&
-        selectedModel1 === "F 150" &&
+        selectedMake1 !== "Ford" &&
+        selectedModel1 !== "F 150" &&
         selectedYear1 <= 2024 &&
         selectedYear1 >= 2021 &&
         sku1 === 33

@@ -518,7 +518,7 @@ $(document).ready(function () {
     // Always add the Downpayment item with a fixed price of $500
     $("#foxy-cart-form").append(
       `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
-      `<input type='hidden' class='dynamic-input' name='price' value='1'>`,
+      `<input type='hidden' class='dynamic-input' name='price' value='.55'>`,
       `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`,
      
     );

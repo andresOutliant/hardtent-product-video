@@ -907,7 +907,7 @@ const truckData = [
     yearStart: 2016,
     yearEnd: "current",
     bedSize: 6.5,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Nissan",
@@ -916,7 +916,7 @@ const truckData = [
     yearStart: 2003,
     yearEnd: 2015,
     bedSize: 5.5,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Nissan",
@@ -927,7 +927,7 @@ const truckData = [
     yearEnd: 2015,
     bedSize: 7,
 
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Nissan",

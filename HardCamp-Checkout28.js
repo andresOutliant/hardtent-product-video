@@ -413,38 +413,77 @@ $(document).ready(function () {
     updateUI();
   }
 
+  // function updateSubtotal() {
+  //   var subtotal = 0;
+
+  //   // Include the original price of the active model card
+  //   var activeModelCard = $(".model-card.active");
+  //   if (activeModelCard.length) {
+  //     var modelPriceText = activeModelCard.find(".model-price").text();
+  //     //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+  //     //   subtotal += modelPrice;
+  //     //commented model price out so it doesnt affect total
+  //   }
+
+  //   // Add prices of active products (using their original prices)
+  //   activeProducts.forEach(function (product) {
+  //     subtotal += product.price * product.quantity;
+  //   });
+
+  //   // Always include the Downpayment item
+  //   // subtotal += 500; // Fixed price for Downpayment
+
+  //   // Apply a discount of $3000
+  //   subtotal -= 3000; // Subtract the discount from the subtotal
+
+  //   var formattedSubtotal = subtotal.toLocaleString("en-US", {
+  //     style: "currency",
+  //     currency: "USD",
+  //   });
+
+  //   $("#subtotal").fadeOut(160, function () {
+  //     $(this).text(formattedSubtotal).fadeIn(160);
+  //   });
+  // }
+
   function updateSubtotal() {
-    var subtotal = 0;
+  var subtotal = 0;
 
-    // Include the original price of the active model card
-    var activeModelCard = $(".model-card.active");
-    if (activeModelCard.length) {
-      var modelPriceText = activeModelCard.find(".model-price").text();
-      //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-      //   subtotal += modelPrice;
-      //commented model price out so it doesnt affect total
-    }
-
-    // Add prices of active products (using their original prices)
-    activeProducts.forEach(function (product) {
-      subtotal += product.price * product.quantity;
-    });
-
-    // Always include the Downpayment item
-    // subtotal += 500; // Fixed price for Downpayment
-
-    // Apply a discount of $3000
-    subtotal -= 3000; // Subtract the discount from the subtotal
-
-    var formattedSubtotal = subtotal.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-
-    $("#subtotal").fadeOut(160, function () {
-      $(this).text(formattedSubtotal).fadeIn(160);
-    });
+  // Include the original price of the active model card
+  var activeModelCard = $(".model-card.active");
+  if (activeModelCard.length) {
+    var modelPriceText = activeModelCard.find(".model-price").text();
+    //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+    //   subtotal += modelPrice;
+    //commented model price out so it doesnt affect total
   }
+
+  // Add prices of active products (using their original prices)
+  activeProducts.forEach(function (product) {
+    subtotal += product.price * product.quantity;
+  });
+
+  // Always include the Downpayment item
+  // subtotal += 500; // Fixed price for Downpayment
+
+  // Apply a discount of $3000
+  subtotal -= 3000; // Subtract the discount from the subtotal
+
+  // Add $100 to the subtotal if the price is higher than $15000
+  if (subtotal > 15000) {
+    subtotal += 100;
+  }
+
+  var formattedSubtotal = subtotal.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
+  $("#subtotal").fadeOut(160, function () {
+    $(this).text(formattedSubtotal).fadeIn(160);
+  });
+}
+
 
   let truckInfo = {
     make: "",

@@ -359,12 +359,12 @@ const truckData = [
     manufacturer: "Ford",
     model: "Maverick",
     gen: 1,
-    yearStart: null,
+    yearStart: 2021,
 
-    yearEnd: null,
+    yearEnd: 2024,
 
     bedSize: null,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ram",

@@ -325,7 +325,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: 2022,
     bedSize: 5,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ford",
@@ -334,7 +334,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: 2022,
     bedSize: 6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ford",
@@ -475,7 +475,7 @@ const truckData = [
     yearStart: 2010,
     yearEnd: 2018,
     bedSize: 6.5,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ram",
@@ -484,7 +484,7 @@ const truckData = [
     yearStart: 2010,
     yearEnd: 2018,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ram",
@@ -493,7 +493,7 @@ const truckData = [
     yearStart: 2002,
     yearEnd: 2009,
     bedSize: 6.25,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ram",
@@ -502,7 +502,7 @@ const truckData = [
     yearStart: 2002,
     yearEnd: 2009,
     bedSize: 6.5,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Ram",
@@ -511,7 +511,7 @@ const truckData = [
     yearStart: 2002,
     yearEnd: 2009,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Rivian",
@@ -583,7 +583,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -592,7 +592,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -601,7 +601,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -610,7 +610,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -619,7 +619,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -628,7 +628,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -637,7 +637,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: "current",
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -646,7 +646,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: "current",
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -655,7 +655,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: "current",
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -664,7 +664,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -673,7 +673,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -682,7 +682,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -691,7 +691,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -700,7 +700,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Chevrolet",
@@ -709,7 +709,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -772,7 +772,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -781,7 +781,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -790,7 +790,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -799,7 +799,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -808,7 +808,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -817,7 +817,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -826,7 +826,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: "current",
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -835,7 +835,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: "current",
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -844,7 +844,7 @@ const truckData = [
     yearStart: 2019,
     yearEnd: "current",
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -853,7 +853,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -862,7 +862,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -871,7 +871,7 @@ const truckData = [
     yearStart: 2014,
     yearEnd: 2019,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -880,7 +880,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 5.8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -889,7 +889,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 6.6,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "GMC",
@@ -898,7 +898,7 @@ const truckData = [
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 8,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Nissan",
@@ -946,7 +946,7 @@ const truckData = [
     yearStart: 2005,
     yearEnd: 2021,
     bedSize: 4,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Nissan",
@@ -955,7 +955,7 @@ const truckData = [
     yearStart: 2005,
     yearEnd: 2021,
     bedSize: 5,
-    supporting: false,
+    supporting: true,
   },
   {
     manufacturer: "Nissan",
@@ -964,6 +964,6 @@ const truckData = [
     yearStart: 2005,
     yearEnd: 2021,
     bedSize: 6,
-    supporting: false,
+    supporting: true,
   },
 ];

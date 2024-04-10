@@ -367,6 +367,17 @@ const truckData = [
     supporting: true,
   },
   {
+    manufacturer: "Ford",
+    model: "F350",
+    gen: 1,
+    yearStart: 2002,
+
+    yearEnd: 2024,
+
+    bedSize: null,
+    supporting: true,
+  },
+  {
     manufacturer: "Ram",
     model: "1500",
     gen: 5,
@@ -511,6 +522,15 @@ const truckData = [
     yearStart: 2002,
     yearEnd: 2009,
     bedSize: 8,
+    supporting: true,
+  },
+  {
+    manufacturer: "Ram",
+    model: "3500",
+    gen: 3,
+    yearStart: 2002,
+    yearEnd: 2024,
+    bedSize: null,
     supporting: true,
   },
   {
@@ -740,7 +760,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 5,
     yearStart: 2019,
     yearEnd: "current",
@@ -749,7 +769,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 5,
     yearStart: 2019,
     yearEnd: "current",
@@ -758,7 +778,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 5,
     yearStart: 2019,
     yearEnd: "current",
@@ -767,7 +787,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 4,
     yearStart: 2014,
     yearEnd: 2019,
@@ -776,7 +796,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 4,
     yearStart: 2014,
     yearEnd: 2019,
@@ -785,7 +805,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 4,
     yearStart: 2014,
     yearEnd: 2019,
@@ -794,7 +814,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 3,
     yearStart: 2007,
     yearEnd: 2013,
@@ -803,7 +823,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 3,
     yearStart: 2007,
     yearEnd: 2013,
@@ -812,7 +832,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "1500",
+    model: "Sierra 1500",
     gen: 3,
     yearStart: 2007,
     yearEnd: 2013,
@@ -821,7 +841,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 5,
     yearStart: 2019,
     yearEnd: "current",
@@ -830,7 +850,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 5,
     yearStart: 2019,
     yearEnd: "current",
@@ -839,7 +859,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 5,
     yearStart: 2019,
     yearEnd: "current",
@@ -848,7 +868,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 4,
     yearStart: 2014,
     yearEnd: 2019,
@@ -857,7 +877,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 4,
     yearStart: 2014,
     yearEnd: 2019,
@@ -866,7 +886,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 4,
     yearStart: 2014,
     yearEnd: 2019,
@@ -875,7 +895,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 3,
     yearStart: 2007,
     yearEnd: 2013,
@@ -884,7 +904,7 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 3,
     yearStart: 2007,
     yearEnd: 2013,
@@ -893,11 +913,20 @@ const truckData = [
   },
   {
     manufacturer: "GMC",
-    model: "2500",
+    model: "Sierra 2500",
     gen: 3,
     yearStart: 2007,
     yearEnd: 2013,
     bedSize: 8,
+    supporting: true,
+  },
+  {
+    manufacturer: "GMC",
+    model: "Sierra 3500",
+    gen: 3,
+    yearStart: 2007,
+    yearEnd: 2024,
+    bedSize: null,
     supporting: true,
   },
   {
@@ -963,6 +992,24 @@ const truckData = [
     gen: 2,
     yearStart: 2005,
     yearEnd: 2021,
+    bedSize: 6,
+    supporting: true,
+  },
+  {
+    manufacturer: "Honda",
+    model: "Ridgeline",
+    gen: 2,
+    yearStart: 2006,
+    yearEnd: 2014,
+    bedSize: 6,
+    supporting: false,
+  },
+  {
+    manufacturer: "Honda",
+    model: "Ridgeline",
+    gen: 2,
+    yearStart: 2017,
+    yearEnd: 2024,
     bedSize: 6,
     supporting: true,
   },

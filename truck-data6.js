@@ -1020,6 +1020,6 @@ const truckData = [
     yearStart: 2001,
     yearEnd: 2013,
     bedSize: 6,
-    supporting: true,
+    supporting: false,
   },
 ];

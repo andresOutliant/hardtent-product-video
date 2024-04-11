@@ -1013,4 +1013,13 @@ const truckData = [
     bedSize: 6,
     supporting: true,
   },
+    {
+    manufacturer: "Chevrolet",
+    model: "Avalanche",
+    gen: 2,
+    yearStart: 2001,
+    yearEnd: 2013,
+    bedSize: 6,
+    supporting: true,
+  },
 ];

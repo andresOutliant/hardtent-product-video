@@ -558,7 +558,7 @@ $(document).ready(function () {
     // Submit the Webflow form programmatically.
     // Note: This assumes the Webflow form is prepared to handle the dynamic inputs being added.
     // It's important to test and ensure that the submission is accepted by Webflow.
-    $("#wf-form-Build-Info-Pre-Deposit").submit();
+    // $("#wf-form-Build-Info-Pre-Deposit").submit();
     // Optional: Submit the FoxyCart form or perform other actions as needed, potentially after a delay
     // to ensure the Webflow form submission process initiates or completes.
     setTimeout(function () {

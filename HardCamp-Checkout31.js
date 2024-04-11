@@ -522,7 +522,7 @@ $(document).ready(function () {
 
     // Always add the Downpayment item with a fixed price of $500
     $("#foxy-cart-form").append(
-      `<input type='hidden' class='dynamic-input' name='name' value='HardCamp Depsoit'>`,
+      `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
       `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
       `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
     );
@@ -536,65 +536,62 @@ $(document).ready(function () {
   //     $("#foxy-cart-form").submit();
   //   });
 
+  // Intercept the click event on the 'Add to Cart' button
   $("#submit-to-foxy").on("click", function (event) {
-    // Prevent the FoxyCart form from submitting immediately
+    // Prevent the FoxyCart form from submitting
     event.preventDefault();
 
-    updateCartFormWithProducts(modelName, modelPrice);
+    // Reference to the hidden Webflow form
+    var webflowForm = $("#wf-form-Build-Info-Pre-Deposit");
 
-    // Reference to the Webflow form
-    var webflowForm = $("#webflow-form");
-
-    // Ensure the Webflow form is clear of previous dynamic inputs
+    // Clear any previously added dynamic inputs in the Webflow form
     webflowForm.find(".dynamic-input").remove();
 
-    // Copy the model details to the Webflow form
-    var modelName = $('#foxy-cart-form input[name="name"]').val();
-    var modelPrice = $('#foxy-cart-form input[name="price"]').val();
-    var modelQuantity = $('#foxy-cart-form input[name="quantity"]').val();
-
-    // Append these details as hidden inputs to the Webflow form
-    webflowForm.append(
-      `<input type='hidden' class='dynamic-input' name='name' value='${modelName}'>`
-    );
-    webflowForm.append(
-      `<input type='hidden' class='dynamic-input' name='price' value='${modelPrice}'>`
-    );
-    webflowForm.append(
-      `<input type='hidden' class='dynamic-input' name='quantity' value='${modelQuantity}'>`
-    );
-
-    // Copy product details (assuming 'activeProducts' or a similar array is accessible globally)
-    activeProducts.forEach((product, index) => {
-      let idx = index + 1;
-      webflowForm.append(
-        `<input type='hidden' class='dynamic-input' name='${idx}:name' value='${product.name}'>`
-      );
-      webflowForm.append(
-        `<input type='hidden' class='dynamic-input' name='${idx}:price' value='${
-          zeroPricingEnabled ? 0 : product.price
-        }'>`
-      );
-      webflowForm.append(
-        `<input type='hidden' class='dynamic-input' name='${idx}:quantity' value='${product.quantity}'>`
-      );
-
-      // Append the image URL if present
-      if (product.imageUrl) {
-        webflowForm.append(
-          `<input type='hidden' class='dynamic-input' name='${idx}:image' value='${product.imageUrl}'>`
-        );
-      }
+    // Clone and append each dynamic input from the FoxyCart form to the Webflow form
+    $("#foxy-cart-form .dynamic-input").each(function () {
+      var clonedInput = $(this).clone();
+      webflowForm.append(clonedInput);
     });
 
-    // Submit the Webflow form programmatically
+    // Now submit the Webflow form programmatically
     webflowForm.submit();
 
-    // If needed, proceed with the FoxyCart form submission or other actions here
-    setTimeout(function () {
-      $("#foxy-cart-form").submit();
-    }, 350);
+    // Optional: Log the form contents to console for verification before actual submission
+    console.log("Webflow Form Inputs:", webflowForm.serialize());
   });
+
+  //   $("#submit-to-foxy").on("click", function(event) {
+  //     // Optionally prevent the default submission to ensure data is copied first.
+  //     event.preventDefault();
+
+  //     // Reference to the hidden Webflow form.
+  //     var webflowForm = $('#wf-form-Build-Info-Pre-Deposit');
+
+  //     // Clear any previously added dynamic inputs in the Webflow form.
+  //     webflowForm.find('.dynamic-input').remove();
+
+  //     // Iterate over the FoxyCart form's inputs, focusing on product details.
+  //     $("#foxy-cart-form .dynamic-input").each(function() {
+  //         // Clone the current element
+  //         var clonedInput = $(this).clone();
+
+  //         // Append the cloned input directly to the Webflow form
+  //         webflowForm.append(clonedInput);
+  //     });
+
+  //     // Submit the Webflow form programmatically.
+  //     // Note: This assumes the Webflow form is prepared to handle the dynamic inputs being added.
+  //     // It's important to test and ensure that the submission is accepted by Webflow.
+  //     webflowForm.submit();
+
+  //     // Optional: Submit the FoxyCart form or perform other actions as needed, potentially after a delay
+  //     // to ensure the Webflow form submission process initiates or completes.
+  //     setTimeout(function() {
+  //         updateCartFormWithProducts(modelName, modelPrice);
+
+  //         $("#foxy-cart-form").submit();
+  //     }, 500); // Adjust delay as needed based on your application's behavior.
+  // });
 
   $(".checkout-cart-btn").on("click", function () {
     $("#submit-to-foxy").trigger("click");

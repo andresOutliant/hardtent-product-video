@@ -413,77 +413,43 @@ $(document).ready(function () {
     updateUI();
   }
 
-  // function updateSubtotal() {
-  //   var subtotal = 0;
-
-  //   // Include the original price of the active model card
-  //   var activeModelCard = $(".model-card.active");
-  //   if (activeModelCard.length) {
-  //     var modelPriceText = activeModelCard.find(".model-price").text();
-  //     //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-  //     //   subtotal += modelPrice;
-  //     //commented model price out so it doesnt affect total
-  //   }
-
-  //   // Add prices of active products (using their original prices)
-  //   activeProducts.forEach(function (product) {
-  //     subtotal += product.price * product.quantity;
-  //   });
-
-  //   // Always include the Downpayment item
-  //   // subtotal += 500; // Fixed price for Downpayment
-
-  //   // Apply a discount of $3000
-  //   subtotal -= 3000; // Subtract the discount from the subtotal
-
-  //   var formattedSubtotal = subtotal.toLocaleString("en-US", {
-  //     style: "currency",
-  //     currency: "USD",
-  //   });
-
-  //   $("#subtotal").fadeOut(160, function () {
-  //     $(this).text(formattedSubtotal).fadeIn(160);
-  //   });
-  // }
-
   function updateSubtotal() {
-  var subtotal = 0;
+    var subtotal = 0;
 
-  // Include the original price of the active model card
-  var activeModelCard = $(".model-card.active");
-  if (activeModelCard.length) {
-    var modelPriceText = activeModelCard.find(".model-price").text();
-    //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-    //   subtotal += modelPrice;
-    //commented model price out so it doesnt affect total
+    // Include the original price of the active model card
+    var activeModelCard = $(".model-card.active");
+    if (activeModelCard.length) {
+      var modelPriceText = activeModelCard.find(".model-price").text();
+      //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+      //   subtotal += modelPrice;
+      //commented model price out so it doesnt affect total
+    }
+
+    // Add prices of active products (using their original prices)
+    activeProducts.forEach(function (product) {
+      subtotal += product.price * product.quantity;
+    });
+
+    // Always include the Downpayment item
+    // subtotal += 500; // Fixed price for Downpayment
+
+    // Apply a discount of $3000
+    subtotal -= 3000; // Subtract the discount from the subtotal
+
+    // Add $100 to the subtotal if the price is higher than $15000
+    if (subtotal > 15000) {
+      subtotal += 100;
+    }
+
+    var formattedSubtotal = subtotal.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+
+    $("#subtotal").fadeOut(160, function () {
+      $(this).text(formattedSubtotal).fadeIn(160);
+    });
   }
-
-  // Add prices of active products (using their original prices)
-  activeProducts.forEach(function (product) {
-    subtotal += product.price * product.quantity;
-  });
-
-  // Always include the Downpayment item
-  // subtotal += 500; // Fixed price for Downpayment
-
-  // Apply a discount of $3000
-  subtotal -= 3000; // Subtract the discount from the subtotal
-
-  // Add $100 to the subtotal if the price is higher than $15000
-  if (subtotal > 15000) {
-    subtotal += 100;
-  }
-
-  var formattedSubtotal = subtotal.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-
-  $("#subtotal").fadeOut(160, function () {
-    $(this).text(formattedSubtotal).fadeIn(160);
-  });
-}
-
 
   let truckInfo = {
     make: "",
@@ -558,35 +524,80 @@ $(document).ready(function () {
     $("#foxy-cart-form").append(
       `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
       `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
-      `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`,
-     
+      `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
     );
   }
 
-  // toggleZeroPricing()
+  //   $("#submit-to-foxy").on("click", function (event) {
+  //     // event.preventDefault(); // Prevent the default form submission
 
-  // function toggleZeroPricing() {
-  //     zeroPricingEnabled = !zeroPricingEnabled;
-  //     console.log("Zero Pricing is now", zeroPricingEnabled ? "enabled" : "disabled");
-  // }
-  // You can call toggleZeroPricing() to switch the zero pricing feature on or off
+  //     updateCartFormWithProducts(modelName, modelPrice);
+
+  //     $("#foxy-cart-form").submit();
+  //   });
 
   $("#submit-to-foxy").on("click", function (event) {
-    // event.preventDefault(); // Prevent the default form submission
+    // Prevent the FoxyCart form from submitting immediately
+    event.preventDefault();
 
     updateCartFormWithProducts(modelName, modelPrice);
 
-    $("#foxy-cart-form").submit();
+    // Reference to the Webflow form
+    var webflowForm = $("#webflow-form");
+
+    // Ensure the Webflow form is clear of previous dynamic inputs
+    webflowForm.find(".dynamic-input").remove();
+
+    // Copy the model details to the Webflow form
+    var modelName = $('#foxy-cart-form input[name="name"]').val();
+    var modelPrice = $('#foxy-cart-form input[name="price"]').val();
+    var modelQuantity = $('#foxy-cart-form input[name="quantity"]').val();
+
+    // Append these details as hidden inputs to the Webflow form
+    webflowForm.append(
+      `<input type='hidden' class='dynamic-input' name='name' value='${modelName}'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' class='dynamic-input' name='price' value='${modelPrice}'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' class='dynamic-input' name='quantity' value='${modelQuantity}'>`
+    );
+
+    // Copy product details (assuming 'activeProducts' or a similar array is accessible globally)
+    activeProducts.forEach((product, index) => {
+      let idx = index + 1;
+      webflowForm.append(
+        `<input type='hidden' class='dynamic-input' name='${idx}:name' value='${product.name}'>`
+      );
+      webflowForm.append(
+        `<input type='hidden' class='dynamic-input' name='${idx}:price' value='${
+          zeroPricingEnabled ? 0 : product.price
+        }'>`
+      );
+      webflowForm.append(
+        `<input type='hidden' class='dynamic-input' name='${idx}:quantity' value='${product.quantity}'>`
+      );
+
+      // Append the image URL if present
+      if (product.imageUrl) {
+        webflowForm.append(
+          `<input type='hidden' class='dynamic-input' name='${idx}:image' value='${product.imageUrl}'>`
+        );
+      }
+    });
+
+    // Submit the Webflow form programmatically
+    webflowForm.submit();
+
+    // If needed, proceed with the FoxyCart form submission or other actions here
+    setTimeout(function () {
+      $("#foxy-cart-form").submit();
+    }, 350);
   });
 
   $(".checkout-cart-btn").on("click", function () {
     $("#submit-to-foxy").trigger("click");
-  });
-
-  $("#foxy-cart-form").on("submit", function (event) {
-    // console.log("Form data being submitted:", $(this).serializeArray());
-    // Keep this line if you want to prevent the actual submission for testing
-    // event.preventDefault();
   });
 
   //   resets the foxy cart on page load

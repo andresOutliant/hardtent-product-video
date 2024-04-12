@@ -562,7 +562,6 @@ $(document).ready(function () {
       webflowForm.append(clonedInput);
     });
 
-
     $("#wf-form-Build-Info-Pre-Deposit").submit();
     // Optional: Submit the FoxyCart form or perform other actions as needed, potentially after a delay
     // to ensure the Webflow form submission process initiates or completes.
@@ -692,15 +691,6 @@ function waitForJQuery() {
           $("#required-message").fadeIn("slow");
         }
       });
-
-
-      // Log each stored value to the console
-      console.log("Stored Make:", storedMake);
-      console.log("Stored Model:", storedModel);
-      console.log("Stored Year:", storedYear);
-      console.log("Stored Name:", storedName);
-      console.log("Stored Email:", storedEmail);
-      console.log("Stored Phone:", storedPhone);
 
       if (
         storedMake &&
@@ -1004,9 +994,9 @@ function canCheckTruck() {
 }
 
 function handleTruckCheck() {
-//   var storedMake = localStorage.getItem("selectedMake");
-//   var storedModel = localStorage.getItem("selectedModel");
-//   var storedYear = localStorage.getItem("selectedYear");
+  //   var storedMake = localStorage.getItem("selectedMake");
+  //   var storedModel = localStorage.getItem("selectedModel");
+  //   var storedYear = localStorage.getItem("selectedYear");
   if (storedMake) {
     $("#make-dropdown").val(storedMake);
   }

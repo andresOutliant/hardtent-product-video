@@ -1,22 +1,5 @@
 fbq("track", "ViewContent");
-$(document).ready(function() {
-  // Check if all necessary values are present
-  if (storedMake && storedModel && storedYear && storedName && storedEmail && storedPhone) {
-    // All data exists, so find the current visible section and the target section to switch to
-    let currentSection = findCurrentSection();
-    let targetSection = document.getElementById("step-two");
 
-    if (targetSection) {
-      console.log("Auto-switching to step-two based on stored localStorage values.");
-      switchSection(currentSection, targetSection);
-    }
-  } else {
-    // Not all required data is present, handle accordingly
-    console.log("Not all required localStorage values are present. Applying defaults or redirecting to initial step.");
-    // Redirect to a starting page or initial section where data can be entered
-    window.location.href = "/start"; // Change this URL to your specific entry page
-  }
-});
 
 document.addEventListener("DOMContentLoaded", function () {
   document

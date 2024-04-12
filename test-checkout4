@@ -1,12 +1,5 @@
 fbq("track", "ViewContent");
 
-var storedMake = localStorage.getItem("selectedMake");
-var storedModel = localStorage.getItem("selectedModel");
-var storedYear = localStorage.getItem("selectedYear");
-var storedName = localStorage.getItem("customer_name");
-var storedEmail = localStorage.getItem("customer_email");
-var storedPhone = localStorage.getItem("customer_phone");
-
 document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelectorAll(".model-card .learn-more")
@@ -778,6 +771,7 @@ function waitForJQuery() {
         // Set the delay for debounce (e.g., 500 milliseconds)
         debounceTimer = setTimeout(function () {
           localStorage.setItem("customer_name", customer_name);
+          console.log("Saved to localStorage:", customer_name); // Log what is being saved
         }, 390);
       });
 
@@ -788,6 +782,7 @@ function waitForJQuery() {
         // Set the delay for debounce (e.g., 500 milliseconds)
         debounceTimer = setTimeout(function () {
           localStorage.setItem("customer_email", customer_email);
+          console.log("Saved to localStorage:", customer_email); // Log what is being saved
         }, 390);
       });
 
@@ -798,6 +793,7 @@ function waitForJQuery() {
         // Set the delay for debounce (e.g., 500 milliseconds)
         debounceTimer = setTimeout(function () {
           localStorage.setItem("customer_phone", customer_phone);
+          console.log("Saved to localStorage:", customer_phone); // Log what is being saved
         }, 390);
       });
 

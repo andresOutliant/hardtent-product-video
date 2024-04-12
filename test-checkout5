@@ -763,39 +763,39 @@ function waitForJQuery() {
         }
       });
 
-      var debounceTimer;
-      $("#customer_name").keyup(function () {
-        clearTimeout(debounceTimer);
-        var customer_name = $(this).val();
+    //   var debounceTimer;
+    //   $("#customer_name").keyup(function () {
+    //     clearTimeout(debounceTimer);
+    //     var customer_name = $(this).val();
 
-        // Set the delay for debounce (e.g., 500 milliseconds)
-        debounceTimer = setTimeout(function () {
-          localStorage.setItem("customer_name", customer_name);
-          console.log("Saved to localStorage:", customer_name); // Log what is being saved
-        }, 390);
-      });
+    //     // Set the delay for debounce (e.g., 500 milliseconds)
+    //     debounceTimer = setTimeout(function () {
+    //       localStorage.setItem("customer_name", customer_name);
+    //       console.log("Saved to localStorage:", customer_name); // Log what is being saved
+    //     }, 390);
+    //   });
 
-      $("#customer_email").keyup(function () {
-        clearTimeout(debounceTimer);
-        var customer_email = $(this).val();
+    //   $("#customer_email").keyup(function () {
+    //     clearTimeout(debounceTimer);
+    //     var customer_email = $(this).val();
 
-        // Set the delay for debounce (e.g., 500 milliseconds)
-        debounceTimer = setTimeout(function () {
-          localStorage.setItem("customer_email", customer_email);
-          console.log("Saved to localStorage:", customer_email); // Log what is being saved
-        }, 390);
-      });
+    //     // Set the delay for debounce (e.g., 500 milliseconds)
+    //     debounceTimer = setTimeout(function () {
+    //       localStorage.setItem("customer_email", customer_email);
+    //       console.log("Saved to localStorage:", customer_email); // Log what is being saved
+    //     }, 390);
+    //   });
 
-      $("#customer_phone").keyup(function () {
-        clearTimeout(debounceTimer);
-        var customer_phone = $(this).val();
+    //   $("#customer_phone").keyup(function () {
+    //     clearTimeout(debounceTimer);
+    //     var customer_phone = $(this).val();
 
-        // Set the delay for debounce (e.g., 500 milliseconds)
-        debounceTimer = setTimeout(function () {
-          localStorage.setItem("customer_phone", customer_phone);
-          console.log("Saved to localStorage:", customer_phone); // Log what is being saved
-        }, 390);
-      });
+    //     // Set the delay for debounce (e.g., 500 milliseconds)
+    //     debounceTimer = setTimeout(function () {
+    //       localStorage.setItem("customer_phone", customer_phone);
+    //       console.log("Saved to localStorage:", customer_phone); // Log what is being saved
+    //     }, 390);
+    //   });
 
       $(
         "#year-dropdown, #customer_name, #customer_email, #customer_phone, #email-check"

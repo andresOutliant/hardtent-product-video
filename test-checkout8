@@ -151,7 +151,8 @@ $(document).ready(function () {
   });
 });
 
-$(document).ready(function () {
+$(document).on('click', '.model-card', function() {
+
   var activeProducts = [];
 
   var modelName = "";

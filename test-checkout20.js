@@ -740,8 +740,17 @@ function waitForJQuery() {
         $("#customer_email").val(storedEmail);
         $("#customer_phone").val(storedPhone);
 
+        // Create dummy elements for testing if not present
+var stepOne = document.getElementById('step-one') || document.body.appendChild(document.createElement('div'));
+stepOne.id = 'step-one';
+
+var stepTwo = document.getElementById('step-two') || document.body.appendChild(document.createElement('div'));
+stepTwo.id = 'step-two';
+
+        switchSection(stepOne, stepTwo);
+
         //handleTruckCheck();
-        switchSection('step-one', 'step-two');
+        //switchSection('step-one', 'step-two');
         $("#make-dropdown, #model-dropdown, #year-dropdown").trigger("change");
       } else {
         // Initialize empty dropdowns if no data is stored

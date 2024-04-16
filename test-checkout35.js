@@ -22,6 +22,8 @@ function updateSelections(id, value) {
   }
 }
 
+var activeModelCard = $(".model-card.active");
+
 $(document).ready(function () {
   // Initialize variables with values from localStorage
   storedMake = localStorage.getItem("selectedMake");
@@ -335,7 +337,6 @@ $(document).ready(function () {
 
 $(document).on("click", ".model-card", function () {
   var activeProducts = [];
-
   var modelName = "";
   var modelPrice = 0;
   resetSelectedAddOns();
@@ -345,9 +346,6 @@ $(document).on("click", ".model-card", function () {
   if (!isActive) {
     $(this).addClass("active");
   }
-
-  updateUI(); // Make sure this function or similar function call happens before updating subtotal
-
 
   // Update the inactive class on .forward-button.inactive accordingly
   if ($(".model-card.active").length > 0) {
@@ -359,7 +357,6 @@ $(document).on("click", ".model-card", function () {
   }
 
   // Update model details and form inputs based on the active model card
-  var activeModelCard = $(".model-card.active");
   if (activeModelCard.length) {
     // Retrieve model name and price from data attributes
     modelName = activeModelCard.data("model-name");
@@ -378,6 +375,11 @@ $(document).on("click", ".model-card", function () {
     // Clear inputs if no model is active
     $("#model-name-input").val("");
     $("#model-price-input").val("");
+    //new
+    var activeProducts = [];
+    var modelName = "";
+    var modelPrice = 0;
+    resetSelectedAddOns();
   }
 
   // Update subtotal or other UI elements if necessary

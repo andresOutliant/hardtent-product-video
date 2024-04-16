@@ -348,8 +348,6 @@ $(document).on("click", ".model-card", function () {
 
   updateUI(); // Make sure this function or similar function call happens before updating subtotal
 
-  // Explicitly call updateSubtotal
-  updateSubtotal();
 
   // Update the inactive class on .forward-button.inactive accordingly
   if ($(".model-card.active").length > 0) {

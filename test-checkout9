@@ -992,9 +992,9 @@ function canCheckTruck() {
 }
 
 function handleTruckCheck() {
-  //   var storedMake = localStorage.getItem("selectedMake");
-  //   var storedModel = localStorage.getItem("selectedModel");
-  //   var storedYear = localStorage.getItem("selectedYear");
+  var storedMake = localStorage.getItem("selectedMake");
+   var storedModel = localStorage.getItem("selectedModel");
+     var storedYear = localStorage.getItem("selectedYear");
   if (storedMake) {
     $("#make-dropdown").val(storedMake);
   }

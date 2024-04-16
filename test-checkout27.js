@@ -2,6 +2,8 @@ fbq("track", "ViewContent");
 
 var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
+var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
+
 function updateSelections(id, value) {
   truckInfo[id] = value;
 
@@ -511,7 +513,6 @@ $(document).on("click", ".model-card", function () {
     });
 
   // Global variable to control zero pricing
-  let zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
   function updateCartFormWithProducts(modelName, modelPrice) {
     // Clear the fpxy form of previous entries

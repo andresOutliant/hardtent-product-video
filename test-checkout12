@@ -749,10 +749,7 @@ function waitForJQuery() {
         populateDropdown("#year-dropdown", [], "Year");
         populateDropdown("#bed-size-dropdown", [], "Bed Size");
         $(".truck-check").css("opacity", "0.5").prop("disabled", true);
-        $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
-          "disabled",
-          true
-        );
+
         var makes = getUniqueMakes(truckData);
         populateDropdown("#make-dropdown", makes, "Make");
       }

@@ -677,7 +677,7 @@ $(document).on('click', '.model-card', function() {
 })(jQuery);
 
 //truck form and checkout code
-
+$(document).ready(function() {
 function waitForJQuery() {
   if (window.jQuery) {
     $(document).ready(function () {
@@ -1031,3 +1031,4 @@ function handleTruckCheck() {
     $(".specialist-form").hide();
   }
 }
+});

@@ -217,7 +217,7 @@ $(document).on('click', '.model-card', function() {
 
     // Update subtotal or other UI elements if necessary
     // updateSubtotal();
-  });
+ 
 
   function updateModelSelected(modelType, modelPrice) {
     // Update the #model-selected div with "HardCamp -" prefix

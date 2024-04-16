@@ -176,9 +176,7 @@ $(document).on('click', '.model-card', function() {
 
   var modelName = "";
   var modelPrice = 0;
-
-  $(".model-card").on("click", function () {
-    resetSelectedAddOns();
+  resetSelectedAddOns();
     // Toggle the active class on the clicked model card
     var isActive = $(this).hasClass("active");
     $(".model-card").removeClass("active");

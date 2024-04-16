@@ -740,15 +740,15 @@ function waitForJQuery() {
         $("#customer_email").val(storedEmail);
         $("#customer_phone").val(storedPhone);
 
-        // Create dummy elements for testing if not present
+        // if user has used compatability form then take them to step two
 var stepOne = document.getElementById('step-one') || document.body.appendChild(document.createElement('div'));
 stepOne.id = 'step-one';
 
 var stepTwo = document.getElementById('step-two') || document.body.appendChild(document.createElement('div'));
 stepTwo.id = 'step-two';
-
+        
         switchSection(stepOne, stepTwo);
-
+        $(".step-two-form").fadeIn(200);
         //handleTruckCheck();
         //switchSection('step-one', 'step-two');
         $("#make-dropdown, #model-dropdown, #year-dropdown").trigger("change");

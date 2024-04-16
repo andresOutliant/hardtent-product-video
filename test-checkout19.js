@@ -741,7 +741,7 @@ function waitForJQuery() {
         $("#customer_phone").val(storedPhone);
 
         //handleTruckCheck();
-        switchSection(currentSection, nextSection);
+        switchSection('step-one', 'step-two');
         $("#make-dropdown, #model-dropdown, #year-dropdown").trigger("change");
       } else {
         // Initialize empty dropdowns if no data is stored

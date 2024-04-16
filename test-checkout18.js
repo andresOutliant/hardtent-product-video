@@ -740,7 +740,8 @@ function waitForJQuery() {
         $("#customer_email").val(storedEmail);
         $("#customer_phone").val(storedPhone);
 
-        handleTruckCheck();
+        //handleTruckCheck();
+        switchSection(currentSection, nextSection);
         $("#make-dropdown, #model-dropdown, #year-dropdown").trigger("change");
       } else {
         // Initialize empty dropdowns if no data is stored

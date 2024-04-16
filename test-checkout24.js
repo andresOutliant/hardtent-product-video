@@ -2,21 +2,33 @@ fbq("track", "ViewContent");
 
 var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
+function updateSelections(id, value) {
+  truckInfo[id] = value;
+
+  if (id === "make") {
+    document.getElementById("make-selected").textContent = value;
+  } else if (id === "model") {
+    document.getElementById("truck-model-selected").textContent = value;
+  } else if (id === "year") {
+    document.getElementById("year-selected").textContent = value;
+  }
+}
+
 $(document).ready(function () {
   // Initialize variables with values from localStorage
-      storedMake = localStorage.getItem("selectedMake");
-      storedModel = localStorage.getItem("selectedModel");
-      storedYear = localStorage.getItem("selectedYear");
-      storedName = localStorage.getItem("customer_name");
-      storedEmail = localStorage.getItem("customer_email");
-      storedPhone = localStorage.getItem("customer_phone");
+  storedMake = localStorage.getItem("selectedMake");
+  storedModel = localStorage.getItem("selectedModel");
+  storedYear = localStorage.getItem("selectedYear");
+  storedName = localStorage.getItem("customer_name");
+  storedEmail = localStorage.getItem("customer_email");
+  storedPhone = localStorage.getItem("customer_phone");
 
-  $('#make-dropdown').val(storedMake).prop('disabled', false);
-  $('#model-dropdown').val(storedModel).prop('disabled', false);
-  $('#year-dropdown').val(storedYear).prop('disabled', false);
-  $('#customer_name').val(storedName);
-  $('#customer_email').val(storedEmail);
-  $('#customer_phone').val(storedPhone);
+  $("#make-dropdown").val(storedMake).prop("disabled", false);
+  $("#model-dropdown").val(storedModel).prop("disabled", false);
+  $("#year-dropdown").val(storedYear).prop("disabled", false);
+  $("#customer_name").val(storedName);
+  $("#customer_email").val(storedEmail);
+  $("#customer_phone").val(storedPhone);
 
   console.log("Stored Make:", storedMake);
   console.log("Stored Model:", storedModel);
@@ -176,54 +188,52 @@ $(document).ready(function () {
   });
 });
 
-$(document).on('click', '.model-card', function() {
-
+$(document).on("click", ".model-card", function () {
   var activeProducts = [];
 
   var modelName = "";
   var modelPrice = 0;
   resetSelectedAddOns();
-    // Toggle the active class on the clicked model card
-    var isActive = $(this).hasClass("active");
-    $(".model-card").removeClass("active");
-    if (!isActive) {
-      $(this).addClass("active");
-    }
+  // Toggle the active class on the clicked model card
+  var isActive = $(this).hasClass("active");
+  $(".model-card").removeClass("active");
+  if (!isActive) {
+    $(this).addClass("active");
+  }
 
-    // Update the inactive class on .forward-button.inactive accordingly
-    if ($(".model-card.active").length > 0) {
-      $(".forward-button.inactive")
-        .removeClass("inactive")
-        .addClass("send-model");
-    } else {
-      $(".forward-button").not(".inactive").addClass("inactive");
-    }
+  // Update the inactive class on .forward-button.inactive accordingly
+  if ($(".model-card.active").length > 0) {
+    $(".forward-button.inactive")
+      .removeClass("inactive")
+      .addClass("send-model");
+  } else {
+    $(".forward-button").not(".inactive").addClass("inactive");
+  }
 
-    // Update model details and form inputs based on the active model card
-    var activeModelCard = $(".model-card.active");
-    if (activeModelCard.length) {
-      // Retrieve model name and price from data attributes
-      modelName = activeModelCard.data("model-name");
-      modelPrice = parseFloat(activeModelCard.data("model-price"));
+  // Update model details and form inputs based on the active model card
+  var activeModelCard = $(".model-card.active");
+  if (activeModelCard.length) {
+    // Retrieve model name and price from data attributes
+    modelName = activeModelCard.data("model-name");
+    modelPrice = parseFloat(activeModelCard.data("model-price"));
 
-      selectModelTypeAddOns(modelName);
-      // Log the values for debugging
-      console.log("Model Name:", modelName, "Model Price:", modelPrice);
+    selectModelTypeAddOns(modelName);
+    // Log the values for debugging
+    console.log("Model Name:", modelName, "Model Price:", modelPrice);
 
-      // Update model selection UI if necessary
-      updateModelSelected(modelName, modelPrice);
+    // Update model selection UI if necessary
+    updateModelSelected(modelName, modelPrice);
 
-      // Update the form with model details and active products
-      updateCartFormWithProducts(modelName, 0); // commented out so modelPrice doesnt affect total
-    } else {
-      // Clear inputs if no model is active
-      $("#model-name-input").val("");
-      $("#model-price-input").val("");
-    }
+    // Update the form with model details and active products
+    updateCartFormWithProducts(modelName, 0); // commented out so modelPrice doesnt affect total
+  } else {
+    // Clear inputs if no model is active
+    $("#model-name-input").val("");
+    $("#model-price-input").val("");
+  }
 
-    // Update subtotal or other UI elements if necessary
-    // updateSubtotal();
- 
+  // Update subtotal or other UI elements if necessary
+  // updateSubtotal();
 
   function updateModelSelected(modelType, modelPrice) {
     // Update the #model-selected div with "HardCamp -" prefix
@@ -482,20 +492,6 @@ $(document).on('click', '.model-card', function() {
     year: "",
   };
 
-  function updateSelections(id, value) {
-    truckInfo[id] = value;
-
-    if (id === "make") {
-      document.getElementById("make-selected").textContent = value;
-    } else if (id === "model") {
-      document.getElementById("truck-model-selected").textContent = value;
-    } else if (id === "year") {
-      document.getElementById("year-selected").textContent = value;
-    }
-
-    // console.log(truckInfo);
-  }
-
   document
     .getElementById("make-dropdown")
     .addEventListener("change", function () {
@@ -699,372 +695,404 @@ $(document).on('click', '.model-card', function() {
   };
 })(jQuery);
 
-
-
 //truck form and checkout code
-$(document).ready(function() {
-function waitForJQuery() {
-  if (window.jQuery) {
-    $(document).ready(function () {
-      $(".check-btn-wrapper").click(function () {
-        if ($(".truck-check").prop("disabled")) {
-          $("#required-message").fadeIn("slow");
-        }
-      });
-
-      if (
-        storedMake &&
-        storedModel &&
-        storedYear &&
-        storedName &&
-        storedEmail &&
-        storedPhone
-      ) {
-        // Populate dropdowns for truck selection
-        populateDropdown(
-          "#make-dropdown",
-          getUniqueMakes(truckData),
-          storedMake
-        );
-        populateDropdown(
-          "#model-dropdown",
-          getUniqueModels(storedMake),
-          storedModel
-        );
-        populateDropdown(
-          "#year-dropdown",
-          getUniqueYears(storedMake, storedModel),
-          storedYear
-        );
-        $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
-          "disabled",
-          false
-        );
-
-        // Populate input fields for customer details
-        $("#customer_name").val(storedName);
-        $("#customer_email").val(storedEmail);
-        $("#customer_phone").val(storedPhone);
-
-        // if user has used compatability form then take them to step two
-var stepOne = document.getElementById('step-one') || document.body.appendChild(document.createElement('div'));
-stepOne.id = 'step-one';
-
-var stepTwo = document.getElementById('step-two') || document.body.appendChild(document.createElement('div'));
-stepTwo.id = 'step-two';
-        
-        switchSection(stepOne, stepTwo);
-        $(".step-two-form").fadeIn(200);
-        //handleTruckCheck();
-        //switchSection('step-one', 'step-two');
-        $("#make-dropdown, #model-dropdown, #year-dropdown").trigger("change");
-      } else {
-        // Initialize empty dropdowns if no data is stored
-        populateDropdown("#make-dropdown", [], "Make");
-        populateDropdown("#model-dropdown", [], "Model");
-        populateDropdown("#year-dropdown", [], "Year");
-        populateDropdown("#bed-size-dropdown", [], "Bed Size");
-        $(".truck-check").css("opacity", "0.5").prop("disabled", true);
-        $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
-          "disabled",
-          true
-        );
-
-        var makes = getUniqueMakes(truckData);
-        populateDropdown("#make-dropdown", makes, "Make");
-      }
-      $("#make-dropdown").change(function () {
-        var selectedMake = $(this).val();
-        localStorage.setItem("selectedMake", selectedMake);
-        var models = getUniqueModels(selectedMake);
-        $("#model-dropdown").prop("disabled", models.length === 0);
-        resetDropdowns([
-          "#model-dropdown",
-          "#year-dropdown",
-          "#bed-size-dropdown",
-        ]);
-        populateDropdown("#model-dropdown", models, "Model");
-        if (models.length > 0) {
-          $("#model-dropdown").val(models[0]).change();
-        }
-      });
-      $("#model-dropdown").change(function () {
-        var selectedMake = $("#make-dropdown").val();
-        var selectedModel = $(this).val();
-        localStorage.setItem("selectedModel", selectedModel);
-        var years = getUniqueYears(selectedMake, selectedModel);
-        $("#year-dropdown").prop("disabled", years.length === 0);
-        resetDropdowns(["#year-dropdown", "#bed-size-dropdown"]);
-        populateDropdown("#year-dropdown", years, "Year");
-        if (years.length > 0) {
-          $("#year-dropdown").val(years[0]).change();
-        }
-      });
-
-    //   var debounceTimer;
-    //   $("#customer_name").keyup(function () {
-    //     clearTimeout(debounceTimer);
-    //     var customer_name = $(this).val();
-
-    //     // Set the delay for debounce (e.g., 500 milliseconds)
-    //     debounceTimer = setTimeout(function () {
-    //       localStorage.setItem("customer_name", customer_name);
-    //       console.log("Saved to localStorage:", customer_name); // Log what is being saved
-    //     }, 390);
-    //   });
-
-    //   $("#customer_email").keyup(function () {
-    //     clearTimeout(debounceTimer);
-    //     var customer_email = $(this).val();
-
-    //     // Set the delay for debounce (e.g., 500 milliseconds)
-    //     debounceTimer = setTimeout(function () {
-    //       localStorage.setItem("customer_email", customer_email);
-    //       console.log("Saved to localStorage:", customer_email); // Log what is being saved
-    //     }, 390);
-    //   });
-
-    //   $("#customer_phone").keyup(function () {
-    //     clearTimeout(debounceTimer);
-    //     var customer_phone = $(this).val();
-
-    //     // Set the delay for debounce (e.g., 500 milliseconds)
-    //     debounceTimer = setTimeout(function () {
-    //       localStorage.setItem("customer_phone", customer_phone);
-    //       console.log("Saved to localStorage:", customer_phone); // Log what is being saved
-    //     }, 390);
-    //   });
-
-      $(
-        "#year-dropdown, #customer_name, #customer_email, #customer_phone, #email-check"
-      ).on("change input", function () {
-        var selectedMake = $("#make-dropdown").val();
-        var selectedModel = $("#model-dropdown").val();
-        var selectedYear = $("#year-dropdown").val();
-        var customerName = $("#customer_name").val().trim();
-        var customerEmail = $("#customer_email").val().trim();
-        var customerPhone = $("#customer_phone").val().trim();
-        var isEmailChecked = $("#email-check").is(":checked");
-
-        var isValidYear = selectedYear !== "";
-        var isValidName = isValidCustomerName(customerName);
-        var isValidEmail = isValidCustomerEmail(customerEmail);
-        var isValidPhone = isValidCustomerPhone(customerPhone);
-        var isValidEmailCheck = isEmailChecked;
+$(document).ready(function () {
+  function waitForJQuery() {
+    if (window.jQuery) {
+      $(document).ready(function () {
+        $(".check-btn-wrapper").click(function () {
+          if ($(".truck-check").prop("disabled")) {
+            $("#required-message").fadeIn("slow");
+          }
+        });
 
         if (
-          isValidYear &&
-          isValidName &&
-          isValidEmail &&
-          isValidPhone &&
-          isValidEmailCheck
+          storedMake &&
+          storedModel &&
+          storedYear &&
+          storedName &&
+          storedEmail &&
+          storedPhone
         ) {
-          localStorage.setItem("selectedYear", selectedYear);
+          // Populate dropdowns for truck selection
+          populateDropdown(
+            "#make-dropdown",
+            getUniqueMakes(truckData),
+            storedMake
+          );
+          populateDropdown(
+            "#model-dropdown",
+            getUniqueModels(storedMake),
+            storedModel
+          );
+          populateDropdown(
+            "#year-dropdown",
+            getUniqueYears(storedMake, storedModel),
+            storedYear
+          );
+          $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
+            "disabled",
+            false
+          );
 
-          var bedSizes = getBedSizes(selectedMake, selectedModel, selectedYear);
+          // Populate input fields for customer details
+          $("#customer_name").val(storedName);
+          $("#customer_email").val(storedEmail);
+          $("#customer_phone").val(storedPhone);
 
-          $("#bed-size-dropdown").prop("disabled", bedSizes.length === 0);
+          // if user has used compatability form then take them to step two
+          var stepOne =
+            document.getElementById("step-one") ||
+            document.body.appendChild(document.createElement("div"));
+          stepOne.id = "step-one";
 
-          resetDropdowns(["#bed-size-dropdown"]);
-          populateDropdown("#bed-size-dropdown", bedSizes, "Bed Size");
+          var stepTwo =
+            document.getElementById("step-two") ||
+            document.body.appendChild(document.createElement("div"));
+          stepTwo.id = "step-two";
 
-          $(".truck-check").css("opacity", "1").prop("disabled", false);
+          switchSection(stepOne, stepTwo);
+          $(".step-two-form").fadeIn(200);
+          //handleTruckCheck();
+          //switchSection('step-one', 'step-two');
+          $("#make-dropdown, #model-dropdown, #year-dropdown").trigger(
+            "change"
+          );
+          document
+            .getElementById("make-dropdown")
+            .addEventListener("change", function () {
+              updateSelections("make", this.value);
+            });
+
+          document
+            .getElementById("model-dropdown")
+            .addEventListener("change", function () {
+              updateSelections("model", this.value);
+            });
+
+          document
+            .getElementById("year-dropdown")
+            .addEventListener("change", function () {
+              updateSelections("year", this.value);
+            });
         } else {
+          // Initialize empty dropdowns if no data is stored
+          populateDropdown("#make-dropdown", [], "Make");
+          populateDropdown("#model-dropdown", [], "Model");
+          populateDropdown("#year-dropdown", [], "Year");
+          populateDropdown("#bed-size-dropdown", [], "Bed Size");
           $(".truck-check").css("opacity", "0.5").prop("disabled", true);
+          $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
+            "disabled",
+            true
+          );
+
+          var makes = getUniqueMakes(truckData);
+          populateDropdown("#make-dropdown", makes, "Make");
         }
+        $("#make-dropdown").change(function () {
+          var selectedMake = $(this).val();
+          localStorage.setItem("selectedMake", selectedMake);
+          var models = getUniqueModels(selectedMake);
+          $("#model-dropdown").prop("disabled", models.length === 0);
+          resetDropdowns([
+            "#model-dropdown",
+            "#year-dropdown",
+            "#bed-size-dropdown",
+          ]);
+          populateDropdown("#model-dropdown", models, "Model");
+          if (models.length > 0) {
+            $("#model-dropdown").val(models[0]).change();
+          }
+        });
+        $("#model-dropdown").change(function () {
+          var selectedMake = $("#make-dropdown").val();
+          var selectedModel = $(this).val();
+          localStorage.setItem("selectedModel", selectedModel);
+          var years = getUniqueYears(selectedMake, selectedModel);
+          $("#year-dropdown").prop("disabled", years.length === 0);
+          resetDropdowns(["#year-dropdown", "#bed-size-dropdown"]);
+          populateDropdown("#year-dropdown", years, "Year");
+          if (years.length > 0) {
+            $("#year-dropdown").val(years[0]).change();
+          }
+        });
+
+        //   var debounceTimer;
+        //   $("#customer_name").keyup(function () {
+        //     clearTimeout(debounceTimer);
+        //     var customer_name = $(this).val();
+
+        //     // Set the delay for debounce (e.g., 500 milliseconds)
+        //     debounceTimer = setTimeout(function () {
+        //       localStorage.setItem("customer_name", customer_name);
+        //       console.log("Saved to localStorage:", customer_name); // Log what is being saved
+        //     }, 390);
+        //   });
+
+        //   $("#customer_email").keyup(function () {
+        //     clearTimeout(debounceTimer);
+        //     var customer_email = $(this).val();
+
+        //     // Set the delay for debounce (e.g., 500 milliseconds)
+        //     debounceTimer = setTimeout(function () {
+        //       localStorage.setItem("customer_email", customer_email);
+        //       console.log("Saved to localStorage:", customer_email); // Log what is being saved
+        //     }, 390);
+        //   });
+
+        //   $("#customer_phone").keyup(function () {
+        //     clearTimeout(debounceTimer);
+        //     var customer_phone = $(this).val();
+
+        //     // Set the delay for debounce (e.g., 500 milliseconds)
+        //     debounceTimer = setTimeout(function () {
+        //       localStorage.setItem("customer_phone", customer_phone);
+        //       console.log("Saved to localStorage:", customer_phone); // Log what is being saved
+        //     }, 390);
+        //   });
+
+        $(
+          "#year-dropdown, #customer_name, #customer_email, #customer_phone, #email-check"
+        ).on("change input", function () {
+          var selectedMake = $("#make-dropdown").val();
+          var selectedModel = $("#model-dropdown").val();
+          var selectedYear = $("#year-dropdown").val();
+          var customerName = $("#customer_name").val().trim();
+          var customerEmail = $("#customer_email").val().trim();
+          var customerPhone = $("#customer_phone").val().trim();
+          var isEmailChecked = $("#email-check").is(":checked");
+
+          var isValidYear = selectedYear !== "";
+          var isValidName = isValidCustomerName(customerName);
+          var isValidEmail = isValidCustomerEmail(customerEmail);
+          var isValidPhone = isValidCustomerPhone(customerPhone);
+          var isValidEmailCheck = isEmailChecked;
+
+          if (
+            isValidYear &&
+            isValidName &&
+            isValidEmail &&
+            isValidPhone &&
+            isValidEmailCheck
+          ) {
+            localStorage.setItem("selectedYear", selectedYear);
+
+            var bedSizes = getBedSizes(
+              selectedMake,
+              selectedModel,
+              selectedYear
+            );
+
+            $("#bed-size-dropdown").prop("disabled", bedSizes.length === 0);
+
+            resetDropdowns(["#bed-size-dropdown"]);
+            populateDropdown("#bed-size-dropdown", bedSizes, "Bed Size");
+
+            $(".truck-check").css("opacity", "1").prop("disabled", false);
+          } else {
+            $(".truck-check").css("opacity", "0.5").prop("disabled", true);
+          }
+        });
+
+        function isValidCustomerName(name) {
+          return name !== "";
+        }
+
+        function isValidCustomerEmail(email) {
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        }
+
+        function isValidCustomerPhone(phone) {
+          return phone.trim() !== "";
+        }
+
+        $(".truck-check").click(function () {
+          handleTruckCheck();
+        });
+
+        $(".button-circle").click(function () {
+          resetDropdowns(["#model-dropdown", "#year-dropdown"]);
+        });
       });
-
-      function isValidCustomerName(name) {
-        return name !== "";
-      }
-
-      function isValidCustomerEmail(email) {
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-      }
-
-      function isValidCustomerPhone(phone) {
-        return phone.trim() !== "";
-      }
-
-      $(".truck-check").click(function () {
-        handleTruckCheck();
-      });
-
-      $(".button-circle").click(function () {
-        resetDropdowns(["#model-dropdown", "#year-dropdown"]);
-      });
-    });
-    clearInterval(jQueryCheckInterval);
-  }
-}
-
-var jQueryCheckInterval = setInterval(waitForJQuery, 100);
-
-function getUniqueMakes(data) {
-  var makes = [...new Set(data.map((item) => item.manufacturer))];
-  return makes;
-}
-
-function getUniqueModels(make) {
-  var models = [
-    ...new Set(
-      truckData
-        .filter((item) => item.manufacturer === make)
-        .map((item) => item.model)
-    ),
-  ];
-  return models;
-}
-
-function getUniqueYears(make, model) {
-  var filteredData = truckData.filter(
-    (item) => item.manufacturer === make && item.model === model
-  );
-  var years = [];
-  filteredData.forEach((item) => {
-    for (
-      let year = item.yearStart;
-      year <=
-      (item.yearEnd === "current" ? new Date().getFullYear() : item.yearEnd);
-      year++
-    ) {
-      if (!years.includes(year)) years.push(year);
+      clearInterval(jQueryCheckInterval);
     }
-  });
+  }
 
-  years.sort(function (a, b) {
-    return b - a;
-  });
+  var jQueryCheckInterval = setInterval(waitForJQuery, 100);
 
-  return years;
-}
+  function getUniqueMakes(data) {
+    var makes = [...new Set(data.map((item) => item.manufacturer))];
+    return makes;
+  }
 
-function getBedSizes(make, model, year) {
-  var sizes = truckData
-    .filter(
-      (item) =>
-        item.manufacturer === make &&
-        item.model === model &&
-        year >= item.yearStart &&
+  function getUniqueModels(make) {
+    var models = [
+      ...new Set(
+        truckData
+          .filter((item) => item.manufacturer === make)
+          .map((item) => item.model)
+      ),
+    ];
+    return models;
+  }
+
+  function getUniqueYears(make, model) {
+    var filteredData = truckData.filter(
+      (item) => item.manufacturer === make && item.model === model
+    );
+    var years = [];
+    filteredData.forEach((item) => {
+      for (
+        let year = item.yearStart;
         year <=
-          (item.yearEnd === "current" ? new Date().getFullYear() : item.yearEnd)
-    )
-    .map((item) => item.bedSize);
-  return [...new Set(sizes)];
-}
+        (item.yearEnd === "current" ? new Date().getFullYear() : item.yearEnd);
+        year++
+      ) {
+        if (!years.includes(year)) years.push(year);
+      }
+    });
 
-function populateDropdown(dropdownId, options, selectedValue) {
-  var dropdown = $(dropdownId);
-  dropdown.empty();
+    years.sort(function (a, b) {
+      return b - a;
+    });
 
-  var placeholder = "";
-  if (dropdownId === "#make-dropdown") placeholder = "Make";
-  else if (dropdownId === "#model-dropdown") placeholder = "Model";
-  else if (dropdownId === "#year-dropdown") placeholder = "Year";
-  else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
+    return years;
+  }
 
-  dropdown.append(new Option(placeholder, "", true, true));
+  function getBedSizes(make, model, year) {
+    var sizes = truckData
+      .filter(
+        (item) =>
+          item.manufacturer === make &&
+          item.model === model &&
+          year >= item.yearStart &&
+          year <=
+            (item.yearEnd === "current"
+              ? new Date().getFullYear()
+              : item.yearEnd)
+      )
+      .map((item) => item.bedSize);
+    return [...new Set(sizes)];
+  }
 
-  options.forEach(function (option) {
-    var isSelected = option === selectedValue;
-    dropdown.append(new Option(option, option, isSelected, isSelected));
-  });
-}
+  function populateDropdown(dropdownId, options, selectedValue) {
+    var dropdown = $(dropdownId);
+    dropdown.empty();
 
-function resetDropdowns(dropdownIds) {
-  dropdownIds.forEach(function (dropdownId) {
     var placeholder = "";
-    if (dropdownId === "#model-dropdown") placeholder = "Model";
+    if (dropdownId === "#make-dropdown") placeholder = "Make";
+    else if (dropdownId === "#model-dropdown") placeholder = "Model";
     else if (dropdownId === "#year-dropdown") placeholder = "Year";
     else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
 
-    populateDropdown(dropdownId, [], placeholder);
-  });
+    dropdown.append(new Option(placeholder, "", true, true));
 
-  $("#truck-compatible").fadeOut(245, "swing");
-  $("#truck-incompatible").fadeOut(245, "swing");
+    options.forEach(function (option) {
+      var isSelected = option === selectedValue;
+      dropdown.append(new Option(option, option, isSelected, isSelected));
+    });
+  }
 
-  $(".compatible-form").fadeOut(245, "swing");
-  $(".incompatible-form").fadeOut(245, "swing");
+  function resetDropdowns(dropdownIds) {
+    dropdownIds.forEach(function (dropdownId) {
+      var placeholder = "";
+      if (dropdownId === "#model-dropdown") placeholder = "Model";
+      else if (dropdownId === "#year-dropdown") placeholder = "Year";
+      else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
 
-  $(".specialist-form").fadeIn(245, "swing");
+      populateDropdown(dropdownId, [], placeholder);
+    });
 
-  $(".truck-check-container").fadeIn(245, "swing");
-  $(".truck-check").css("opacity", "0.5").prop("disabled", true);
+    $("#truck-compatible").fadeOut(245, "swing");
+    $("#truck-incompatible").fadeOut(245, "swing");
 
-  $(".step-one-next-form").fadeOut(245, "swing");
-}
+    $(".compatible-form").fadeOut(245, "swing");
+    $(".incompatible-form").fadeOut(245, "swing");
 
-function checkSupporting(make, model, year, bedSize) {
-  var result = truckData.find(function (truck) {
-    return (
-      truck.manufacturer === make &&
-      truck.model === model &&
-      parseInt(year) >= truck.yearStart &&
-      parseInt(year) <= (truck.yearEnd === "current" ? 2024 : truck.yearEnd) &&
-      (bedSize === undefined || bedSize === null || truck.bedSize == bedSize)
+    $(".specialist-form").fadeIn(245, "swing");
+
+    $(".truck-check-container").fadeIn(245, "swing");
+    $(".truck-check").css("opacity", "0.5").prop("disabled", true);
+
+    $(".step-one-next-form").fadeOut(245, "swing");
+  }
+
+  function checkSupporting(make, model, year, bedSize) {
+    var result = truckData.find(function (truck) {
+      return (
+        truck.manufacturer === make &&
+        truck.model === model &&
+        parseInt(year) >= truck.yearStart &&
+        parseInt(year) <=
+          (truck.yearEnd === "current" ? 2024 : truck.yearEnd) &&
+        (bedSize === undefined || bedSize === null || truck.bedSize == bedSize)
+      );
+    });
+    return result ? result.supporting : false;
+  }
+
+  function getUniqueTrims(make, model) {
+    var trims = [
+      ...new Set(
+        truckData
+          .filter((item) => item.manufacturer === make && item.model === model)
+          .map((item) => item.trim)
+      ),
+    ];
+    return trims;
+  }
+
+  function canCheckTruck() {
+    var selectedMake = $("#make-dropdown").val();
+    var selectedModel = $("#model-dropdown").val();
+    var selectedYear = $("#year-dropdown").val();
+    return selectedMake && selectedModel && selectedYear;
+  }
+
+  function handleTruckCheck() {
+    var storedMake = localStorage.getItem("selectedMake");
+    var storedModel = localStorage.getItem("selectedModel");
+    var storedYear = localStorage.getItem("selectedYear");
+    if (storedMake) {
+      $("#make-dropdown").val(storedMake);
+    }
+    if (storedModel) {
+      $("#model-dropdown").val(storedModel);
+    }
+    if (storedYear) {
+      $("#year-dropdown").val(storedYear);
+    }
+
+    var selectedMake = $("#make-dropdown").val();
+    var selectedModel = $("#model-dropdown").val();
+    var selectedYear = $("#year-dropdown").val();
+    $("#make-selected").text(selectedMake || "Placeholder");
+    $("#truck-model-selected").text(selectedModel || "Placeholder");
+    $("#year-selected").text(selectedYear || "Placeholder");
+
+    var isSupporting = checkSupporting(
+      selectedMake,
+      selectedModel,
+      selectedYear
     );
-  });
-  return result ? result.supporting : false;
-}
 
-function getUniqueTrims(make, model) {
-  var trims = [
-    ...new Set(
-      truckData
-        .filter((item) => item.manufacturer === make && item.model === model)
-        .map((item) => item.trim)
-    ),
-  ];
-  return trims;
-}
+    $(".truck-check-container").fadeOut(245, "swing");
 
-function canCheckTruck() {
-  var selectedMake = $("#make-dropdown").val();
-  var selectedModel = $("#model-dropdown").val();
-  var selectedYear = $("#year-dropdown").val();
-  return selectedMake && selectedModel && selectedYear;
-}
-
-function handleTruckCheck() {
-  var storedMake = localStorage.getItem("selectedMake");
-   var storedModel = localStorage.getItem("selectedModel");
-     var storedYear = localStorage.getItem("selectedYear");
-  if (storedMake) {
-    $("#make-dropdown").val(storedMake);
+    if (isSupporting) {
+      $("#truck-compatible").fadeIn(245, "swing", function () {
+        $(this).css("display", "flex");
+      });
+      $(".specialist-form").hide();
+      $(".compatible-form").fadeIn(245, "swing");
+      $(".step-one-next-form").fadeIn(245, "swing");
+    } else {
+      $("#truck-incompatible").fadeIn(245, "swing", function () {
+        $(this).css("display", "flex");
+      });
+      $(".incompatible-form").fadeIn(245, "swing");
+      $(".specialist-form").hide();
+    }
   }
-  if (storedModel) {
-    $("#model-dropdown").val(storedModel);
-  }
-  if (storedYear) {
-    $("#year-dropdown").val(storedYear);
-  }
-
-  var selectedMake = $("#make-dropdown").val();
-  var selectedModel = $("#model-dropdown").val();
-  var selectedYear = $("#year-dropdown").val();
-  $("#make-selected").text(selectedMake || "Placeholder");
-  $("#truck-model-selected").text(selectedModel || "Placeholder");
-  $("#year-selected").text(selectedYear || "Placeholder");
-
-  var isSupporting = checkSupporting(selectedMake, selectedModel, selectedYear);
-
-  $(".truck-check-container").fadeOut(245, "swing");
-
-  if (isSupporting) {
-    $("#truck-compatible").fadeIn(245, "swing", function () {
-      $(this).css("display", "flex");
-    });
-    $(".specialist-form").hide();
-    $(".compatible-form").fadeIn(245, "swing");
-    $(".step-one-next-form").fadeIn(245, "swing");
-  } else {
-    $("#truck-incompatible").fadeIn(245, "swing", function () {
-      $(this).css("display", "flex");
-    });
-    $(".incompatible-form").fadeIn(245, "swing");
-    $(".specialist-form").hide();
-  }
-}
 });

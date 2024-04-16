@@ -2,7 +2,7 @@ fbq("track", "ViewContent");
 
 var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
-var zeroPricingEnabled = false; // Set this to false if you want to disable zero pricing
+var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
 var truckInfo = {
   make: "",
@@ -345,6 +345,11 @@ $(document).on("click", ".model-card", function () {
   if (!isActive) {
     $(this).addClass("active");
   }
+
+  updateUI(); // Make sure this function or similar function call happens before updating subtotal
+
+  // Explicitly call updateSubtotal
+  updateSubtotal();
 
   // Update the inactive class on .forward-button.inactive accordingly
   if ($(".model-card.active").length > 0) {

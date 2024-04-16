@@ -2,7 +2,7 @@ fbq("track", "ViewContent");
 
 var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
-var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
+var zeroPricingEnabled = false; // Set this to false if you want to disable zero pricing
 
 var truckInfo = {
   make: "",
@@ -196,6 +196,143 @@ $(document).ready(function () {
   });
 });
 
+// $(document).ready(function() {
+//     var activeProducts = [];
+//     var $modelCards = $(".model-card");
+//     var $forwardButton = $(".forward-button");
+//     var $form = $("#foxy-cart-form");
+
+//     function toggleActiveClass(card) {
+//         var isActive = $(card).hasClass("active");
+//         $modelCards.removeClass("active");
+//         if (!isActive) {
+//             $(card).addClass("active");
+//         }
+//     }
+
+//     function updateForwardButton() {
+//         if ($(".model-card.active").length > 0) {
+//             $forwardButton.removeClass("inactive").addClass("send-model");
+//         } else {
+//             $forwardButton.addClass("inactive").removeClass("send-model");
+//         }
+//     }
+
+//     function updateModelDetails() {
+//         var $activeModelCard = $(".model-card.active");
+//         if ($activeModelCard.length) {
+//             var modelName = $activeModelCard.data("model-name");
+//             var modelPrice = parseFloat($activeModelCard.data("model-price"));
+//             selectModelTypeAddOns(modelName);
+//             console.log("Model Name:", modelName, "Model Price:", modelPrice);
+//             updateModelSelected(modelName, modelPrice);
+//             updateCartFormWithProducts(modelName, modelPrice);
+//         } else {
+//             $("#model-name-input, #model-price-input").val("");
+//         }
+//     }
+
+//     function updateModelSelected(modelType, modelPrice) {
+//         $("#model-selected").text("HardCamp - " + modelType);
+//         var formattedModelPrice = modelPrice.toLocaleString("en-US", { style: "currency", currency: "USD" });
+//         $("#model-selected-price").text(formattedModelPrice);
+//     }
+
+//     function selectModelTypeAddOns(modelType) {
+//         var normalizedModelType = normalizeModelType(modelType);
+//         $(".checkout-adds-wrapper").each(function() {
+//             var types = $(this).data("included").split(",").map($.trim);
+//             if (types.includes(normalizedModelType)) {
+//                 $(this).click().hide();
+//             }
+//         });
+//     }
+
+//     function normalizeModelType(modelType) {
+//         return modelType.toLowerCase().replace("outfitted+", "plus");
+//     }
+
+//     function resetSelectedAddOns() {
+//         $(".checkout-adds-wrapper.active").click();
+//     }
+
+//     function handleAddonClick() {
+//         $(this).toggleClass("active");
+//         if ($(this).hasClass("active")) {
+//             addOrUpdateProduct($(this));
+//         } else {
+//             removeProductFromArray($(this));
+//         }
+//         updateSubtotal();
+//     }
+
+//     function addOrUpdateProduct(productElement) {
+//         var productDetails = getProductDetails(productElement);
+//         var existingProduct = activeProducts.find(p => p.sku === productDetails.sku);
+//         if (existingProduct) {
+//             $.extend(existingProduct, productDetails);
+//         } else {
+//             activeProducts.push(productDetails);
+//         }
+//         updateUI();
+//     }
+
+//     function removeProductFromArray(productElement) {
+//         var productSKU = productElement.data("sku");
+//         activeProducts = activeProducts.filter(p => p.sku !== productSKU);
+//         updateUI();
+//     }
+
+//     function updateSubtotal() {
+//         var subtotal = activeProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+//         var formattedSubtotal = subtotal.toLocaleString("en-US", { style: "currency", currency: "USD" });
+//         $("#subtotal").fadeOut(160, function() {
+//             $(this).text(formattedSubtotal).fadeIn(160);
+//         });
+//     }
+
+//     function getProductDetails(productElement) {
+//         return {
+//             sku: productElement.data("sku"),
+//             name: productElement.find(".add-name").text(),
+//             price: parseFloat(productElement.find(".add-price").text().replace(/[^0-9.]/g, "")),
+//             quantity: parseInt(productElement.find(".quantity-number").text()) || 1,
+//             imageUrl: productElement.find(".add-image").attr("src")
+//         };
+//     }
+
+//     function updateUI() {
+//         // Update UI with new product details
+//     }
+
+//     $modelCards.on("click", function() {
+//         resetSelectedAddOns();
+//         toggleActiveClass(this);
+//         updateForwardButton();
+//         updateModelDetails();
+//     });
+
+//     $(".checkout-adds-wrapper").on("click", handleAddonClick);
+
+//     $(".counter-button.up, .counter-button.down").on("click", function(event) {
+//         event.stopPropagation();
+//         var $counterBox = $(this).closest(".counter-box");
+//         var $quantityNumber = $counterBox.find(".quantity-number");
+//         var newQuantity = Math.max(1, parseInt($quantityNumber.text()) + ($(this).hasClass("up") ? 1 : -1));
+//         $quantityNumber.text(newQuantity);
+//         addOrUpdateProduct($(this).closest(".checkout-adds-wrapper"));
+//     });
+
+//     $(".learn-more-btn").on("click", function(event) {
+//         event.stopPropagation();
+//         // Additional logic for learn more button
+//     });
+
+//     $(window).on("resize", adjustDescriptionText);
+
+//     adjustDescriptionText();
+// });
+
 $(document).on("click", ".model-card", function () {
   var activeProducts = [];
 
@@ -241,7 +378,7 @@ $(document).on("click", ".model-card", function () {
   }
 
   // Update subtotal or other UI elements if necessary
-  updateSubtotal();
+  // updateSubtotal();
 
   function updateModelSelected(modelType, modelPrice) {
     // Update the #model-selected div with "HardCamp -" prefix
@@ -463,13 +600,22 @@ $(document).on("click", ".model-card", function () {
     var activeModelCard = $(".model-card.active");
     if (activeModelCard.length) {
       var modelPriceText = activeModelCard.find(".model-price").text();
-      //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-      //   subtotal += modelPrice;
-      //commented model price out so it doesnt affect total
+      // var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+      // subtotal += modelPrice;
+      // commented model price out so it doesnt affect total
     }
+
+    // Log active products details
+    console.log("Active products:", activeProducts);
 
     // Add prices of active products (using their original prices)
     activeProducts.forEach(function (product) {
+      console.log(
+        "Adding product price:",
+        product.price,
+        "Quantity:",
+        product.quantity
+      );
       subtotal += product.price * product.quantity;
     });
 
@@ -489,10 +635,50 @@ $(document).on("click", ".model-card", function () {
       currency: "USD",
     });
 
+    console.log("Subtotal calculated:", subtotal);
+
     $("#subtotal").fadeOut(160, function () {
       $(this).text(formattedSubtotal).fadeIn(160);
     });
   }
+
+  //   function updateSubtotal() {
+  //     var subtotal = 0;
+
+  //     // Include the original price of the active model card
+  //     var activeModelCard = $(".model-card.active");
+  //     if (activeModelCard.length) {
+  //       var modelPriceText = activeModelCard.find(".model-price").text();
+  //       //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+  //       //   subtotal += modelPrice;
+  //       //commented model price out so it doesnt affect total
+  //     }
+
+  //     // Add prices of active products (using their original prices)
+  //     activeProducts.forEach(function (product) {
+  //       subtotal += product.price * product.quantity;
+  //     });
+
+  //     // Always include the Downpayment item
+  //     // subtotal += 500; // Fixed price for Downpayment
+
+  //     // Apply a discount of $3000
+  //     subtotal -= 3000; // Subtract the discount from the subtotal
+
+  //     // Add $100 to the subtotal if the price is higher than $15000
+  //     if (subtotal > 15000) {
+  //       subtotal += 100;
+  //     }
+
+  //     var formattedSubtotal = subtotal.toLocaleString("en-US", {
+  //       style: "currency",
+  //       currency: "USD",
+  //     });
+
+  //     $("#subtotal").fadeOut(160, function () {
+  //       $(this).text(formattedSubtotal).fadeIn(160);
+  //     });
+  //   }
 
   document
     .getElementById("make-dropdown")

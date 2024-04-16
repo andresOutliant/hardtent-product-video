@@ -1022,4 +1022,13 @@ const truckData = [
     bedSize: 6,
     supporting: false,
   },
+    {
+    manufacturer: "Tesla",
+    model: "Cybertruck",
+    gen: 1,
+    yearStart: 2019,
+    yearEnd: "current",
+    bedSize: 5,
+    supporting: true,
+  },
 ];

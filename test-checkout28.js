@@ -4,6 +4,12 @@ var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
 var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
+var truckInfo = {
+  make: "",
+  model: "",
+  year: "",
+};
+
 function updateSelections(id, value) {
   truckInfo[id] = value;
 
@@ -487,12 +493,6 @@ $(document).on("click", ".model-card", function () {
       $(this).text(formattedSubtotal).fadeIn(160);
     });
   }
-
-  let truckInfo = {
-    make: "",
-    model: "",
-    year: "",
-  };
 
   document
     .getElementById("make-dropdown")

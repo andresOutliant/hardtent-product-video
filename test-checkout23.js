@@ -1,22 +1,22 @@
 fbq("track", "ViewContent");
 
-//var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
+var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
 $(document).ready(function () {
   // Initialize variables with values from localStorage
-  //     storedMake = localStorage.getItem("selectedMake");
-  //     storedModel = localStorage.getItem("selectedModel");
-  //     storedYear = localStorage.getItem("selectedYear");
-  //     storedName = localStorage.getItem("customer_name");
-  //     storedEmail = localStorage.getItem("customer_email");
-  //     storedPhone = localStorage.getItem("customer_phone");
+      storedMake = localStorage.getItem("selectedMake");
+      storedModel = localStorage.getItem("selectedModel");
+      storedYear = localStorage.getItem("selectedYear");
+      storedName = localStorage.getItem("customer_name");
+      storedEmail = localStorage.getItem("customer_email");
+      storedPhone = localStorage.getItem("customer_phone");
 
-  // $('#make-dropdown').val(storedMake).prop('disabled', false);
-  // $('#model-dropdown').val(storedModel).prop('disabled', false);
-  // $('#year-dropdown').val(storedYear).prop('disabled', false);
-  // $('#customer_name').val(storedName);
-  // $('#customer_email').val(storedEmail);
-  // $('#customer_phone').val(storedPhone);
+  $('#make-dropdown').val(storedMake).prop('disabled', false);
+  $('#model-dropdown').val(storedModel).prop('disabled', false);
+  $('#year-dropdown').val(storedYear).prop('disabled', false);
+  $('#customer_name').val(storedName);
+  $('#customer_email').val(storedEmail);
+  $('#customer_phone').val(storedPhone);
 
   console.log("Stored Make:", storedMake);
   console.log("Stored Model:", storedModel);

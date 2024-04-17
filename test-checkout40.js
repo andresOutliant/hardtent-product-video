@@ -617,8 +617,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 $(document).on("click", ".model-card", function () {
-  var modelName = "";
-  var modelPrice = 0;
   resetSelectedAddOns();
   var isActive = $(this).hasClass("active");
   $(".model-card").removeClass("active");
@@ -627,6 +625,7 @@ $(document).on("click", ".model-card", function () {
     $(this).addClass("active");
   }
 
+  // Update the button state based on active model cards
   if ($(".model-card.active").length > 0) {
     $(".forward-button.inactive")
       .removeClass("inactive")
@@ -637,26 +636,38 @@ $(document).on("click", ".model-card", function () {
 
   var activeModelCard = $(".model-card.active");
   if (activeModelCard.length) {
-    modelName = activeModelCard.data("model-name");
-    modelPrice = parseFloat(activeModelCard.data("model-price"));
+    var modelName = activeModelCard.data("model-name");
+    var modelPrice = parseFloat(activeModelCard.data("model-price"));
+
+    // Check if the model name is "Outfitted+"
+    if (modelName === "Outfitted+") {
+      modelPrice = 23977; // Set a custom price for "Outfitted+"
+    }
+
     selectModelTypeAddOns(modelName);
     console.log("Model Name:", modelName, "Model Price:", modelPrice);
     updateModelSelected(modelName, modelPrice);
-    updateCartFormWithProducts(modelName, 0); // Assumes no price change for illustration
+    updateCartFormWithProducts(modelName, 0);
+
+    // Format the price with commas
+    var formattedPrice = formatPrice(modelPrice);
 
     // Update Subtotal in UI
     $("#subtotal").fadeOut(160, function () {
       $(this)
-        .text("$" + modelPrice.toFixed(2))
+        .text("$" + formattedPrice)
         .fadeIn(160);
     });
   } else {
     $("#model-name-input").val("");
     $("#model-price-input").val("");
   }
-
-  // Dropdown and button listeners remain unchanged
 });
+
+// Function to format numbers with commas
+function formatPrice(number) {
+  return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+}
 
 // $(document).on("click", ".model-card", function () {
 //   var modelName = "";

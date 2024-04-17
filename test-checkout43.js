@@ -1149,10 +1149,12 @@ $(document).ready(function () {
 
     var selectedMake = $("#make-dropdown").val();
     var selectedModel = $("#model-dropdown").val();
-    var selectedYear = $("#year-dropdown").val();
+    //var selectedYear = $("#year-dropdown").val();
     $("#make-selected").text(selectedMake || "Placeholder");
     $("#truck-model-selected").text(selectedModel || "Placeholder");
-    $("#year-selected").text(selectedYear || "Placeholder");
+    //$("#year-selected").text(selectedYear || "Placeholder");
+        $("#year-selected").text(storedYear || "Placeholder");
+
 
     var isSupporting = checkSupporting(
       selectedMake,

@@ -10,6 +10,9 @@ var truckInfo = {
   year: "",
 };
 
+var modelName = "";
+var modelPrice = 0;
+
 var activeModelCard = $(".model-card.active");
 var activeProducts = [];
 
@@ -618,51 +621,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
 $(document).on("click", ".model-card", function () {
   resetSelectedAddOns();
-  var isActive = $(this).hasClass("active");
   $(".model-card").removeClass("active");
+  $(this).addClass("active");
 
-  if (!isActive) {
-    $(this).addClass("active");
-  }
-
-  // Update the button state based on active model cards
-  if ($(".model-card.active").length > 0) {
-    $(".forward-button.inactive")
-      .removeClass("inactive")
-      .addClass("send-model");
-  } else {
-    $(".forward-button").not(".inactive").addClass("inactive");
-  }
+  // Ensure that forward buttons are handled appropriately
+  updateForwardButtonState();
 
   var activeModelCard = $(".model-card.active");
   if (activeModelCard.length) {
     var modelName = activeModelCard.data("model-name");
     var modelPrice = parseFloat(activeModelCard.data("model-price"));
 
-    // Check if the model name is "Outfitted+"
+    // Custom pricing logic for specific model names
     if (modelName === "Outfitted+") {
-      modelPrice = 23977; // Set a custom price for "Outfitted+"
+      modelPrice = 24000; // example custom price
     }
 
-    selectModelTypeAddOns(modelName);
-    console.log("Model Name:", modelName, "Model Price:", modelPrice);
+    // Log and update UI components
+    console.log("Model Selected:", modelName, "Price:", modelPrice);
     updateModelSelected(modelName, modelPrice);
-    updateCartFormWithProducts(modelName, 0);
+    updateCartFormWithProducts(modelName, 0); // Initial update
 
-    // Format the price with commas
-    var formattedPrice = formatPrice(modelPrice);
+    // Form submission with a timeout to ensure UI updates are completed
+    $("#wf-form-Build-Info-Pre-Deposit").submit();
 
-    // Update Subtotal in UI
-    $("#subtotal").fadeOut(160, function () {
-      $(this)
-        .text("$" + formattedPrice)
-        .fadeIn(160);
-    });
+    setTimeout(function () {
+      updateCartFormWithProducts(modelName, modelPrice); // Now modelName is in scope
+    }, 500); // Adjust delay as necessary
   } else {
-    $("#model-name-input").val("");
-    $("#model-price-input").val("");
+    // Handle case where no model is active
+    clearModelSelectionInputs();
   }
 });
+
+function updateForwardButtonState() {
+  if ($(".model-card.active").length > 0) {
+    $(".forward-button.inactive")
+      .removeClass("inactive")
+      .addClass("send-model");
+  } else {
+    $(".forward-button").addClass("inactive");
+  }
+}
+
+function clearModelSelectionInputs() {
+  $("#model-name-input").val("");
+  $("#model-price-input").val("");
+}
 
 // Function to format numbers with commas
 function formatPrice(number) {

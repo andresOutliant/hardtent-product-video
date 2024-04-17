@@ -620,14 +620,13 @@ $(document).on("click", ".model-card", function () {
   var modelName = "";
   var modelPrice = 0;
   resetSelectedAddOns();
-  // Toggle the active class on the clicked model card
   var isActive = $(this).hasClass("active");
   $(".model-card").removeClass("active");
+
   if (!isActive) {
     $(this).addClass("active");
   }
 
-  // Update the inactive class on .forward-button.inactive accordingly
   if ($(".model-card.active").length > 0) {
     $(".forward-button.inactive")
       .removeClass("inactive")
@@ -636,61 +635,102 @@ $(document).on("click", ".model-card", function () {
     $(".forward-button").not(".inactive").addClass("inactive");
   }
 
-  // Update model details and form inputs based on the active model card
+  var activeModelCard = $(".model-card.active");
   if (activeModelCard.length) {
-    // Retrieve model name and price from data attributes
     modelName = activeModelCard.data("model-name");
     modelPrice = parseFloat(activeModelCard.data("model-price"));
-
     selectModelTypeAddOns(modelName);
-    // Log the values for debugging
     console.log("Model Name:", modelName, "Model Price:", modelPrice);
-
-    // Update model selection UI if necessary
     updateModelSelected(modelName, modelPrice);
+    updateCartFormWithProducts(modelName, 0); // Assumes no price change for illustration
 
-    // Update the form with model details and active products
-    updateCartFormWithProducts(modelName, 0); // commented out so modelPrice doesnt affect total
+    // Update Subtotal in UI
+    $("#subtotal").fadeOut(160, function () {
+      $(this)
+        .text("$" + modelPrice.toFixed(2))
+        .fadeIn(160);
+    });
   } else {
-    // Clear inputs if no model is active
     $("#model-name-input").val("");
     $("#model-price-input").val("");
-    //new
-    // var activeProducts = [];
-    // var modelName = "";
-    // var modelPrice = 0;
-    // resetSelectedAddOns();
   }
-  document
-    .getElementById("make-dropdown")
-    .addEventListener("change", function () {
-      updateSelections("make", this.value);
-    });
 
-  document
-    .getElementById("model-dropdown")
-    .addEventListener("change", function () {
-      updateSelections("model", this.value);
-    });
-
-  document
-    .getElementById("year-dropdown")
-    .addEventListener("change", function () {
-      updateSelections("year", this.value);
-    });
-
-  // Global variable to control zero pricing
-
-  $(".checkout-cart-btn").on("click", function () {
-    $("#submit-to-foxy").trigger("click");
-  });
-
-  // Initial adjustment
-  adjustDescriptionText();
-
-  // Adjust on window resize
-  window.addEventListener("resize", adjustDescriptionText);
+  // Dropdown and button listeners remain unchanged
 });
+
+// $(document).on("click", ".model-card", function () {
+//   var modelName = "";
+//   var modelPrice = 0;
+//   resetSelectedAddOns();
+//   // Toggle the active class on the clicked model card
+//   var isActive = $(this).hasClass("active");
+//   $(".model-card").removeClass("active");
+//   if (!isActive) {
+//     $(this).addClass("active");
+//   }
+
+//   // Update the inactive class on .forward-button.inactive accordingly
+//   if ($(".model-card.active").length > 0) {
+//     $(".forward-button.inactive")
+//       .removeClass("inactive")
+//       .addClass("send-model");
+//   } else {
+//     $(".forward-button").not(".inactive").addClass("inactive");
+//   }
+
+//   // Update model details and form inputs based on the active model card
+//   if (activeModelCard.length) {
+//     // Retrieve model name and price from data attributes
+//     modelName = activeModelCard.data("model-name");
+//     modelPrice = parseFloat(activeModelCard.data("model-price"));
+
+//     selectModelTypeAddOns(modelName);
+//     // Log the values for debugging
+//     console.log("Model Name:", modelName, "Model Price:", modelPrice);
+
+//     // Update model selection UI if necessary
+//     updateModelSelected(modelName, modelPrice);
+
+//     // Update the form with model details and active products
+//     updateCartFormWithProducts(modelName, 0); // commented out so modelPrice doesnt affect total
+//   } else {
+//     // Clear inputs if no model is active
+//     $("#model-name-input").val("");
+//     $("#model-price-input").val("");
+//     //new
+//     // var activeProducts = [];
+//     // var modelName = "";
+//     // var modelPrice = 0;
+//     // resetSelectedAddOns();
+//   }
+//   document
+//     .getElementById("make-dropdown")
+//     .addEventListener("change", function () {
+//       updateSelections("make", this.value);
+//     });
+
+//   document
+//     .getElementById("model-dropdown")
+//     .addEventListener("change", function () {
+//       updateSelections("model", this.value);
+//     });
+
+//   document
+//     .getElementById("year-dropdown")
+//     .addEventListener("change", function () {
+//       updateSelections("year", this.value);
+//     });
+
+//   $(".checkout-cart-btn").on("click", function () {
+//     $("#submit-to-foxy").trigger("click");
+//   });
+
+//   // Initial adjustment
+//   adjustDescriptionText();
+
+//   // Adjust on window resize
+//   window.addEventListener("resize", adjustDescriptionText);
+// });
 
 function adjustDescriptionText() {
   // Determine word limits for different screen sizes

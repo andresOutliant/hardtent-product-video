@@ -10,6 +10,9 @@ var truckInfo = {
   year: "",
 };
 
+var activeModelCard = $(".model-card.active");
+var activeProducts = [];
+
 function updateSelections(id, value) {
   truckInfo[id] = value;
 
@@ -21,9 +24,6 @@ function updateSelections(id, value) {
     document.getElementById("year-selected").textContent = value;
   }
 }
-
-var activeModelCard = $(".model-card.active");
-var activeProducts = [];
 
 function addOrUpdateProduct(productElement) {
   var productSKU = productElement.data("sku");
@@ -140,6 +140,155 @@ function resetSelectedAddOns() {
   });
 }
 
+function updateUI() {
+  var templateHTML = `
+      <div class="add-on-placeholder">
+        <div class="margin-right small-custom flex">
+          <div class="add-on-name">Placeholder</div>
+        </div>
+        <div class="quantity-container">
+          <div>x</div>
+          <div class="quantity-number">1</div>
+        </div>
+        <div class="counter-box three">
+          <div class="counter-button down two">
+            <img src="https://assets-global.website-files.com/654922a0e3186570803201c3/658ca44a218eb39c370bf177_-.png" loading="lazy" alt="" class="counter-arrow down two">
+          </div>
+          <div class="counter-input two">
+            <div class="quantity-number">1</div>
+          </div>
+          <div class="counter-button up two">
+            <img src="https://assets-global.website-files.com/654922a0e3186570803201c3/658ca40a8bb1d83760670f38_%2B.png" loading="lazy" alt="" class="counter-arrow down two">
+          </div>
+        </div>
+        <div class="add-on-price">$69.95</div>
+      </div>`;
+
+  $(".add-on-placeholder:not(.template)").remove();
+
+  // Iterate over each product in activeProducts and update the UI
+  activeProducts.forEach((product) => {
+    var newDiv = $(templateHTML).clone();
+    //   console.log("Checking product SKU:", product.sku);
+    if (product.sku) {
+      newDiv.attr("data-sku", product.sku);
+    } else {
+      // console.error("Product SKU is undefined or empty");
+    }
+    newDiv.find(".add-on-name").text(product.name); // Update product name
+    newDiv.find(".quantity-number").text(product.quantity); // Update quantity
+    newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
+
+    newDiv.appendTo(".adds").show();
+  });
+
+  updateSubtotal();
+}
+
+function updateCartFormWithProducts(modelName, modelPrice) {
+  // Clear the fpxy form of previous entries
+  $("#foxy-cart-form").find(".dynamic-input").remove();
+
+  // Add the model with zero pricing or actual pricing
+  $("#foxy-cart-form").append(
+    `<input type='hidden' class='dynamic-input' name='name' value='${modelName}'>`,
+    `<input type='hidden' class='dynamic-input' name='price' value='${
+      zeroPricingEnabled ? 0 : modelPrice
+    }'>`,
+    `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
+  );
+
+  // Add each product with zero pricing or actual pricing
+  activeProducts.forEach((product, index) => {
+    let idx = index + 1;
+    $("#foxy-cart-form").append(
+      `<input type='hidden' class='dynamic-input' name='${idx}:name' value='${product.name}'>`,
+      `<input type='hidden' class='dynamic-input' name='${idx}:price' value='${
+        zeroPricingEnabled ? 0 : product.price
+      }'>`,
+      `<input type='hidden' class='dynamic-input' name='${idx}:quantity' value='${product.quantity}'>`,
+      product.imageUrl
+        ? `<input type='hidden' class='dynamic-input' name='${idx}:image' value='${product.imageUrl}'>`
+        : ""
+    );
+  });
+
+  // Always add the Downpayment item with a fixed price of $500
+  $("#foxy-cart-form").append(
+    `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
+    `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
+    `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
+  );
+}
+
+function updateSubtotal() {
+  var subtotal = 0;
+
+  // Include the original price of the active model card
+  var activeModelCard = $(".model-card.active");
+  if (activeModelCard.length) {
+    var modelPriceText = activeModelCard.find(".model-price").text();
+    // var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+    // subtotal += modelPrice;
+    // commented model price out so it doesnt affect total
+  }
+
+  // Log active products details
+  console.log("Active products:", activeProducts);
+
+  // Add prices of active products (using their original prices)
+  activeProducts.forEach(function (product) {
+    console.log(
+      "Adding product price:",
+      product.price,
+      "Quantity:",
+      product.quantity
+    );
+    subtotal += product.price * product.quantity;
+  });
+
+  // Always include the Downpayment item
+  // subtotal += 500; // Fixed price for Downpayment
+
+  // Apply a discount of $3000
+  subtotal -= 3000; // Subtract the discount from the subtotal
+
+  // Add $100 to the subtotal if the price is higher than $15000
+  if (subtotal > 15000) {
+    subtotal += 100;
+  }
+
+  var formattedSubtotal = subtotal.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
+  console.log("Subtotal calculated:", subtotal);
+
+  $("#subtotal").fadeOut(160, function () {
+    $(this).text(formattedSubtotal).fadeIn(160);
+  });
+}
+
+function removeProductFromArray(productElement) {
+  var productSKU = productElement.data("sku"); // Get the SKU from data attribute
+  // console.log("Removing product with SKU:", productSKU);
+
+  activeProducts = activeProducts.filter(
+    (product) => product.sku !== productSKU
+  );
+  // console.log("Updated activeProducts array after removal:", activeProducts);
+
+  $(".add-on-placeholder")
+    .filter(function () {
+      return $(this).data("sku") === productSKU;
+    })
+    .remove();
+  // console.log("Removed product element from UI for SKU:", productSKU);
+
+  updateUI();
+}
+
 $(document).ready(function () {
   //   resets the foxy cart on page load
   FC.onLoad = function () {
@@ -171,42 +320,6 @@ $(document).ready(function () {
   console.log("Stored Name:", storedName);
   console.log("Stored Email:", storedEmail);
   console.log("Stored Phone:", storedPhone);
-
-  function updateCartFormWithProducts(modelName, modelPrice) {
-    // Clear the fpxy form of previous entries
-    $("#foxy-cart-form").find(".dynamic-input").remove();
-
-    // Add the model with zero pricing or actual pricing
-    $("#foxy-cart-form").append(
-      `<input type='hidden' class='dynamic-input' name='name' value='${modelName}'>`,
-      `<input type='hidden' class='dynamic-input' name='price' value='${
-        zeroPricingEnabled ? 0 : modelPrice
-      }'>`,
-      `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
-    );
-
-    // Add each product with zero pricing or actual pricing
-    activeProducts.forEach((product, index) => {
-      let idx = index + 1;
-      $("#foxy-cart-form").append(
-        `<input type='hidden' class='dynamic-input' name='${idx}:name' value='${product.name}'>`,
-        `<input type='hidden' class='dynamic-input' name='${idx}:price' value='${
-          zeroPricingEnabled ? 0 : product.price
-        }'>`,
-        `<input type='hidden' class='dynamic-input' name='${idx}:quantity' value='${product.quantity}'>`,
-        product.imageUrl
-          ? `<input type='hidden' class='dynamic-input' name='${idx}:image' value='${product.imageUrl}'>`
-          : ""
-      );
-    });
-
-    // Always add the Downpayment item with a fixed price of $500
-    $("#foxy-cart-form").append(
-      `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
-      `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
-      `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
-    );
-  }
 
   $(".learn-more-btn").on("click", function (event) {
     event.stopPropagation();
@@ -265,8 +378,6 @@ $(document).ready(function () {
       $(this).find(".add-check").fadeOut();
       removeProductFromArray($(this));
     }
-
-    updateSubtotal();
   });
 
   $("#submit-to-foxy").on("click", function (event) {
@@ -316,119 +427,6 @@ $(document).ready(function () {
     var productElement = $(this).closest(".checkout-adds-wrapper");
     addOrUpdateProduct(productElement); // Update product with new quantity
   });
-
-  function removeProductFromArray(productElement) {
-    var productSKU = productElement.data("sku"); // Get the SKU from data attribute
-    // console.log("Removing product with SKU:", productSKU);
-
-    activeProducts = activeProducts.filter(
-      (product) => product.sku !== productSKU
-    );
-    // console.log("Updated activeProducts array after removal:", activeProducts);
-
-    $(".add-on-placeholder")
-      .filter(function () {
-        return $(this).data("sku") === productSKU;
-      })
-      .remove();
-    // console.log("Removed product element from UI for SKU:", productSKU);
-
-    updateUI();
-  }
-
-  function updateUI() {
-    var templateHTML = `
-      <div class="add-on-placeholder">
-        <div class="margin-right small-custom flex">
-          <div class="add-on-name">Placeholder</div>
-        </div>
-        <div class="quantity-container">
-          <div>x</div>
-          <div class="quantity-number">1</div>
-        </div>
-        <div class="counter-box three">
-          <div class="counter-button down two">
-            <img src="https://assets-global.website-files.com/654922a0e3186570803201c3/658ca44a218eb39c370bf177_-.png" loading="lazy" alt="" class="counter-arrow down two">
-          </div>
-          <div class="counter-input two">
-            <div class="quantity-number">1</div>
-          </div>
-          <div class="counter-button up two">
-            <img src="https://assets-global.website-files.com/654922a0e3186570803201c3/658ca40a8bb1d83760670f38_%2B.png" loading="lazy" alt="" class="counter-arrow down two">
-          </div>
-        </div>
-        <div class="add-on-price">$69.95</div>
-      </div>`;
-
-    $(".add-on-placeholder:not(.template)").remove();
-
-    // Iterate over each product in activeProducts and update the UI
-    activeProducts.forEach((product) => {
-      var newDiv = $(templateHTML).clone();
-      //   console.log("Checking product SKU:", product.sku);
-      if (product.sku) {
-        newDiv.attr("data-sku", product.sku);
-      } else {
-        // console.error("Product SKU is undefined or empty");
-      }
-      newDiv.find(".add-on-name").text(product.name); // Update product name
-      newDiv.find(".quantity-number").text(product.quantity); // Update quantity
-      newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
-
-      newDiv.appendTo(".adds").show();
-    });
-
-    updateSubtotal();
-  }
-
-  function updateSubtotal() {
-    var subtotal = 0;
-
-    // Include the original price of the active model card
-    var activeModelCard = $(".model-card.active");
-    if (activeModelCard.length) {
-      var modelPriceText = activeModelCard.find(".model-price").text();
-      // var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-      // subtotal += modelPrice;
-      // commented model price out so it doesnt affect total
-    }
-
-    // Log active products details
-    console.log("Active products:", activeProducts);
-
-    // Add prices of active products (using their original prices)
-    activeProducts.forEach(function (product) {
-      console.log(
-        "Adding product price:",
-        product.price,
-        "Quantity:",
-        product.quantity
-      );
-      subtotal += product.price * product.quantity;
-    });
-
-    // Always include the Downpayment item
-    // subtotal += 500; // Fixed price for Downpayment
-
-    // Apply a discount of $3000
-    subtotal -= 3000; // Subtract the discount from the subtotal
-
-    // Add $100 to the subtotal if the price is higher than $15000
-    if (subtotal > 15000) {
-      subtotal += 100;
-    }
-
-    var formattedSubtotal = subtotal.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-
-    console.log("Subtotal calculated:", subtotal);
-
-    $("#subtotal").fadeOut(160, function () {
-      $(this).text(formattedSubtotal).fadeIn(160);
-    });
-  }
 
   // Update subtotal or other UI elements if necessary
   // updateSubtotal();
@@ -619,7 +617,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 $(document).on("click", ".model-card", function () {
-  var activeProducts = [];
   var modelName = "";
   var modelPrice = 0;
   resetSelectedAddOns();

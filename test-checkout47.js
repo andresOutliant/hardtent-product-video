@@ -838,7 +838,6 @@ $(document).ready(function () {
         $(".check-btn-wrapper").click(function () {
           if ($(".truck-check").prop("disabled")) {
             $("#required-message").fadeIn("slow");
-            handleTruckCheck();
           }
         });
 
@@ -1192,7 +1191,7 @@ $(document).ready(function () {
 
     var selectedMake = $("#make-dropdown").val();
     var selectedModel = $("#model-dropdown").val();
-    //var selectedYear = $("#year-dropdown").val();
+    var selectedYear = $("#year-dropdown").val();
     $("#make-selected").text(selectedMake || "Placeholder");
     $("#truck-model-selected").text(selectedModel || "Placeholder");
     //$("#year-selected").text(selectedYear || "Placeholder");

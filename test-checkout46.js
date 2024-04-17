@@ -838,6 +838,7 @@ $(document).ready(function () {
         $(".check-btn-wrapper").click(function () {
           if ($(".truck-check").prop("disabled")) {
             $("#required-message").fadeIn("slow");
+            handleTruckCheck();
           }
         });
 

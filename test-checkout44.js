@@ -384,33 +384,75 @@ $(document).ready(function () {
   });
 
   $("#submit-to-foxy").on("click", function (event) {
-    // Optionally prevent the default submission to ensure data is copied first.
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission.
 
-    // Reference to the hidden Webflow form.
     var webflowForm = $("#wf-form-Build-Info-Pre-Deposit");
+    webflowForm.find(".dynamic-input").remove(); // Clear existing dynamic inputs.
 
-    // Clear any previously added dynamic inputs in the Webflow form.
-    webflowForm.find(".dynamic-input").remove();
-
-    // Iterate over the FoxyCart form's inputs, focusing on product details.
+    // Iterate over the FoxyCart form's dynamic inputs and clone them to the Webflow form.
     $("#foxy-cart-form .dynamic-input").each(function () {
-      // Clone the current element
       var clonedInput = $(this).clone();
-
-      // Append the cloned input directly to the Webflow form
       webflowForm.append(clonedInput);
     });
 
-    $("#wf-form-Build-Info-Pre-Deposit").submit();
-    // Optional: Submit the FoxyCart form or perform other actions as needed, potentially after a delay
-    // to ensure the Webflow form submission process initiates or completes.
+    // Create and append each hidden input for the stored variables.
+    webflowForm.append(
+      `<input type='hidden' name='make' id='build-form-make' value='${storedMake}' class='dynamic-input'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' name='model' id='build-form-model' value='${storedModel}' class='dynamic-input'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' name='year' id='build-form-year' value='${storedYear}' class='dynamic-input'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' name='name' id='build-form-name' value='${storedName}' class='dynamic-input'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' name='email' id='build-form-email' value='${storedEmail}' class='dynamic-input'>`
+    );
+    webflowForm.append(
+      `<input type='hidden' name='phone' id='build-form-phone' value='${storedPhone}' class='dynamic-input'>`
+    );
+
+    // Submit the Webflow form.
+    webflowForm.submit();
+
+    // Optional additional actions.
     setTimeout(function () {
       updateCartFormWithProducts(modelName, modelPrice);
-
       $("#foxy-cart-form").submit();
-    }, 250); // Adjust delay as needed based on your application's behavior.
+    }, 250); // Delay can be adjusted as needed.
   });
+
+  //   $("#submit-to-foxy").on("click", function (event) {
+  //     // Optionally prevent the default submission to ensure data is copied first.
+  //     event.preventDefault();
+
+  //     // Reference to the hidden Webflow form.
+  //     var webflowForm = $("#wf-form-Build-Info-Pre-Deposit");
+
+  //     // Clear any previously added dynamic inputs in the Webflow form.
+  //     webflowForm.find(".dynamic-input").remove();
+
+  //     // Iterate over the FoxyCart form's inputs, focusing on product details.
+  //     $("#foxy-cart-form .dynamic-input").each(function () {
+  //       // Clone the current element
+  //       var clonedInput = $(this).clone();
+
+  //       // Append the cloned input directly to the Webflow form
+  //       webflowForm.append(clonedInput);
+  //     });
+
+  //     $("#wf-form-Build-Info-Pre-Deposit").submit();
+  //     // Optional: Submit the FoxyCart form or perform other actions as needed, potentially after a delay
+  //     // to ensure the Webflow form submission process initiates or completes.
+  //     setTimeout(function () {
+  //       updateCartFormWithProducts(modelName, modelPrice);
+
+  //       $("#foxy-cart-form").submit();
+  //     }, 250); // Adjust delay as needed based on your application's behavior.
+  //   });
 
   $(".counter-button.up, .counter-button.down").click(function (event) {
     event.stopPropagation(); // Prevent event from bubbling up
@@ -1153,8 +1195,7 @@ $(document).ready(function () {
     $("#make-selected").text(selectedMake || "Placeholder");
     $("#truck-model-selected").text(selectedModel || "Placeholder");
     //$("#year-selected").text(selectedYear || "Placeholder");
-        $("#year-selected").text(storedYear || "Placeholder");
-
+    $("#year-selected").text(storedYear || "Placeholder");
 
     var isSupporting = checkSupporting(
       selectedMake,
@@ -1180,5 +1221,3 @@ $(document).ready(function () {
     }
   }
 });
-
-

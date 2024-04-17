@@ -23,6 +23,7 @@ function updateSelections(id, value) {
 }
 
 var activeModelCard = $(".model-card.active");
+var activeProducts = [];
 
 function addOrUpdateProduct(productElement) {
   var productSKU = productElement.data("sku");

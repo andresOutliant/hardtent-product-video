@@ -218,7 +218,7 @@ function updateCartFormWithProducts(modelName, modelPrice) {
 
   // Always add the Downpayment item with a fixed price of $500
   $("#foxy-cart-form").append(
-    `<input type='hidden' class='dynamic-input' name='name' value='HardCamp Reserve'>`,
+    `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardTent'>`,
     `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
     `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
   );
@@ -675,8 +675,12 @@ $(document).on("click", ".model-card", function () {
     $(".forward-button.inactive")
       .removeClass("inactive")
       .addClass("send-model");
+      $(this).find(".add-check").fadeIn();
+
   } else {
     $(".forward-button").not(".inactive").addClass("inactive");
+    $(this).find(".add-check").fadeOut();
+
   }
 
   var activeModelCard = $(".model-card.active");

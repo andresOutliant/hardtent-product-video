@@ -389,12 +389,6 @@ $(document).ready(function () {
     var webflowForm = $("#wf-form-Build-Info-Pre-Deposit");
     webflowForm.find(".dynamic-input").remove(); // Clear existing dynamic inputs.
 
-    // Iterate over the FoxyCart form's dynamic inputs and clone them to the Webflow form.
-    $("#foxy-cart-form .dynamic-input").each(function () {
-      var clonedInput = $(this).clone();
-      webflowForm.append(clonedInput);
-    });
-
     // Create and append each hidden input for the stored variables.
     webflowForm.append(
       `<input type='hidden' name='make' id='build-form-make' value='${storedMake}' class='dynamic-input'>`
@@ -414,6 +408,12 @@ $(document).ready(function () {
     webflowForm.append(
       `<input type='hidden' name='phone' id='build-form-phone' value='${storedPhone}' class='dynamic-input'>`
     );
+
+    // Iterate over the FoxyCart form's dynamic inputs and clone them to the Webflow form.
+    $("#foxy-cart-form .dynamic-input").each(function () {
+      var clonedInput = $(this).clone();
+      webflowForm.append(clonedInput);
+    });
 
     // Submit the Webflow form.
     webflowForm.submit();

@@ -354,22 +354,6 @@ $(document).ready(function () {
     $(this).text(formattedPrice);
   });
 
-  $(".flex-click").click(function () {
-    $(this)
-      .find(".flex-hide")
-      .each(function (index, element) {
-        var $el = $(element);
-        if ($el.is(":hidden")) {
-          $el
-            .delay(index * 150)
-            .animate({ height: "toggle", opacity: "toggle" }, 250);
-        } else {
-          $el
-            .delay(index * 150)
-            .animate({ height: "toggle", opacity: "toggle" }, 250);
-        }
-      });
-  });
 
   $(".checkout-adds-wrapper").on("click", function () {
     $(this).toggleClass("active");

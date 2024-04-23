@@ -653,18 +653,17 @@ $(document).on("click", ".model-card", function () {
     $(".forward-button.inactive")
       .removeClass("inactive")
       .addClass("send-model");
-      $(this).find(".add-check").fadeIn();
-
+    $(this).find(".add-check").fadeIn();
   } else {
     $(".forward-button").not(".inactive").addClass("inactive");
     $(this).find(".add-check").fadeOut();
-
   }
 
   var activeModelCard = $(".model-card.active");
   if (activeModelCard.length) {
     var modelName = activeModelCard.data("model-name");
     var modelPrice = parseFloat(activeModelCard.data("model-price"));
+    var startingAtPrice = activeModelCard.find(".starting-at-price").data("price"); // Capture starting-at-price
 
     // Check if the model name is "Outfitted+"
     if (modelName === "Outfitted+") {
@@ -679,17 +678,19 @@ $(document).on("click", ".model-card", function () {
     // Format the price with commas
     var formattedPrice = formatPrice(modelPrice);
 
-    // Update Subtotal in UI
+    // Update Subtotal and original prices in UI
     $("#subtotal").fadeOut(160, function () {
       $(this)
         .text("$" + formattedPrice)
         .fadeIn(160);
     });
+    $(".original-price").text("$" + formatPrice(startingAtPrice)); // Update all original-price elements
   } else {
     $("#model-name-input").val("");
     $("#model-price-input").val("");
   }
 });
+
 
 // Function to format numbers with commas
 function formatPrice(number) {

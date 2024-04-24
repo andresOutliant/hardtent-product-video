@@ -663,7 +663,7 @@ $(document).on("click", ".model-card", function () {
   if (activeModelCard.length) {
     var modelName = activeModelCard.data("model-name");
     var modelPrice = parseFloat(activeModelCard.data("model-price"));
-    var startingAtPrice = activeModelCard.find(".starting-at-price").data("price"); // Capture starting-at-price
+    var startingAtPrice = activeModelCard.find(".starting-at-price").text().replace(/,/g, ''); // Capture starting-at-price from the element's text
 
     // Check if the model name is "Outfitted+"
     if (modelName === "Outfitted+") {

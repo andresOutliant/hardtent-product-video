@@ -699,10 +699,11 @@ $(document).on("click", ".model-card", function () {
 
 function formatPrice(price) {
   if (!isNaN(price)) {
-    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');  // assuming price is a valid number
+    // Round the price to the nearest whole number and format with commas
+    return Math.round(price).toLocaleString();
   } else {
     console.error("Invalid price input:", price);
-    return null;  // handle cases where price is not a number
+    return null; // handle cases where price is not a number
   }
 }
 

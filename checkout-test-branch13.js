@@ -6,6 +6,8 @@ var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 storedMake = localStorage.getItem("selectedMake");
 storedModel = localStorage.getItem("selectedModel");
 storedYear = localStorage.getItem("selectedYear");
+var storedYear2 = localStorage.getItem("selectedYear");
+
 storedName = localStorage.getItem("customer_name");
 storedEmail = localStorage.getItem("customer_email");
 storedPhone = localStorage.getItem("customer_phone");
@@ -189,14 +191,12 @@ function updateUI() {
     newDiv.find(".add-on-name").text(product.name); // Update product name
     newDiv.find(".quantity-number").text(product.quantity); // Update quantity
     //newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
-    newDiv
-      .find(".add-on-price")
-      .text(
-        new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-        }).format(product.totalPrice)
-      );
+    newDiv.find(".add-on-price").text(
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(product.totalPrice)
+    );
 
     newDiv.appendTo(".adds").show();
   });
@@ -1205,7 +1205,7 @@ $(document).ready(function () {
     var selectedYear = $("#year-dropdown").val();
     $("#make-selected").text(selectedMake || "Placeholder");
     $("#truck-model-selected").text(selectedModel || "Placeholder");
-    $("#year-selected").text(selectedYear || "Placeholder");
+    $("#year-selected").text(storedYear2 || "Placeholder");
     //$("#year-selected").text(storedYear || "Placeholder");
 
     var isSupporting = checkSupporting(

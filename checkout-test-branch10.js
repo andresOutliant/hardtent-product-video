@@ -32,10 +32,7 @@ function addOrUpdateProduct(productElement) {
   var productSKU = productElement.data("sku");
   var productName = productElement.find(".add-name").text();
   var productPrice = parseFloat(
-    productElement
-      .find(".add-price")
-      .text()
-      .replace(/[^0-9.]/g, "")
+    productElement.find(".add-price").text().replace(/[^0-9.]/g, "")
   );
   productPrice = Number.isFinite(productPrice) ? productPrice : 0;
   var quantity = parseInt(productElement.find(".quantity-number").text()) || 1;
@@ -48,6 +45,8 @@ function addOrUpdateProduct(productElement) {
     existingProduct.quantity = quantity;
     existingProduct.totalPrice = productPrice * quantity;
     existingProduct.imageUrl = productImage; // Update the image URL
+    updateUI();
+    return existingProduct;
   } else {
     var newProduct = {
       sku: productSKU,
@@ -58,12 +57,11 @@ function addOrUpdateProduct(productElement) {
       imageUrl: productImage, // Include the image URL
     };
     activeProducts.push(newProduct);
+    updateUI();
+    return newProduct;
   }
-
-  // console.log("Product added/updated:", newProduct || existingProduct);
-  // console.log("Active Products Array after update:", activeProducts);
-  updateUI();
 }
+
 
 function selectModelTypeAddOns(modelType) {
   // Normalize modelType for comparison
@@ -357,25 +355,27 @@ $(document).ready(function () {
   });
 
 
-  $(".checkout-adds-wrapper").on("click", function () {
-    $(this).toggleClass("active");
+$(".checkout-adds-wrapper").on("click", function () {
+  $(this).toggleClass("active");
 
-    if ($(this).hasClass("active")) {
-      $(this).find(".add-check").fadeIn();
-      addOrUpdateProduct($(this));
-      analytics.track("Add-On Selected", {
-        add_on_id: "",
-        add_on_name: newProduct.name ?? "",
-        customer_email: storedEmail ?? "",
-        make: storedMake ?? "",
-        model: storedModel ?? "",
-        year: storedYear ?? "",
-      });
-    } else {
-      $(this).find(".add-check").fadeOut();
-      removeProductFromArray($(this));
-    }
-  });
+  if ($(this).hasClass("active")) {
+    $(this).find(".add-check").fadeIn();
+    var product = addOrUpdateProduct($(this));  // Capture the returned product
+    analytics.track("Add-On Selected", {
+      add_on_id: "",
+      add_on_name: product.name,  // Use the captured product details
+      customer_email: storedEmail ?? "",
+      make: storedMake ?? "",
+      model: storedModel ?? "",
+      year: storedYear ?? "",
+    });
+  } else {
+    $(this).find(".add-check").fadeOut();
+    removeProductFromArray($(this));
+    updateUI();  // Update UI after product removal
+  }
+});
+
 
   $("#submit-to-foxy").on("click", function (event) {
     event.preventDefault(); // Prevent the default form submission.

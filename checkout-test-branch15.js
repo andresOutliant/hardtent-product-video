@@ -686,7 +686,7 @@ $(document).on("click", ".model-card", function () {
 
     // Check if the model name is "Outfitted+"
     if (modelName === "Outfitted+") {
-      modelPrice = 23977; // Set a custom price for "Outfitted+"
+      //modelPrice = 23977; // Set a custom price for "Outfitted+"
     }
 
     selectModelTypeAddOns(modelName);

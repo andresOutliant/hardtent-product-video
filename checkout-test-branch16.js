@@ -126,14 +126,17 @@ function updateModelSelected(modelType, modelPrice) {
   // Update the #model-selected div with "HardCamp -" prefix
   $("#model-selected").text("HardCamp - " + modelType);
 
-  // Format modelPrice with commas
+  // Format modelPrice without decimals
   var formattedModelPrice = modelPrice.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   });
 
   $("#model-selected-price").text(formattedModelPrice);
 }
+
 
 function normalizeModelType(modelType) {
   // Convert modelType to lowercase for comparison
@@ -277,10 +280,12 @@ function updateSubtotal() {
     subtotal += 100;
   }
 
-  var formattedSubtotal = subtotal.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
+var formattedSubtotal = subtotal.toLocaleString("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+});
 
   console.log("Subtotal calculated:", subtotal);
 
@@ -350,17 +355,17 @@ $(document).ready(function () {
     }
   });
 
-  $(".model-price").each(function () {
-    // Retrieve the price as a float
-    var price = parseFloat($(this).text());
-    // Format the price with commas and ensure two decimal places
-    var formattedPrice = price.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    // Update the element's text with the formatted price
-    $(this).text(formattedPrice);
+$(".model-price").each(function () {
+  // Retrieve the price as a float
+  var price = parseFloat($(this).text());
+  // Format the price with commas and ensure no decimal places
+  var formattedPrice = price.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
+  // Update the element's text with the formatted price
+  $(this).text(formattedPrice);
+});
 
   $(".checkout-adds-wrapper").on("click", function () {
     $(this).toggleClass("active");

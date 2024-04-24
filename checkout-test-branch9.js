@@ -363,6 +363,14 @@ $(document).ready(function () {
     if ($(this).hasClass("active")) {
       $(this).find(".add-check").fadeIn();
       addOrUpdateProduct($(this));
+      analytics.track("Add-On Selected", {
+        add_on_id: "",
+        add_on_name: newProduct.name ?? "",
+        customer_email: storedEmail ?? "",
+        make: storedMake ?? "",
+        model: storedModel ?? "",
+        year: storedYear ?? "",
+      });
     } else {
       $(this).find(".add-check").fadeOut();
       removeProductFromArray($(this));

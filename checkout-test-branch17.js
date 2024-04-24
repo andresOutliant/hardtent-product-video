@@ -198,8 +198,11 @@ function updateUI() {
       new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
       }).format(product.totalPrice)
     );
+
 
     newDiv.appendTo(".adds").show();
   });

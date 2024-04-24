@@ -663,7 +663,10 @@ $(document).on("click", ".model-card", function () {
   if (activeModelCard.length) {
     var modelName = activeModelCard.data("model-name");
     var modelPrice = parseFloat(activeModelCard.data("model-price"));
-    var startingAtPrice = activeModelCard.find(".starting-at-price").text().replace(/,/g, ''); // Capture starting-at-price from the element's text
+    var startingAtPrice = parseFloat(activeModelCard.find(".starting-at-price").text().replace(/,/g, '')); // Capture and parse starting-at-price
+
+    // Debug: Log captured prices
+    console.log("Starting At Price:", startingAtPrice);
 
     // Check if the model name is "Outfitted+"
     if (modelName === "Outfitted+") {
@@ -684,18 +687,25 @@ $(document).on("click", ".model-card", function () {
         .text("$" + formattedPrice)
         .fadeIn(160);
     });
-    $(".original-price").text("$" + formatPrice(startingAtPrice)); // Update all original-price elements
+    $(".original-price").each(function() {
+      var formattedStartingPrice = formatPrice(startingAtPrice);
+      $(this).text(formattedStartingPrice ? "$" + formattedStartingPrice : "N/A");
+    });
   } else {
     $("#model-name-input").val("");
     $("#model-price-input").val("");
   }
 });
 
-
-// Function to format numbers with commas
-function formatPrice(number) {
-  return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+function formatPrice(price) {
+  if (!isNaN(price)) {
+    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');  // assuming price is a valid number
+  } else {
+    console.error("Invalid price input:", price);
+    return null;  // handle cases where price is not a number
+  }
 }
+
 
 // $(document).on("click", ".model-card", function () {
 //   var modelName = "";

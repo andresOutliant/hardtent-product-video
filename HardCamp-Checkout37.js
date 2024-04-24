@@ -367,7 +367,7 @@ $(document).ready(function () {
       }
       newDiv.find(".add-on-name").text(product.name); // Update product name
       newDiv.find(".quantity-number").text(product.quantity); // Update quantity
-      newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
+      newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(0)); // Update product price
 
       newDiv.appendTo(".adds").show();
     });

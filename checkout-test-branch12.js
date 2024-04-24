@@ -2,6 +2,14 @@ fbq("track", "ViewContent");
 
 var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
 
+// Initialize variables with values from localStorage
+storedMake = localStorage.getItem("selectedMake");
+storedModel = localStorage.getItem("selectedModel");
+storedYear = localStorage.getItem("selectedYear");
+storedName = localStorage.getItem("customer_name");
+storedEmail = localStorage.getItem("customer_email");
+storedPhone = localStorage.getItem("customer_phone");
+
 var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
 var truckInfo = {
@@ -32,7 +40,10 @@ function addOrUpdateProduct(productElement) {
   var productSKU = productElement.data("sku");
   var productName = productElement.find(".add-name").text();
   var productPrice = parseFloat(
-    productElement.find(".add-price").text().replace(/[^0-9.]/g, "")
+    productElement
+      .find(".add-price")
+      .text()
+      .replace(/[^0-9.]/g, "")
   );
   productPrice = Number.isFinite(productPrice) ? productPrice : 0;
   var quantity = parseInt(productElement.find(".quantity-number").text()) || 1;
@@ -61,7 +72,6 @@ function addOrUpdateProduct(productElement) {
     return newProduct;
   }
 }
-
 
 function selectModelTypeAddOns(modelType) {
   // Normalize modelType for comparison
@@ -179,8 +189,14 @@ function updateUI() {
     newDiv.find(".add-on-name").text(product.name); // Update product name
     newDiv.find(".quantity-number").text(product.quantity); // Update quantity
     //newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
-    newDiv.find(".add-on-price").text(new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.totalPrice));
-
+    newDiv
+      .find(".add-on-price")
+      .text(
+        new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(product.totalPrice)
+      );
 
     newDiv.appendTo(".adds").show();
   });
@@ -302,14 +318,6 @@ $(document).ready(function () {
     });
   };
 
-  // Initialize variables with values from localStorage
-  storedMake = localStorage.getItem("selectedMake");
-  storedModel = localStorage.getItem("selectedModel");
-  storedYear = localStorage.getItem("selectedYear");
-  storedName = localStorage.getItem("customer_name");
-  storedEmail = localStorage.getItem("customer_email");
-  storedPhone = localStorage.getItem("customer_phone");
-
   $("#make-dropdown").val(storedMake).prop("disabled", false);
   $("#model-dropdown").val(storedModel).prop("disabled", false);
   $("#year-dropdown").val(storedYear).prop("disabled", false);
@@ -354,28 +362,26 @@ $(document).ready(function () {
     $(this).text(formattedPrice);
   });
 
+  $(".checkout-adds-wrapper").on("click", function () {
+    $(this).toggleClass("active");
 
-$(".checkout-adds-wrapper").on("click", function () {
-  $(this).toggleClass("active");
-
-  if ($(this).hasClass("active")) {
-    $(this).find(".add-check").fadeIn();
-    var product = addOrUpdateProduct($(this));  // Capture the returned product
-    analytics.track("Add-On Selected", {
-      add_on_id: "",
-      add_on_name: product.name,  // Use the captured product details
-      customer_email: storedEmail ?? "",
-      make: storedMake ?? "",
-      model: storedModel ?? "",
-      year: storedYear ?? "",
-    });
-  } else {
-    $(this).find(".add-check").fadeOut();
-    removeProductFromArray($(this));
-    updateUI();  // Update UI after product removal
-  }
-});
-
+    if ($(this).hasClass("active")) {
+      $(this).find(".add-check").fadeIn();
+      var product = addOrUpdateProduct($(this)); // Capture the returned product
+      analytics.track("Add-On Selected", {
+        add_on_id: "",
+        add_on_name: product.name, // Use the captured product details
+        customer_email: storedEmail ?? "",
+        make: storedMake ?? "",
+        model: storedModel ?? "",
+        year: storedYear ?? "",
+      });
+    } else {
+      $(this).find(".add-check").fadeOut();
+      removeProductFromArray($(this));
+      updateUI(); // Update UI after product removal
+    }
+  });
 
   $("#submit-to-foxy").on("click", function (event) {
     event.preventDefault(); // Prevent the default form submission.
@@ -553,8 +559,6 @@ $(".checkout-adds-wrapper").on("click", function () {
       }
     });
   });
-
-
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -673,7 +677,9 @@ $(document).on("click", ".model-card", function () {
   if (activeModelCard.length) {
     var modelName = activeModelCard.data("model-name");
     var modelPrice = parseFloat(activeModelCard.data("model-price"));
-    var startingAtPrice = parseFloat(activeModelCard.find(".starting-at-price").text().replace(/,/g, '')); // Capture and parse starting-at-price
+    var startingAtPrice = parseFloat(
+      activeModelCard.find(".starting-at-price").text().replace(/,/g, "")
+    ); // Capture and parse starting-at-price
 
     // Debug: Log captured prices
     console.log("Starting At Price:", startingAtPrice);
@@ -697,9 +703,11 @@ $(document).on("click", ".model-card", function () {
         .text("$" + formattedPrice)
         .fadeIn(160);
     });
-    $(".original-price").each(function() {
+    $(".original-price").each(function () {
       var formattedStartingPrice = formatPrice(startingAtPrice);
-      $(this).text(formattedStartingPrice ? "$" + formattedStartingPrice : "N/A");
+      $(this).text(
+        formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+      );
     });
   } else {
     $("#model-name-input").val("");
@@ -716,7 +724,6 @@ function formatPrice(price) {
     return null; // handle cases where price is not a number
   }
 }
-
 
 // $(document).on("click", ".model-card", function () {
 //   var modelName = "";

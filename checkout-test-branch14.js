@@ -1205,7 +1205,7 @@ $(document).ready(function () {
     var selectedYear = $("#year-dropdown").val();
     $("#make-selected").text(selectedMake || "Placeholder");
     $("#truck-model-selected").text(selectedModel || "Placeholder");
-    $("#year-selected").text(storedYear2 || "Placeholder");
+    $(".year-selected").text(storedYear || "Placeholder");
     //$("#year-selected").text(storedYear || "Placeholder");
 
     var isSupporting = checkSupporting(

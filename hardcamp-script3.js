@@ -323,6 +323,11 @@ $(document).ready(function () {
   console.log("Stored Email:", storedEmail);
   console.log("Stored Phone:", storedPhone);
 
+  $("#back-to-step-one").click(function () {
+    $(".truck-dropdown").fadeIn(245, "swing");
+    $(".email-check-wrapper").fadeIn(245, "swing");
+  });
+
   $(".learn-more-btn").on("click", function (event) {
     event.stopPropagation();
     $(".hardtent_menu-right").animate({ scrollTop: 0 }, "slow");

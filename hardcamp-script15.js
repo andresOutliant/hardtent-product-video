@@ -1116,12 +1116,13 @@ $(document).ready(function () {
     $(".truck-check-container").fadeOut(245, "swing");
 
     if (isSupporting) {
+      $("#wf-form-Truck-Compatibility-Form").hide(); //newww
       $("#truck-compatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });
-      $("#wf-form-Truck-Compatibility-Form").hide(); //newww
       $(".specialist-form").hide();
     } else {
+      $("#wf-form-Truck-Compatibility-Form").hide();
       $("#truck-incompatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });

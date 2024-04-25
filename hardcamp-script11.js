@@ -324,7 +324,7 @@ $(document).ready(function () {
   console.log("Stored Phone:", storedPhone);
 
   $("#back-to-step-one").click(function () {
-    $(".#truck-form").fadeIn(245, "swing");
+    $(".#wf-form-Truck-Compatibility-Form").fadeIn(245, "swing");
     // $(".truck-success-message").hide(); //newww
     $(".specialist-form").fadeIn(245, "swing");
     $(".truck-check-container").fadeIn(245, "swing");
@@ -1118,7 +1118,7 @@ $(document).ready(function () {
       $("#truck-compatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });
-      $("#truck-form").hide(); //newww
+      $("#wf-form-Truck-Compatibility-Form").hide(); //newww
       $(".specialist-form").hide();
     } else {
       $("#truck-incompatible").fadeIn(245, "swing", function () {

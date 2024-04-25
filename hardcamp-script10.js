@@ -1119,9 +1119,7 @@ $(document).ready(function () {
         $(this).css("display", "flex");
       });
       $("#truck-form").hide(); //newww
-      $("#truck-compatible").fadeIn(245, "swing");
-      // $(".specialist-form").hide();
-      // $("#truck-compatible").fadeIn(245, "swing");
+      $(".specialist-form").hide();
     } else {
       $("#truck-incompatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");

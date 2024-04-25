@@ -1107,7 +1107,8 @@ $(document).ready(function () {
       $("#truck-compatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });
-      $("#truck-form").hide(); //newww
+      $(".truck-dropdown").hide(); //newww
+      $(".email-check-wrapper").hide(); //newww
 
       $(".specialist-form").hide();
       $(".compatible-form").fadeIn(245, "swing");

@@ -324,10 +324,13 @@ $(document).ready(function () {
   console.log("Stored Phone:", storedPhone);
 
   $("#back-to-step-one").click(function () {
-    $(".#wf-form-Truck-Compatibility-Form").fadeIn(245, "swing");
-    // $(".truck-success-message").hide(); //newww
+    $(".truck-matched").fadeOut(245, "swing");
+    $("#truck-compatible").fadeOut(245, "swing");
+    $("#truck-incompatible").fadeOut(245, "swing");
+
     $(".specialist-form").fadeIn(245, "swing");
     $(".truck-check-container").fadeIn(245, "swing");
+    $("#wf-form-Truck-Compatibility-Form").fadeIn(245, "swing");
   });
 
   $(".learn-more-btn").on("click", function (event) {
@@ -1055,8 +1058,6 @@ $(document).ready(function () {
 
     $(".truck-check-container").fadeIn(245, "swing");
     $(".truck-check").css("opacity", "0.5").prop("disabled", true);
-
-    $(".step-one-next-form").fadeOut(245, "swing");
   }
 
   function checkSupporting(make, model, year, bedSize) {

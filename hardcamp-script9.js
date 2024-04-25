@@ -325,9 +325,8 @@ $(document).ready(function () {
 
   $("#back-to-step-one").click(function () {
     $(".#truck-form").fadeIn(245, "swing");
-    $(".truck-success-message").hide(); //newww
+    // $(".truck-success-message").hide(); //newww
     $(".specialist-form").fadeIn(245, "swing");
-    $(".step-one-next-form").fadeOut(245, "swing");
     $(".truck-check-container").fadeIn(245, "swing");
   });
 
@@ -835,8 +834,11 @@ $(document).ready(function () {
 
           switchSection(stepOne, stepTwo);
           $(".step-two-form").fadeIn(200);
-          //handleTruckCheck();
-          //switchSection('step-one', 'step-two');
+
+          $(".truck-matched").fadeIn(245, "swing");
+          $("#truck-compatible").fadeOut(245, "swing");
+          $("#truck-incompatible").fadeOut(245, "swing");
+
           $("#make-dropdown, #model-dropdown, #year-dropdown").trigger(
             "change"
           );
@@ -1044,8 +1046,9 @@ $(document).ready(function () {
 
     $("#truck-compatible").fadeOut(245, "swing");
     $("#truck-incompatible").fadeOut(245, "swing");
+    $("#truck-matched").fadeOut(245, "swing");
 
-    $(".compatible-form").fadeOut(245, "swing");
+    // $(".compatible-form").fadeOut(245, "swing");
     $(".incompatible-form").fadeOut(245, "swing");
 
     $(".specialist-form").fadeIn(245, "swing");
@@ -1116,10 +1119,9 @@ $(document).ready(function () {
         $(this).css("display", "flex");
       });
       $("#truck-form").hide(); //newww
-      // $(".email-check-wrapper").hide(); //newww
+      $("#truck-compatible").fadeIn(245, "swing");
       // $(".specialist-form").hide();
-      $(".compatible-form").fadeIn(245, "swing");
-      $(".step-one-next-form").fadeIn(245, "swing");
+      // $("#truck-compatible").fadeIn(245, "swing");
     } else {
       $("#truck-incompatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");

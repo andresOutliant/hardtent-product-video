@@ -323,7 +323,7 @@ $(document).ready(function () {
   console.log("Stored Email:", storedEmail);
   console.log("Stored Phone:", storedPhone);
 
-  $("#back-to-step-one").click(function () {
+  $(".back-to-step-one").click(function () {
     $(".truck-matched").fadeOut(245, "swing");
     $("#truck-compatible").fadeOut(245, "swing");
     $("#truck-incompatible").fadeOut(245, "swing");

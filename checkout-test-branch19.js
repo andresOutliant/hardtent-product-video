@@ -693,7 +693,6 @@ $(document).on("click", ".model-card", function () {
       "Original Price:",
       originalPrice
     );
-    updateModelSelected(modelName, modelPrice);
     updateCartFormWithProducts(modelName, 0);
 
     // Format the price with commas

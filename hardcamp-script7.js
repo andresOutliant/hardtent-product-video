@@ -329,6 +329,7 @@ $(document).ready(function () {
     $(".truck-success-message").hide(); //newww
     $(".specialist-form").fadeIn(245, "swing");
     $(".step-one-next-form").fadeOut(245, "swing");
+    $(".truck-check-container").fadeIn(245, "swing");
   });
 
   $(".learn-more-btn").on("click", function (event) {

@@ -835,7 +835,7 @@ $(document).ready(function () {
           switchSection(stepOne, stepTwo);
           $(".step-two-form").fadeIn(200);
 
-          $(".truck-matched").fadeIn(245, "swing");
+          $(".truck-matched").fadeOut(245, "swing");
           $("#truck-compatible").fadeOut(245, "swing");
           $("#truck-incompatible").fadeOut(245, "swing");
 

@@ -122,22 +122,6 @@ function selectModelTypeAddOns(modelType) {
   });
 }
 
-function updateModelSelected(modelType, modelPrice) {
-  // Update the #model-selected div with "HardCamp -" prefix
-  $("#model-selected").text("HardCamp - " + modelType);
-
-  // Format modelPrice without decimals
-  var formattedModelPrice = modelPrice.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
-
-  $("#model-selected-price").text(formattedModelPrice);
-}
-
-
 function normalizeModelType(modelType) {
   // Convert modelType to lowercase for comparison
   modelType = modelType.toLowerCase();
@@ -199,10 +183,9 @@ function updateUI() {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0
+        maximumFractionDigits: 0,
       }).format(product.totalPrice)
     );
-
 
     newDiv.appendTo(".adds").show();
   });
@@ -283,12 +266,12 @@ function updateSubtotal() {
     subtotal += 100;
   }
 
-var formattedSubtotal = subtotal.toLocaleString("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0
-});
+  var formattedSubtotal = subtotal.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
   console.log("Subtotal calculated:", subtotal);
 
@@ -358,17 +341,17 @@ $(document).ready(function () {
     }
   });
 
-$(".model-price").each(function () {
-  // Retrieve the price as a float
-  var price = parseFloat($(this).text());
-  // Format the price with commas and ensure no decimal places
-  var formattedPrice = price.toLocaleString("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+  $(".model-price").each(function () {
+    // Retrieve the price as a float
+    var price = parseFloat($(this).text());
+    // Format the price with commas and ensure no decimal places
+    var formattedPrice = price.toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+    // Update the element's text with the formatted price
+    $(this).text(formattedPrice);
   });
-  // Update the element's text with the formatted price
-  $(this).text(formattedPrice);
-});
 
   $(".checkout-adds-wrapper").on("click", function () {
     $(this).toggleClass("active");
@@ -686,19 +669,30 @@ $(document).on("click", ".model-card", function () {
     var modelName = activeModelCard.data("model-name");
     var modelPrice = parseFloat(activeModelCard.data("model-price"));
     var startingAtPrice = parseFloat(
-      activeModelCard.find(".starting-at-price").text().replace(/,/g, "")
-    ); // Capture and parse starting-at-price
+      activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+        modelPrice
+    );
 
-    // Debug: Log captured prices
-    console.log("Starting At Price:", startingAtPrice);
+    $("#model-selected").text("HardCamp - " + modelName);
 
-    // Check if the model name is "Outfitted+"
-    if (modelName === "Outfitted+") {
-      //modelPrice = 23977; // Set a custom price for "Outfitted+"
-    }
+    // Capture the original price from the active model card, fallback to modelPrice if not available
+    var originalPriceText = activeModelCard.find(".starting-at-price").text();
+    var originalPrice = originalPriceText
+      ? parseFloat(originalPriceText.replace(/,/g, ""))
+      : modelPrice;
+
+    // Update the original price on the webpage
+    $("#original-price").text("$" + formatPrice(originalPrice));
 
     selectModelTypeAddOns(modelName);
-    console.log("Model Name:", modelName, "Model Price:", modelPrice);
+    console.log(
+      "Model Name:",
+      modelName,
+      "Model Price:",
+      modelPrice,
+      "Original Price:",
+      originalPrice
+    );
     updateModelSelected(modelName, modelPrice);
     updateCartFormWithProducts(modelName, 0);
 
@@ -720,6 +714,7 @@ $(document).on("click", ".model-card", function () {
   } else {
     $("#model-name-input").val("");
     $("#model-price-input").val("");
+    $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
   }
 });
 
@@ -732,80 +727,6 @@ function formatPrice(price) {
     return null; // handle cases where price is not a number
   }
 }
-
-// $(document).on("click", ".model-card", function () {
-//   var modelName = "";
-//   var modelPrice = 0;
-//   resetSelectedAddOns();
-//   // Toggle the active class on the clicked model card
-//   var isActive = $(this).hasClass("active");
-//   $(".model-card").removeClass("active");
-//   if (!isActive) {
-//     $(this).addClass("active");
-//   }
-
-//   // Update the inactive class on .forward-button.inactive accordingly
-//   if ($(".model-card.active").length > 0) {
-//     $(".forward-button.inactive")
-//       .removeClass("inactive")
-//       .addClass("send-model");
-//   } else {
-//     $(".forward-button").not(".inactive").addClass("inactive");
-//   }
-
-//   // Update model details and form inputs based on the active model card
-//   if (activeModelCard.length) {
-//     // Retrieve model name and price from data attributes
-//     modelName = activeModelCard.data("model-name");
-//     modelPrice = parseFloat(activeModelCard.data("model-price"));
-
-//     selectModelTypeAddOns(modelName);
-//     // Log the values for debugging
-//     console.log("Model Name:", modelName, "Model Price:", modelPrice);
-
-//     // Update model selection UI if necessary
-//     updateModelSelected(modelName, modelPrice);
-
-//     // Update the form with model details and active products
-//     updateCartFormWithProducts(modelName, 0); // commented out so modelPrice doesnt affect total
-//   } else {
-//     // Clear inputs if no model is active
-//     $("#model-name-input").val("");
-//     $("#model-price-input").val("");
-//     //new
-//     // var activeProducts = [];
-//     // var modelName = "";
-//     // var modelPrice = 0;
-//     // resetSelectedAddOns();
-//   }
-//   document
-//     .getElementById("make-dropdown")
-//     .addEventListener("change", function () {
-//       updateSelections("make", this.value);
-//     });
-
-//   document
-//     .getElementById("model-dropdown")
-//     .addEventListener("change", function () {
-//       updateSelections("model", this.value);
-//     });
-
-//   document
-//     .getElementById("year-dropdown")
-//     .addEventListener("change", function () {
-//       updateSelections("year", this.value);
-//     });
-
-//   $(".checkout-cart-btn").on("click", function () {
-//     $("#submit-to-foxy").trigger("click");
-//   });
-
-//   // Initial adjustment
-//   adjustDescriptionText();
-
-//   // Adjust on window resize
-//   window.addEventListener("resize", adjustDescriptionText);
-// });
 
 function adjustDescriptionText() {
   // Determine word limits for different screen sizes
@@ -960,40 +881,6 @@ $(document).ready(function () {
             $("#year-dropdown").val(years[0]).change();
           }
         });
-
-        //   var debounceTimer;
-        //   $("#customer_name").keyup(function () {
-        //     clearTimeout(debounceTimer);
-        //     var customer_name = $(this).val();
-
-        //     // Set the delay for debounce (e.g., 500 milliseconds)
-        //     debounceTimer = setTimeout(function () {
-        //       localStorage.setItem("customer_name", customer_name);
-        //       console.log("Saved to localStorage:", customer_name); // Log what is being saved
-        //     }, 390);
-        //   });
-
-        //   $("#customer_email").keyup(function () {
-        //     clearTimeout(debounceTimer);
-        //     var customer_email = $(this).val();
-
-        //     // Set the delay for debounce (e.g., 500 milliseconds)
-        //     debounceTimer = setTimeout(function () {
-        //       localStorage.setItem("customer_email", customer_email);
-        //       console.log("Saved to localStorage:", customer_email); // Log what is being saved
-        //     }, 390);
-        //   });
-
-        //   $("#customer_phone").keyup(function () {
-        //     clearTimeout(debounceTimer);
-        //     var customer_phone = $(this).val();
-
-        //     // Set the delay for debounce (e.g., 500 milliseconds)
-        //     debounceTimer = setTimeout(function () {
-        //       localStorage.setItem("customer_phone", customer_phone);
-        //       console.log("Saved to localStorage:", customer_phone); // Log what is being saved
-        //     }, 390);
-        //   });
 
         $(
           "#year-dropdown, #customer_name, #customer_email, #customer_phone, #email-check"

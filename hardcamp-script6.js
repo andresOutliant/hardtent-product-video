@@ -328,6 +328,7 @@ $(document).ready(function () {
     $(".email-check-wrapper").fadeIn(245, "swing");
     $(".truck-success-message").hide(); //newww
     $(".specialist-form").fadeIn(245, "swing");
+    $(".step-one-next-form").fadeOut(245, "swing");
   });
 
   $(".learn-more-btn").on("click", function (event) {

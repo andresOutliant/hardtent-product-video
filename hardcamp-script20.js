@@ -10,6 +10,15 @@ storedEmail = localStorage.getItem("customer_email");
 storedPhone = localStorage.getItem("customer_phone");
 var isSupporting;
 
+console.log("Make: " + storedMake);
+console.log("Model: " + storedModel);
+console.log("Year: " + storedYear);
+
+console.log("Customer Name: " + storedName);
+console.log("Customer Email: " + storedEmail);
+console.log("Customer Phone: " + storedPhone);
+console.log("isSupporting" + isSupporting);
+
 var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
 var truckInfo = {

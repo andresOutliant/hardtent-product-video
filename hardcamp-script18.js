@@ -8,6 +8,7 @@ storedYear = localStorage.getItem("selectedYear");
 storedName = localStorage.getItem("customer_name");
 storedEmail = localStorage.getItem("customer_email");
 storedPhone = localStorage.getItem("customer_phone");
+var isSupporting;
 
 var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
@@ -780,7 +781,8 @@ $(document).ready(function () {
           storedYear &&
           storedName &&
           storedEmail &&
-          storedPhone
+          storedPhone &&
+          isSupporting
         ) {
           // Populate dropdowns for truck selection
           populateDropdown(
@@ -1068,9 +1070,6 @@ $(document).ready(function () {
   }
 
   function handleTruckCheck() {
-    var storedMake = localStorage.getItem("selectedMake");
-    var storedModel = localStorage.getItem("selectedModel");
-    var storedYear = localStorage.getItem("selectedYear");
     if (storedMake) {
       $("#make-dropdown").val(storedMake);
     }
@@ -1081,19 +1080,17 @@ $(document).ready(function () {
       $("#year-dropdown").val(storedYear);
     }
 
-    var selectedMake = $("#make-dropdown").val();
-    var selectedModel = $("#model-dropdown").val();
-    var selectedYear = $("#year-dropdown").val();
-    $("#make-selected").text(selectedMake || "Placeholder");
-    $("#truck-model-selected").text(selectedModel || "Placeholder");
+    $("#make-selected").text(storedMake || "Placeholder");
+    $("#truck-model-selected").text(storedModel || "Placeholder");
     $(".year-selected").text(storedYear || "Placeholder");
-    //$("#year-selected").text(storedYear || "Placeholder");
 
     var isSupporting = checkSupporting(
       selectedMake,
       selectedModel,
       selectedYear
     );
+
+    localStorage.setItem("isSupporting", isSupporting);
 
     $(".truck-check-container").fadeOut(245, "swing");
 

@@ -22,14 +22,40 @@ if (localStorage.getItem("selectedYear")) {
   $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
 }
 
+// function populateDropdown(dropdownId, options, selectedValue) {
+//   var dropdown = $(dropdownId);
+//   dropdown.empty();
+//   options.forEach(function (option) {
+//     var isSelected = option === selectedValue;
+//     dropdown.append(new Option(option, option, isSelected, isSelected));
+//   });
+//   dropdown.val(selectedValue).trigger("change");
+// }
 function populateDropdown(dropdownId, options, selectedValue) {
   var dropdown = $(dropdownId);
-  dropdown.empty();
-  options.forEach(function (option) {
-    var isSelected = option === selectedValue;
-    dropdown.append(new Option(option, option, isSelected, isSelected));
+  dropdown.empty(); // Clears existing options
+
+  // Add placeholder or default option
+  dropdown.append(
+    $("<option>", {
+      text: "Please select",
+      value: "",
+    })
+  );
+
+  // Add new options
+  options.forEach((option) => {
+    dropdown.append(
+      $("<option>", {
+        text: option,
+        value: option,
+        selected: option === selectedValue,
+      })
+    );
   });
-  dropdown.val(selectedValue).trigger("change");
+
+  // Enable or disable the dropdown based on the options available
+  dropdown.prop("disabled", options.length === 0);
 }
 
 console.log("Make: " + storedMake);
@@ -324,6 +350,11 @@ $(document).ready(function () {
       );
     });
   };
+
+  $("#model-dropdown").change(function () {
+    console.log("Model selected: ", $(this).val());
+    // Other code...
+  });
 
   $("#make-dropdown").val(storedMake).prop("disabled", false);
   $("#model-dropdown").val(storedModel).prop("disabled", false);
@@ -955,10 +986,19 @@ $(document).ready(function () {
 
         // Function to update year dropdown based on selected make and model
         function updateYearDropdown(make, model) {
+          if (!model) {
+            // Check if a model is actually selected
+            $("#year-dropdown").prop("disabled", true).empty();
+            return;
+          }
+
           var years = getUniqueYears(make, model);
           populateDropdown("#year-dropdown", years, years[0]);
+
+          // Enable or disable the year dropdown based on available years
+          $("#year-dropdown").prop("disabled", years.length === 0);
           if (years.length > 0) {
-            $("#year-dropdown").change();
+            $("#year-dropdown").change(); // Optionally trigger change if needed for further updates
           }
         }
 

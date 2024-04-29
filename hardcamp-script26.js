@@ -22,6 +22,16 @@ if (localStorage.getItem("selectedYear")) {
   $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
 }
 
+function populateDropdown(dropdownId, options, selectedValue) {
+  var dropdown = $(dropdownId);
+  dropdown.empty();
+  options.forEach(function (option) {
+    var isSelected = option === selectedValue;
+    dropdown.append(new Option(option, option, isSelected, isSelected));
+  });
+  dropdown.val(selectedValue).trigger("change");
+}
+
 console.log("Make: " + storedMake);
 console.log("Model: " + storedModel);
 console.log("Year: " + storedYear);
@@ -931,16 +941,6 @@ $(document).ready(function () {
           if (years.length > 0) {
             $("#year-dropdown").change();
           }
-        }
-
-        function populateDropdown(dropdownId, options, selectedValue) {
-          var dropdown = $(dropdownId);
-          dropdown.empty();
-          options.forEach(function (option) {
-            var isSelected = option === selectedValue;
-            dropdown.append(new Option(option, option, isSelected, isSelected));
-          });
-          dropdown.val(selectedValue).trigger("change");
         }
 
         $(

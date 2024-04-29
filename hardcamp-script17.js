@@ -1,4 +1,4 @@
-fbq("track", "ViewContent");
+// fbq("track", "ViewContent");
 
 // Initialize variables with values from localStorage
 storedMake = localStorage.getItem("selectedMake");

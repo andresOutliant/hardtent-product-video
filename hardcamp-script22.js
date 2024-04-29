@@ -8,7 +8,8 @@ storedYear = localStorage.getItem("selectedYear");
 storedName = localStorage.getItem("customer_name");
 storedEmail = localStorage.getItem("customer_email");
 storedPhone = localStorage.getItem("customer_phone");
-var isSupporting = false;
+var isSupporting =
+  localStorage.getItem("isSupporting") === "true" ? true : false;
 
 console.log("Make: " + storedMake);
 console.log("Model: " + storedModel);

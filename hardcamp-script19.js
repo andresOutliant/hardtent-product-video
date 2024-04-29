@@ -1084,11 +1084,7 @@ $(document).ready(function () {
     $("#truck-model-selected").text(storedModel || "Placeholder");
     $(".year-selected").text(storedYear || "Placeholder");
 
-    var isSupporting = checkSupporting(
-      selectedMake,
-      selectedModel,
-      selectedYear
-    );
+    var isSupporting = checkSupporting(storedMake, storedModel, storedYear);
 
     localStorage.setItem("isSupporting", isSupporting);
 

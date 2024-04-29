@@ -1126,29 +1126,28 @@ $(document).ready(function () {
   }
 
   function handleTruckCheck() {
-    if (storedMake) {
-      $("#make-dropdown").val(storedMake);
-    }
-    if (storedModel) {
-      $("#model-dropdown").val(storedModel);
-    }
-    if (storedYear) {
-      $("#year-dropdown").val(storedYear);
-    }
+    // Fetch the current selections from the dropdowns
+    var currentMake = $("#make-dropdown").val();
+    var currentModel = $("#model-dropdown").val();
+    var currentYear = $("#year-dropdown").val();
 
-    $("#make-selected").text(storedMake || "Placeholder");
-    $("#truck-model-selected").text(storedModel || "Placeholder");
-    $(".year-selected").text(storedYear || "Placeholder");
+    // Update the text fields to display the current selections
+    $("#make-selected").text(currentMake || "Placeholder");
+    $("#truck-model-selected").text(currentModel || "Placeholder");
+    $(".year-selected").text(currentYear || "Placeholder");
 
-    isSupporting = checkSupporting(storedMake, storedModel, storedYear);
+    // Check support status using the current selections
+    isSupporting = checkSupporting(currentMake, currentModel, currentYear);
 
+    // Store the new 'isSupporting' status
     localStorage.setItem("isSupporting", isSupporting);
-    console.log("new isSupporting " + isSupporting);
+    console.log("new isSupporting: " + isSupporting);
 
+    // Hide the truck check container and update the form display based on support status
     $(".truck-check-container").fadeOut(245, "swing");
 
     if (isSupporting) {
-      $("#wf-form-Truck-Compatibility-Form").hide(); //newww
+      $("#wf-form-Truck-Compatibility-Form").hide();
       $("#truck-compatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });

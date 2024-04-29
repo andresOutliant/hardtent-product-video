@@ -18,7 +18,7 @@ console.log("Year: " + storedYear);
 console.log("Customer Name: " + storedName);
 console.log("Customer Email: " + storedEmail);
 console.log("Customer Phone: " + storedPhone);
-console.log("isSupporting" + isSupporting);
+console.log("isSupporting " + isSupporting);
 
 var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
@@ -1097,6 +1097,7 @@ $(document).ready(function () {
     isSupporting = checkSupporting(storedMake, storedModel, storedYear);
 
     localStorage.setItem("isSupporting", isSupporting);
+    console.log("new isSupporting " + isSupporting);
 
     $(".truck-check-container").fadeOut(245, "swing");
 

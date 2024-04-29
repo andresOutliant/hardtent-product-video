@@ -8,7 +8,7 @@ storedYear = localStorage.getItem("selectedYear");
 storedName = localStorage.getItem("customer_name");
 storedEmail = localStorage.getItem("customer_email");
 storedPhone = localStorage.getItem("customer_phone");
-var isSupporting;
+var isSupporting = false;
 
 console.log("Make: " + storedMake);
 console.log("Model: " + storedModel);
@@ -1093,7 +1093,7 @@ $(document).ready(function () {
     $("#truck-model-selected").text(storedModel || "Placeholder");
     $(".year-selected").text(storedYear || "Placeholder");
 
-    var isSupporting = checkSupporting(storedMake, storedModel, storedYear);
+    isSupporting = checkSupporting(storedMake, storedModel, storedYear);
 
     localStorage.setItem("isSupporting", isSupporting);
 

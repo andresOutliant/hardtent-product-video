@@ -926,11 +926,30 @@ $(document).ready(function () {
         });
 
         // Function to update model dropdown based on selected make
+        $("#make-dropdown").change(function () {
+          var selectedMake = $(this).val();
+          localStorage.setItem("selectedMake", selectedMake);
+          updateModelAndYearDropdowns(selectedMake); // Update model and year based on selected make
+        });
+
         function updateModelAndYearDropdowns(make) {
+          if (!make) {
+            // Check if the make is not selected
+            $("#model-dropdown").prop("disabled", true).empty();
+            $("#year-dropdown").prop("disabled", true).empty();
+            return;
+          }
+
           var models = getUniqueModels(make);
           populateDropdown("#model-dropdown", models, models[0]);
+
+          // Check if there are any models to enable the dropdown
           if (models.length > 0) {
-            $("#model-dropdown").change();
+            $("#model-dropdown").prop("disabled", false);
+            $("#model-dropdown").change(); // Trigger change to update year dropdown
+          } else {
+            $("#model-dropdown").prop("disabled", true);
+            $("#year-dropdown").prop("disabled", true);
           }
         }
 

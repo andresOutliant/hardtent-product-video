@@ -1,12 +1,9 @@
 fbq("track", "ViewContent");
 
-var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
-
 // Initialize variables with values from localStorage
 storedMake = localStorage.getItem("selectedMake");
 storedModel = localStorage.getItem("selectedModel");
 storedYear = localStorage.getItem("selectedYear");
-var storedYear2 = localStorage.getItem("selectedYear");
 
 storedName = localStorage.getItem("customer_name");
 storedEmail = localStorage.getItem("customer_email");
@@ -78,19 +75,6 @@ function addOrUpdateProduct(productElement) {
 function selectModelTypeAddOns(modelType) {
   // Normalize modelType for comparison
   var normalizedModelType = normalizeModelType(modelType);
-  var selectedMake1 = localStorage.getItem("selectedMake");
-  var selectedModel1 = localStorage.getItem("selectedModel");
-  var selectedYear1 = parseInt(localStorage.getItem("selectedYear"), 10);
-  console.log("Selected Make:", selectedMake1);
-  console.log("Selected Model:", selectedModel1);
-  console.log("Selected Year:", selectedYear1);
-
-  console.log("Selected Make:", selectedMake1 === "Ford"); // Should be true
-  console.log("Selected Model:", selectedModel1 === "F 150"); // Should be true
-  console.log(
-    "Selected Year Range:",
-    selectedYear1 <= 2024 && selectedYear1 >= 2021
-  ); // Should be true for years 2021-2024
 
   $(".checkout-adds-wrapper").each(function () {
     var includedTypes = $(this).data("included");
@@ -108,10 +92,10 @@ function selectModelTypeAddOns(modelType) {
 
     //Remove the following SKU=33 addon from Ford F150 2021-2024
     if (
-      selectedMake1 !== "Ford" &&
-      selectedModel1 !== "F 150" &&
-      selectedYear1 <= 2024 &&
-      selectedYear1 >= 2021 &&
+      storedMake !== "Ford" &&
+      storedModel !== "F 150" &&
+      storedYear <= 2024 &&
+      storedYear >= 2021 &&
       sku1 === 33
     ) {
       if (types.includes(normalizedModelType)) {
@@ -316,12 +300,12 @@ $(document).ready(function () {
   $("#customer_email").val(storedEmail);
   $("#customer_phone").val(storedPhone);
 
-  console.log("Stored Make:", storedMake);
-  console.log("Stored Model:", storedModel);
-  console.log("Stored Year:", storedYear);
-  console.log("Stored Name:", storedName);
-  console.log("Stored Email:", storedEmail);
-  console.log("Stored Phone:", storedPhone);
+  //   console.log("Stored Make:", storedMake);
+  //   console.log("Stored Model:", storedModel);
+  //   console.log("Stored Year:", storedYear);
+  //   console.log("Stored Name:", storedName);
+  //   console.log("Stored Email:", storedEmail);
+  //   console.log("Stored Phone:", storedPhone);
 
   $(".back-to-step-one").click(function () {
     $(".truck-matched").fadeOut(245, "swing");
@@ -845,12 +829,10 @@ $(document).ready(function () {
           $("#make-dropdown, #model-dropdown, #year-dropdown").trigger(
             "change"
           );
-          var selectedMake2 = $("#make-dropdown").val();
-          var selectedModel2 = $("#model-dropdown").val();
-          var selectedYear3 = $("#year-dropdown").val();
-          $("#make-selected").text(selectedMake2 || "Placeholder");
-          $("#truck-model-selected").text(selectedModel2 || "Placeholder");
-          $("#year-selected").text(selectedYear3 || "Placeholder");
+
+          $("#make-selected").text(storedMake || "Placeholder");
+          $("#truck-model-selected").text(storedModel || "Placeholder");
+          $("#year-selected").text(storedYear || "Placeholder");
         } else {
           // Initialize empty dropdowns if no data is stored
           populateDropdown("#make-dropdown", [], "Make");

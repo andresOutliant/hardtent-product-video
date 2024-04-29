@@ -11,6 +11,17 @@ storedPhone = localStorage.getItem("customer_phone");
 var isSupporting =
   localStorage.getItem("isSupporting") === "true" ? true : false;
 
+// Initialize dropdowns with data if available in localStorage
+if (localStorage.getItem("selectedMake")) {
+  $("#make-dropdown").val(localStorage.getItem("selectedMake")).change();
+}
+if (localStorage.getItem("selectedModel")) {
+  $("#model-dropdown").val(localStorage.getItem("selectedModel")).change();
+}
+if (localStorage.getItem("selectedYear")) {
+  $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
+}
+
 console.log("Make: " + storedMake);
 console.log("Model: " + storedModel);
 console.log("Year: " + storedYear);
@@ -860,33 +871,77 @@ $(document).ready(function () {
           var makes = getUniqueMakes(truckData);
           populateDropdown("#make-dropdown", makes, "Make");
         }
+        // $("#make-dropdown").change(function () {
+        //   var selectedMake = $(this).val();
+        //   localStorage.setItem("selectedMake", selectedMake);
+        //   var models = getUniqueModels(selectedMake);
+        //   $("#model-dropdown").prop("disabled", models.length === 0);
+        //   resetDropdowns([
+        //     "#model-dropdown",
+        //     "#year-dropdown",
+        //     "#bed-size-dropdown",
+        //   ]);
+        //   populateDropdown("#model-dropdown", models, "Model");
+        //   if (models.length > 0) {
+        //     $("#model-dropdown").val(models[0]).change();
+        //   }
+        // });
         $("#make-dropdown").change(function () {
           var selectedMake = $(this).val();
           localStorage.setItem("selectedMake", selectedMake);
-          var models = getUniqueModels(selectedMake);
-          $("#model-dropdown").prop("disabled", models.length === 0);
-          resetDropdowns([
-            "#model-dropdown",
-            "#year-dropdown",
-            "#bed-size-dropdown",
-          ]);
-          populateDropdown("#model-dropdown", models, "Model");
-          if (models.length > 0) {
-            $("#model-dropdown").val(models[0]).change();
-          }
+          updateModelAndYearDropdowns(selectedMake); // Update model and year based on selected make
         });
+        // $("#model-dropdown").change(function () {
+        //   var selectedMake = $("#make-dropdown").val();
+        //   var selectedModel = $(this).val();
+        //   localStorage.setItem("selectedModel", selectedModel);
+        //   var years = getUniqueYears(selectedMake, selectedModel);
+        //   $("#year-dropdown").prop("disabled", years.length === 0);
+        //   resetDropdowns(["#year-dropdown", "#bed-size-dropdown"]);
+        //   populateDropdown("#year-dropdown", years, "Year");
+        //   if (years.length > 0) {
+        //     $("#year-dropdown").val(years[0]).change();
+        //   }
+        // });
         $("#model-dropdown").change(function () {
           var selectedMake = $("#make-dropdown").val();
           var selectedModel = $(this).val();
           localStorage.setItem("selectedModel", selectedModel);
-          var years = getUniqueYears(selectedMake, selectedModel);
-          $("#year-dropdown").prop("disabled", years.length === 0);
-          resetDropdowns(["#year-dropdown", "#bed-size-dropdown"]);
-          populateDropdown("#year-dropdown", years, "Year");
-          if (years.length > 0) {
-            $("#year-dropdown").val(years[0]).change();
-          }
+          updateYearDropdown(selectedMake, selectedModel); // Update year based on selected make and model
         });
+
+        $("#year-dropdown").change(function () {
+          var selectedYear = $(this).val();
+          localStorage.setItem("selectedYear", selectedYear);
+        });
+
+        // Function to update model dropdown based on selected make
+        function updateModelAndYearDropdowns(make) {
+          var models = getUniqueModels(make);
+          populateDropdown("#model-dropdown", models, models[0]);
+          if (models.length > 0) {
+            $("#model-dropdown").change();
+          }
+        }
+
+        // Function to update year dropdown based on selected make and model
+        function updateYearDropdown(make, model) {
+          var years = getUniqueYears(make, model);
+          populateDropdown("#year-dropdown", years, years[0]);
+          if (years.length > 0) {
+            $("#year-dropdown").change();
+          }
+        }
+
+        function populateDropdown(dropdownId, options, selectedValue) {
+          var dropdown = $(dropdownId);
+          dropdown.empty();
+          options.forEach(function (option) {
+            var isSelected = option === selectedValue;
+            dropdown.append(new Option(option, option, isSelected, isSelected));
+          });
+          dropdown.val(selectedValue).trigger("change");
+        }
 
         $(
           "#year-dropdown, #customer_name, #customer_email, #customer_phone, #email-check"
@@ -1013,23 +1068,23 @@ $(document).ready(function () {
     return [...new Set(sizes)];
   }
 
-  function populateDropdown(dropdownId, options, selectedValue) {
-    var dropdown = $(dropdownId);
-    dropdown.empty();
+  //   function populateDropdown(dropdownId, options, selectedValue) {
+  //     var dropdown = $(dropdownId);
+  //     dropdown.empty();
 
-    var placeholder = "";
-    if (dropdownId === "#make-dropdown") placeholder = "Make";
-    else if (dropdownId === "#model-dropdown") placeholder = "Model";
-    else if (dropdownId === "#year-dropdown") placeholder = "Year";
-    else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
+  //     var placeholder = "";
+  //     if (dropdownId === "#make-dropdown") placeholder = "Make";
+  //     else if (dropdownId === "#model-dropdown") placeholder = "Model";
+  //     else if (dropdownId === "#year-dropdown") placeholder = "Year";
+  //     else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
 
-    dropdown.append(new Option(placeholder, "", true, true));
+  //     dropdown.append(new Option(placeholder, "", true, true));
 
-    options.forEach(function (option) {
-      var isSelected = option === selectedValue;
-      dropdown.append(new Option(option, option, isSelected, isSelected));
-    });
-  }
+  //     options.forEach(function (option) {
+  //       var isSelected = option === selectedValue;
+  //       dropdown.append(new Option(option, option, isSelected, isSelected));
+  //     });
+  //   }
 
   function resetDropdowns(dropdownIds) {
     dropdownIds.forEach(function (dropdownId) {

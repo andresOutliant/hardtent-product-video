@@ -1065,18 +1065,9 @@ $(document).ready(function () {
         (bedSize === undefined || bedSize === null || truck.bedSize == bedSize)
       );
     });
-    return result ? result.supporting : false;
-  }
+    console.log("Matching truck data:", result); // Log the result to the console
 
-  function getUniqueTrims(make, model) {
-    var trims = [
-      ...new Set(
-        truckData
-          .filter((item) => item.manufacturer === make && item.model === model)
-          .map((item) => item.trim)
-      ),
-    ];
-    return trims;
+    return result ? result.supporting : false;
   }
 
   function handleTruckCheck() {

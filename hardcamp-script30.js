@@ -22,23 +22,14 @@ if (localStorage.getItem("selectedYear")) {
   $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
 }
 
-// function populateDropdown(dropdownId, options, selectedValue) {
-//   var dropdown = $(dropdownId);
-//   dropdown.empty();
-//   options.forEach(function (option) {
-//     var isSelected = option === selectedValue;
-//     dropdown.append(new Option(option, option, isSelected, isSelected));
-//   });
-//   dropdown.val(selectedValue).trigger("change");
-// }
-function populateDropdown(dropdownId, options, selectedValue) {
+function populateDropdown(dropdownId, options, selectedValue, placeholderText) {
   var dropdown = $(dropdownId);
   dropdown.empty(); // Clears existing options
 
-  // Add placeholder or default option
+  // Add a customized placeholder based on the dropdown
   dropdown.append(
     $("<option>", {
-      text: "Please select",
+      text: placeholderText, // Use the passed placeholder text
       value: "",
     })
   );
@@ -912,38 +903,13 @@ $(document).ready(function () {
           var makes = getUniqueMakes(truckData);
           populateDropdown("#make-dropdown", makes, "Make");
         }
-        // $("#make-dropdown").change(function () {
-        //   var selectedMake = $(this).val();
-        //   localStorage.setItem("selectedMake", selectedMake);
-        //   var models = getUniqueModels(selectedMake);
-        //   $("#model-dropdown").prop("disabled", models.length === 0);
-        //   resetDropdowns([
-        //     "#model-dropdown",
-        //     "#year-dropdown",
-        //     "#bed-size-dropdown",
-        //   ]);
-        //   populateDropdown("#model-dropdown", models, "Model");
-        //   if (models.length > 0) {
-        //     $("#model-dropdown").val(models[0]).change();
-        //   }
-        // });
+
         $("#make-dropdown").change(function () {
           var selectedMake = $(this).val();
           localStorage.setItem("selectedMake", selectedMake);
           updateModelAndYearDropdowns(selectedMake); // Update model and year based on selected make
         });
-        // $("#model-dropdown").change(function () {
-        //   var selectedMake = $("#make-dropdown").val();
-        //   var selectedModel = $(this).val();
-        //   localStorage.setItem("selectedModel", selectedModel);
-        //   var years = getUniqueYears(selectedMake, selectedModel);
-        //   $("#year-dropdown").prop("disabled", years.length === 0);
-        //   resetDropdowns(["#year-dropdown", "#bed-size-dropdown"]);
-        //   populateDropdown("#year-dropdown", years, "Year");
-        //   if (years.length > 0) {
-        //     $("#year-dropdown").val(years[0]).change();
-        //   }
-        // });
+
         $("#model-dropdown").change(function () {
           var selectedMake = $("#make-dropdown").val();
           var selectedModel = $(this).val();
@@ -1127,24 +1093,6 @@ $(document).ready(function () {
     return [...new Set(sizes)];
   }
 
-  //   function populateDropdown(dropdownId, options, selectedValue) {
-  //     var dropdown = $(dropdownId);
-  //     dropdown.empty();
-
-  //     var placeholder = "";
-  //     if (dropdownId === "#make-dropdown") placeholder = "Make";
-  //     else if (dropdownId === "#model-dropdown") placeholder = "Model";
-  //     else if (dropdownId === "#year-dropdown") placeholder = "Year";
-  //     else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
-
-  //     dropdown.append(new Option(placeholder, "", true, true));
-
-  //     options.forEach(function (option) {
-  //       var isSelected = option === selectedValue;
-  //       dropdown.append(new Option(option, option, isSelected, isSelected));
-  //     });
-  //   }
-
   function resetDropdowns(dropdownIds) {
     dropdownIds.forEach(function (dropdownId) {
       var placeholder = "";
@@ -1218,6 +1166,13 @@ $(document).ready(function () {
       });
       $(".incompatible-form").fadeIn(245, "swing");
       $(".specialist-form").hide();
+
+      $(".make-incompatable").text(currentMake);
+      $(".model-incompatable").text(currentModel);
+      $(".year-incompatable").text(currentYear);
+      $(".email-incompatable").text(storedEmail);
+      $(".phone-incompatable").text(storedPhone);
+      $(".name-incompatable").text(storedName);
     }
   }
 });

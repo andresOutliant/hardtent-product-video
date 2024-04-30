@@ -40,7 +40,10 @@ $(document).ready(function () {
 document.addEventListener("DOMContentLoaded", function () {
   // Find the link by its class
   const link = document.querySelector(".navbar22_link");
-
+  if (!link) {
+    console.error("Link element not found.");
+    return; // Exit if no link found
+  }
   link.addEventListener("click", function (event) {
     event.preventDefault(); // Prevent the default link behavior
     const targetUrl = this.getAttribute("href"); // Get the href value

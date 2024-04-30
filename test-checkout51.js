@@ -1,6 +1,62 @@
-fbq("track", "ViewContent");
+// fbq("track", "ViewContent");
 
-var storedMake, storedModel, storedYear, storedName, storedEmail, storedPhone;
+// Initialize variables with values from localStorage
+storedMake = localStorage.getItem("selectedMake");
+storedModel = localStorage.getItem("selectedModel");
+storedYear = localStorage.getItem("selectedYear");
+
+storedName = localStorage.getItem("customer_name");
+storedEmail = localStorage.getItem("customer_email");
+storedPhone = localStorage.getItem("customer_phone");
+var isSupporting =
+  localStorage.getItem("isSupporting") === "true" ? true : false;
+
+// Initialize dropdowns with data if available in localStorage
+if (localStorage.getItem("selectedMake")) {
+  $("#make-dropdown").val(localStorage.getItem("selectedMake")).change();
+}
+if (localStorage.getItem("selectedModel")) {
+  $("#model-dropdown").val(localStorage.getItem("selectedModel")).change();
+}
+if (localStorage.getItem("selectedYear")) {
+  $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
+}
+
+function populateDropdown(dropdownId, options, selectedValue, placeholderText) {
+  var dropdown = $(dropdownId);
+  dropdown.empty(); // Clears existing options
+
+  // Add a customized placeholder based on the dropdown
+  dropdown.append(
+    $("<option>", {
+      text: placeholderText, // Use the passed placeholder text
+      value: "",
+    })
+  );
+
+  // Add new options
+  options.forEach((option) => {
+    dropdown.append(
+      $("<option>", {
+        text: option,
+        value: option,
+        selected: option === selectedValue,
+      })
+    );
+  });
+
+  // Enable or disable the dropdown based on the options available
+  dropdown.prop("disabled", options.length === 0);
+}
+
+console.log("Make: " + storedMake);
+console.log("Model: " + storedModel);
+console.log("Year: " + storedYear);
+
+console.log("Customer Name: " + storedName);
+console.log("Customer Email: " + storedEmail);
+console.log("Customer Phone: " + storedPhone);
+console.log("isSupporting " + isSupporting);
 
 var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
 
@@ -48,6 +104,8 @@ function addOrUpdateProduct(productElement) {
     existingProduct.quantity = quantity;
     existingProduct.totalPrice = productPrice * quantity;
     existingProduct.imageUrl = productImage; // Update the image URL
+    updateUI();
+    return existingProduct;
   } else {
     var newProduct = {
       sku: productSKU,
@@ -58,29 +116,14 @@ function addOrUpdateProduct(productElement) {
       imageUrl: productImage, // Include the image URL
     };
     activeProducts.push(newProduct);
+    updateUI();
+    return newProduct;
   }
-
-  // console.log("Product added/updated:", newProduct || existingProduct);
-  // console.log("Active Products Array after update:", activeProducts);
-  updateUI();
 }
 
 function selectModelTypeAddOns(modelType) {
   // Normalize modelType for comparison
   var normalizedModelType = normalizeModelType(modelType);
-  var selectedMake1 = localStorage.getItem("selectedMake");
-  var selectedModel1 = localStorage.getItem("selectedModel");
-  var selectedYear1 = parseInt(localStorage.getItem("selectedYear"), 10);
-  console.log("Selected Make:", selectedMake1);
-  console.log("Selected Model:", selectedModel1);
-  console.log("Selected Year:", selectedYear1);
-
-  console.log("Selected Make:", selectedMake1 === "Ford"); // Should be true
-  console.log("Selected Model:", selectedModel1 === "F 150"); // Should be true
-  console.log(
-    "Selected Year Range:",
-    selectedYear1 <= 2024 && selectedYear1 >= 2021
-  ); // Should be true for years 2021-2024
 
   $(".checkout-adds-wrapper").each(function () {
     var includedTypes = $(this).data("included");
@@ -98,10 +141,10 @@ function selectModelTypeAddOns(modelType) {
 
     //Remove the following SKU=33 addon from Ford F150 2021-2024
     if (
-      selectedMake1 !== "Ford" &&
-      selectedModel1 !== "F 150" &&
-      selectedYear1 <= 2024 &&
-      selectedYear1 >= 2021 &&
+      storedMake !== "Ford" &&
+      storedModel !== "F 150" &&
+      storedYear <= 2024 &&
+      storedYear >= 2021 &&
       sku1 === 33
     ) {
       if (types.includes(normalizedModelType)) {
@@ -110,19 +153,6 @@ function selectModelTypeAddOns(modelType) {
       }
     }
   });
-}
-
-function updateModelSelected(modelType, modelPrice) {
-  // Update the #model-selected div with "HardCamp -" prefix
-  $("#model-selected").text("HardCamp - " + modelType);
-
-  // Format modelPrice with commas
-  var formattedModelPrice = modelPrice.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-
-  $("#model-selected-price").text(formattedModelPrice);
 }
 
 function normalizeModelType(modelType) {
@@ -180,7 +210,15 @@ function updateUI() {
     }
     newDiv.find(".add-on-name").text(product.name); // Update product name
     newDiv.find(".quantity-number").text(product.quantity); // Update quantity
-    newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
+    //newDiv.find(".add-on-price").text("$" + product.totalPrice.toFixed(2)); // Update product price
+    newDiv.find(".add-on-price").text(
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(product.totalPrice)
+    );
 
     newDiv.appendTo(".adds").show();
   });
@@ -218,7 +256,7 @@ function updateCartFormWithProducts(modelName, modelPrice) {
 
   // Always add the Downpayment item with a fixed price of $500
   $("#foxy-cart-form").append(
-    `<input type='hidden' class='dynamic-input' name='name' value='Downpayment for HardCamp'>`,
+    `<input type='hidden' class='dynamic-input' name='name' value='Reserve for HardCamp'>`,
     `<input type='hidden' class='dynamic-input' name='price' value='500'>`,
     `<input type='hidden' class='dynamic-input' name='quantity' value='1'>`
   );
@@ -264,6 +302,8 @@ function updateSubtotal() {
   var formattedSubtotal = subtotal.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
   console.log("Subtotal calculated:", subtotal);
@@ -302,13 +342,10 @@ $(document).ready(function () {
     });
   };
 
-  // Initialize variables with values from localStorage
-  storedMake = localStorage.getItem("selectedMake");
-  storedModel = localStorage.getItem("selectedModel");
-  storedYear = localStorage.getItem("selectedYear");
-  storedName = localStorage.getItem("customer_name");
-  storedEmail = localStorage.getItem("customer_email");
-  storedPhone = localStorage.getItem("customer_phone");
+  $("#model-dropdown").change(function () {
+    console.log("Model selected: ", $(this).val());
+    // Other code...
+  });
 
   $("#make-dropdown").val(storedMake).prop("disabled", false);
   $("#model-dropdown").val(storedModel).prop("disabled", false);
@@ -317,12 +354,22 @@ $(document).ready(function () {
   $("#customer_email").val(storedEmail);
   $("#customer_phone").val(storedPhone);
 
-  console.log("Stored Make:", storedMake);
-  console.log("Stored Model:", storedModel);
-  console.log("Stored Year:", storedYear);
-  console.log("Stored Name:", storedName);
-  console.log("Stored Email:", storedEmail);
-  console.log("Stored Phone:", storedPhone);
+  //   console.log("Stored Make:", storedMake);
+  //   console.log("Stored Model:", storedModel);
+  //   console.log("Stored Year:", storedYear);
+  //   console.log("Stored Name:", storedName);
+  //   console.log("Stored Email:", storedEmail);
+  //   console.log("Stored Phone:", storedPhone);
+
+  $(".back-to-step-one").click(function () {
+    $(".truck-matched").fadeOut(245, "swing");
+    $("#truck-compatible").fadeOut(245, "swing");
+    $("#truck-incompatible").fadeOut(245, "swing");
+
+    $(".specialist-form").fadeIn(245, "swing");
+    $(".truck-check-container").fadeIn(245, "swing");
+    $("#truck-form").fadeIn(245, "swing");
+  });
 
   $(".learn-more-btn").on("click", function (event) {
     event.stopPropagation();
@@ -345,30 +392,13 @@ $(document).ready(function () {
   $(".model-price").each(function () {
     // Retrieve the price as a float
     var price = parseFloat($(this).text());
-    // Format the price with commas and ensure two decimal places
+    // Format the price with commas and ensure no decimal places
     var formattedPrice = price.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     });
     // Update the element's text with the formatted price
     $(this).text(formattedPrice);
-  });
-
-  $(".flex-click").click(function () {
-    $(this)
-      .find(".flex-hide")
-      .each(function (index, element) {
-        var $el = $(element);
-        if ($el.is(":hidden")) {
-          $el
-            .delay(index * 150)
-            .animate({ height: "toggle", opacity: "toggle" }, 250);
-        } else {
-          $el
-            .delay(index * 150)
-            .animate({ height: "toggle", opacity: "toggle" }, 250);
-        }
-      });
   });
 
   $(".checkout-adds-wrapper").on("click", function () {
@@ -376,10 +406,19 @@ $(document).ready(function () {
 
     if ($(this).hasClass("active")) {
       $(this).find(".add-check").fadeIn();
-      addOrUpdateProduct($(this));
+      var product = addOrUpdateProduct($(this)); // Capture the returned product
+      analytics.track("Add-On Selected", {
+        add_on_id: "",
+        add_on_name: product.name, // Use the captured product details
+        customer_email: storedEmail ?? "",
+        make: storedMake ?? "",
+        model: storedModel ?? "",
+        year: storedYear ?? "",
+      });
     } else {
       $(this).find(".add-check").fadeOut();
       removeProductFromArray($(this));
+      updateUI(); // Update UI after product removal
     }
   });
 
@@ -559,14 +598,6 @@ $(document).ready(function () {
       }
     });
   });
-
-  $(".starting-price-copy").each(function () {
-    // Check if the first child is a div and perform actions
-    var $firstChildDiv = $(this).children("div:first");
-    if ($firstChildDiv.length > 0) {
-      $firstChildDiv.text("$");
-    }
-  });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -661,136 +692,177 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-$(document).on("click", ".model-card", function () {
-  resetSelectedAddOns();
-  var isActive = $(this).hasClass("active");
-  $(".model-card").removeClass("active");
-
-  if (!isActive) {
-    $(this).addClass("active");
+$(document).ready(function () {
+  // Function to show the appropriate slider
+  function showRelevantSlider(modelName) {
+    $("div[data-slider-name]").hide(); // Hide all sliders
+    $('div[data-slider-name="' + modelName + '"]').show(); // Show the relevant slider
   }
 
-  // Update the button state based on active model cards
-  if ($(".model-card.active").length > 0) {
-    $(".forward-button.inactive")
-      .removeClass("inactive")
-      .addClass("send-model");
-      $(this).find(".add-check").fadeIn();
+  // Check local storage for a saved model selection or default to 'base'
+  var savedModelName = localStorage.getItem("selectedModelName") || "base";
+  showRelevantSlider(savedModelName);
 
-  } else {
-    $(".forward-button").not(".inactive").addClass("inactive");
-    $(this).find(".add-check").fadeOut();
+  $(document).on("click", ".model-card", function () {
+    resetSelectedAddOns();
+    var isActive = $(this).hasClass("active");
+    $(".model-card").removeClass("active");
 
-  }
-
-  var activeModelCard = $(".model-card.active");
-  if (activeModelCard.length) {
-    var modelName = activeModelCard.data("model-name");
-    var modelPrice = parseFloat(activeModelCard.data("model-price"));
-
-    // Check if the model name is "Outfitted+"
-    if (modelName === "Outfitted+") {
-      modelPrice = 23977; // Set a custom price for "Outfitted+"
+    if (!isActive) {
+      $(this).addClass("active");
     }
 
-    selectModelTypeAddOns(modelName);
-    console.log("Model Name:", modelName, "Model Price:", modelPrice);
-    updateModelSelected(modelName, modelPrice);
-    updateCartFormWithProducts(modelName, 0);
+    // Update the button state based on active model cards
+    if ($(".model-card.active").length > 0) {
+      $(".forward-button.inactive")
+        .removeClass("inactive")
+        .addClass("send-model");
+      $(this).find(".add-check").fadeIn();
+    } else {
+      $(".forward-button").not(".inactive").addClass("inactive");
+      $(this).find(".add-check").fadeOut();
+    }
 
-    // Format the price with commas
-    var formattedPrice = formatPrice(modelPrice);
+    var activeModelCard = $(".model-card.active");
+    if (activeModelCard.length) {
+      var modelName = activeModelCard.data("model-name");
+      var modelPrice = parseFloat(activeModelCard.data("model-price"));
+      var startingAtPrice = parseFloat(
+        activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+          modelPrice
+      );
 
-    // Update Subtotal in UI
-    $("#subtotal").fadeOut(160, function () {
-      $(this)
-        .text("$" + formattedPrice)
-        .fadeIn(160);
-    });
-  } else {
-    $("#model-name-input").val("");
-    $("#model-price-input").val("");
-  }
+      $("#model-selected").text("HardCamp - " + modelName);
+
+      var originalPriceText = activeModelCard.find(".starting-at-price").text();
+      var originalPrice = originalPriceText
+        ? parseFloat(originalPriceText.replace(/,/g, ""))
+        : modelPrice;
+
+      $("#original-price").text("$" + formatPrice(originalPrice));
+
+      selectModelTypeAddOns(modelName);
+      console.log(
+        "Model Name:",
+        modelName,
+        "Model Price:",
+        modelPrice,
+        "Original Price:",
+        originalPrice
+      );
+      updateCartFormWithProducts(modelName, 0);
+
+      var formattedPrice = formatPrice(modelPrice);
+
+      $("#subtotal").fadeOut(160, function () {
+        $(this)
+          .text("$" + formattedPrice)
+          .fadeIn(160);
+      });
+
+      $(".original-price").each(function () {
+        var formattedStartingPrice = formatPrice(startingAtPrice);
+        $(this).text(
+          formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+        );
+      });
+
+      // Save the selected model name to local storage
+      localStorage.setItem("selectedModelName", modelName);
+
+      // Show or hide slider divs based on the selected model name
+      showRelevantSlider(modelName);
+    } else {
+      $("#model-name-input").val("");
+      $("#model-price-input").val("");
+      $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
+      $("div[data-slider-name]").hide(); // Hide all sliders if no model is active
+    }
+  });
 });
 
-// Function to format numbers with commas
-function formatPrice(number) {
-  return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-}
-
 // $(document).on("click", ".model-card", function () {
-//   var modelName = "";
-//   var modelPrice = 0;
 //   resetSelectedAddOns();
-//   // Toggle the active class on the clicked model card
 //   var isActive = $(this).hasClass("active");
 //   $(".model-card").removeClass("active");
+
 //   if (!isActive) {
 //     $(this).addClass("active");
 //   }
 
-//   // Update the inactive class on .forward-button.inactive accordingly
+//   // Update the button state based on active model cards
 //   if ($(".model-card.active").length > 0) {
 //     $(".forward-button.inactive")
 //       .removeClass("inactive")
 //       .addClass("send-model");
+//     $(this).find(".add-check").fadeIn();
 //   } else {
 //     $(".forward-button").not(".inactive").addClass("inactive");
+//     $(this).find(".add-check").fadeOut();
 //   }
 
-//   // Update model details and form inputs based on the active model card
+//   var activeModelCard = $(".model-card.active");
 //   if (activeModelCard.length) {
-//     // Retrieve model name and price from data attributes
-//     modelName = activeModelCard.data("model-name");
-//     modelPrice = parseFloat(activeModelCard.data("model-price"));
+//     var modelName = activeModelCard.data("model-name");
+//     var modelPrice = parseFloat(activeModelCard.data("model-price"));
+//     var startingAtPrice = parseFloat(
+//       activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+//         modelPrice
+//     );
+
+//     $("#model-selected").text("HardCamp - " + modelName);
+
+//     // Capture the original price from the active model card, fallback to modelPrice if not available
+//     var originalPriceText = activeModelCard.find(".starting-at-price").text();
+//     var originalPrice = originalPriceText
+//       ? parseFloat(originalPriceText.replace(/,/g, ""))
+//       : modelPrice;
+
+//     // Update the original price on the webpage
+//     $("#original-price").text("$" + formatPrice(originalPrice));
 
 //     selectModelTypeAddOns(modelName);
-//     // Log the values for debugging
-//     console.log("Model Name:", modelName, "Model Price:", modelPrice);
+//     console.log(
+//       "Model Name:",
+//       modelName,
+//       "Model Price:",
+//       modelPrice,
+//       "Original Price:",
+//       originalPrice
+//     );
+//     updateCartFormWithProducts(modelName, 0);
 
-//     // Update model selection UI if necessary
-//     updateModelSelected(modelName, modelPrice);
+//     // Format the price with commas
+//     var formattedPrice = formatPrice(modelPrice);
 
-//     // Update the form with model details and active products
-//     updateCartFormWithProducts(modelName, 0); // commented out so modelPrice doesnt affect total
+//     // Update Subtotal and original prices in UI
+//     $("#subtotal").fadeOut(160, function () {
+//       $(this)
+//         .text("$" + formattedPrice)
+//         .fadeIn(160);
+//     });
+//     $(".original-price").each(function () {
+//       var formattedStartingPrice = formatPrice(startingAtPrice);
+//       $(this).text(
+//         formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+//       );
+//     });
 //   } else {
-//     // Clear inputs if no model is active
 //     $("#model-name-input").val("");
 //     $("#model-price-input").val("");
-//     //new
-//     // var activeProducts = [];
-//     // var modelName = "";
-//     // var modelPrice = 0;
-//     // resetSelectedAddOns();
+//     $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
 //   }
-//   document
-//     .getElementById("make-dropdown")
-//     .addEventListener("change", function () {
-//       updateSelections("make", this.value);
-//     });
-
-//   document
-//     .getElementById("model-dropdown")
-//     .addEventListener("change", function () {
-//       updateSelections("model", this.value);
-//     });
-
-//   document
-//     .getElementById("year-dropdown")
-//     .addEventListener("change", function () {
-//       updateSelections("year", this.value);
-//     });
-
-//   $(".checkout-cart-btn").on("click", function () {
-//     $("#submit-to-foxy").trigger("click");
-//   });
-
-//   // Initial adjustment
-//   adjustDescriptionText();
-
-//   // Adjust on window resize
-//   window.addEventListener("resize", adjustDescriptionText);
 // });
+
+function formatPrice(price) {
+  if (!isNaN(price)) {
+    // Round the price to the nearest whole number and format with commas
+    return Math.round(price).toLocaleString();
+  } else {
+    console.error("Invalid price input:", price);
+    return null; // handle cases where price is not a number
+  }
+}
 
 function adjustDescriptionText() {
   // Determine word limits for different screen sizes
@@ -851,23 +923,27 @@ $(document).ready(function () {
           storedYear &&
           storedName &&
           storedEmail &&
-          storedPhone
+          storedPhone &&
+          isSupporting
         ) {
           // Populate dropdowns for truck selection
           populateDropdown(
             "#make-dropdown",
             getUniqueMakes(truckData),
-            storedMake
+            storedMake,
+            "Select Make"
           );
           populateDropdown(
             "#model-dropdown",
             getUniqueModels(storedMake),
-            storedModel
+            storedModel,
+            "Select Model"
           );
           populateDropdown(
             "#year-dropdown",
             getUniqueYears(storedMake, storedModel),
-            storedYear
+            storedYear,
+            "Select Year"
           );
           $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
             "disabled",
@@ -892,17 +968,18 @@ $(document).ready(function () {
 
           switchSection(stepOne, stepTwo);
           $(".step-two-form").fadeIn(200);
-          //handleTruckCheck();
-          //switchSection('step-one', 'step-two');
+
+          $(".truck-matched").fadeOut(245, "swing");
+          $("#truck-compatible").fadeOut(245, "swing");
+          $("#truck-incompatible").fadeOut(245, "swing");
+
           $("#make-dropdown, #model-dropdown, #year-dropdown").trigger(
             "change"
           );
-          var selectedMake2 = $("#make-dropdown").val();
-          var selectedModel2 = $("#model-dropdown").val();
-          var selectedYear3 = $("#year-dropdown").val();
-          $("#make-selected").text(selectedMake2 || "Placeholder");
-          $("#truck-model-selected").text(selectedModel2 || "Placeholder");
-          $("#year-selected").text(selectedYear3 || "Placeholder");
+
+          $("#make-selected").text(storedMake || "Placeholder");
+          $("#truck-model-selected").text(storedModel || "Placeholder");
+          $("#year-selected").text(storedYear || "Placeholder");
         } else {
           // Initialize empty dropdowns if no data is stored
           populateDropdown("#make-dropdown", [], "Make");
@@ -918,67 +995,70 @@ $(document).ready(function () {
           var makes = getUniqueMakes(truckData);
           populateDropdown("#make-dropdown", makes, "Make");
         }
+
         $("#make-dropdown").change(function () {
           var selectedMake = $(this).val();
           localStorage.setItem("selectedMake", selectedMake);
-          var models = getUniqueModels(selectedMake);
-          $("#model-dropdown").prop("disabled", models.length === 0);
-          resetDropdowns([
-            "#model-dropdown",
-            "#year-dropdown",
-            "#bed-size-dropdown",
-          ]);
-          populateDropdown("#model-dropdown", models, "Model");
-          if (models.length > 0) {
-            $("#model-dropdown").val(models[0]).change();
-          }
+          updateModelAndYearDropdowns(selectedMake); // Update model and year based on selected make
         });
+
         $("#model-dropdown").change(function () {
           var selectedMake = $("#make-dropdown").val();
           var selectedModel = $(this).val();
           localStorage.setItem("selectedModel", selectedModel);
-          var years = getUniqueYears(selectedMake, selectedModel);
-          $("#year-dropdown").prop("disabled", years.length === 0);
-          resetDropdowns(["#year-dropdown", "#bed-size-dropdown"]);
-          populateDropdown("#year-dropdown", years, "Year");
-          if (years.length > 0) {
-            $("#year-dropdown").val(years[0]).change();
-          }
+          updateYearDropdown(selectedMake, selectedModel); // Update year based on selected make and model
         });
 
-        //   var debounceTimer;
-        //   $("#customer_name").keyup(function () {
-        //     clearTimeout(debounceTimer);
-        //     var customer_name = $(this).val();
+        $("#year-dropdown").change(function () {
+          var selectedYear = $(this).val();
+          localStorage.setItem("selectedYear", selectedYear);
+        });
 
-        //     // Set the delay for debounce (e.g., 500 milliseconds)
-        //     debounceTimer = setTimeout(function () {
-        //       localStorage.setItem("customer_name", customer_name);
-        //       console.log("Saved to localStorage:", customer_name); // Log what is being saved
-        //     }, 390);
-        //   });
+        // Function to update model dropdown based on selected make
+        $("#make-dropdown").change(function () {
+          var selectedMake = $(this).val();
+          localStorage.setItem("selectedMake", selectedMake);
+          updateModelAndYearDropdowns(selectedMake); // Update model and year based on selected make
+        });
 
-        //   $("#customer_email").keyup(function () {
-        //     clearTimeout(debounceTimer);
-        //     var customer_email = $(this).val();
+        function updateModelAndYearDropdowns(make) {
+          if (!make) {
+            // Check if the make is not selected
+            $("#model-dropdown").prop("disabled", true).empty();
+            $("#year-dropdown").prop("disabled", true).empty();
+            return;
+          }
 
-        //     // Set the delay for debounce (e.g., 500 milliseconds)
-        //     debounceTimer = setTimeout(function () {
-        //       localStorage.setItem("customer_email", customer_email);
-        //       console.log("Saved to localStorage:", customer_email); // Log what is being saved
-        //     }, 390);
-        //   });
+          var models = getUniqueModels(make);
+          populateDropdown("#model-dropdown", models, models[0]);
 
-        //   $("#customer_phone").keyup(function () {
-        //     clearTimeout(debounceTimer);
-        //     var customer_phone = $(this).val();
+          // Check if there are any models to enable the dropdown
+          if (models.length > 0) {
+            $("#model-dropdown").prop("disabled", false);
+            $("#model-dropdown").change(); // Trigger change to update year dropdown
+          } else {
+            $("#model-dropdown").prop("disabled", true);
+            $("#year-dropdown").prop("disabled", true);
+          }
+        }
 
-        //     // Set the delay for debounce (e.g., 500 milliseconds)
-        //     debounceTimer = setTimeout(function () {
-        //       localStorage.setItem("customer_phone", customer_phone);
-        //       console.log("Saved to localStorage:", customer_phone); // Log what is being saved
-        //     }, 390);
-        //   });
+        // Function to update year dropdown based on selected make and model
+        function updateYearDropdown(make, model) {
+          if (!model) {
+            // Check if a model is actually selected
+            $("#year-dropdown").prop("disabled", true).empty();
+            return;
+          }
+
+          var years = getUniqueYears(make, model);
+          populateDropdown("#year-dropdown", years, years[0]);
+
+          // Enable or disable the year dropdown based on available years
+          $("#year-dropdown").prop("disabled", years.length === 0);
+          if (years.length > 0) {
+            $("#year-dropdown").change(); // Optionally trigger change if needed for further updates
+          }
+        }
 
         $(
           "#year-dropdown, #customer_name, #customer_email, #customer_phone, #email-check"
@@ -1105,24 +1185,6 @@ $(document).ready(function () {
     return [...new Set(sizes)];
   }
 
-  function populateDropdown(dropdownId, options, selectedValue) {
-    var dropdown = $(dropdownId);
-    dropdown.empty();
-
-    var placeholder = "";
-    if (dropdownId === "#make-dropdown") placeholder = "Make";
-    else if (dropdownId === "#model-dropdown") placeholder = "Model";
-    else if (dropdownId === "#year-dropdown") placeholder = "Year";
-    else if (dropdownId === "#bed-size-dropdown") placeholder = "Bed Size";
-
-    dropdown.append(new Option(placeholder, "", true, true));
-
-    options.forEach(function (option) {
-      var isSelected = option === selectedValue;
-      dropdown.append(new Option(option, option, isSelected, isSelected));
-    });
-  }
-
   function resetDropdowns(dropdownIds) {
     dropdownIds.forEach(function (dropdownId) {
       var placeholder = "";
@@ -1135,16 +1197,15 @@ $(document).ready(function () {
 
     $("#truck-compatible").fadeOut(245, "swing");
     $("#truck-incompatible").fadeOut(245, "swing");
+    $("#truck-matched").fadeOut(245, "swing");
 
-    $(".compatible-form").fadeOut(245, "swing");
+    // $(".compatible-form").fadeOut(245, "swing");
     $(".incompatible-form").fadeOut(245, "swing");
 
     $(".specialist-form").fadeIn(245, "swing");
 
     $(".truck-check-container").fadeIn(245, "swing");
     $(".truck-check").css("opacity", "0.5").prop("disabled", true);
-
-    $(".step-one-next-form").fadeOut(245, "swing");
   }
 
   function checkSupporting(make, model, year, bedSize) {
@@ -1158,70 +1219,55 @@ $(document).ready(function () {
         (bedSize === undefined || bedSize === null || truck.bedSize == bedSize)
       );
     });
+    console.log("Matching truck data:", result); // Log the result to the console
+
     return result ? result.supporting : false;
   }
 
-  function getUniqueTrims(make, model) {
-    var trims = [
-      ...new Set(
-        truckData
-          .filter((item) => item.manufacturer === make && item.model === model)
-          .map((item) => item.trim)
-      ),
-    ];
-    return trims;
-  }
-
-  function canCheckTruck() {
-    var selectedMake = $("#make-dropdown").val();
-    var selectedModel = $("#model-dropdown").val();
-    var selectedYear = $("#year-dropdown").val();
-    return selectedMake && selectedModel && selectedYear;
-  }
-
   function handleTruckCheck() {
-    var storedMake = localStorage.getItem("selectedMake");
-    var storedModel = localStorage.getItem("selectedModel");
-    var storedYear = localStorage.getItem("selectedYear");
-    if (storedMake) {
-      $("#make-dropdown").val(storedMake);
-    }
-    if (storedModel) {
-      $("#model-dropdown").val(storedModel);
-    }
-    if (storedYear) {
-      $("#year-dropdown").val(storedYear);
-    }
+    // Fetch the current selections from the dropdowns
+    var currentMake = $("#make-dropdown").val();
+    var currentModel = $("#model-dropdown").val();
+    var currentYear = $("#year-dropdown").val();
 
-    var selectedMake = $("#make-dropdown").val();
-    var selectedModel = $("#model-dropdown").val();
-    var selectedYear = $("#year-dropdown").val();
-    $("#make-selected").text(selectedMake || "Placeholder");
-    $("#truck-model-selected").text(selectedModel || "Placeholder");
-    //$("#year-selected").text(selectedYear || "Placeholder");
-    $("#year-selected").text(storedYear || "Placeholder");
+    // Update the text fields to display the current selections
+    $("#make-selected").text(currentMake || "Placeholder");
+    $("#truck-model-selected").text(currentModel || "Placeholder");
+    $(".year-selected").text(currentYear || "Placeholder");
 
-    var isSupporting = checkSupporting(
-      selectedMake,
-      selectedModel,
-      selectedYear
-    );
+    // Check support status using the current selections
+    isSupporting = checkSupporting(currentMake, currentModel, currentYear);
 
+    // Store the new 'isSupporting' status
+    localStorage.setItem("isSupporting", isSupporting);
+    console.log("new isSupporting: " + isSupporting);
+
+    // Hide the truck check container and update the form display based on support status
     $(".truck-check-container").fadeOut(245, "swing");
 
     if (isSupporting) {
+      $("#truck-form").hide();
       $("#truck-compatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });
       $(".specialist-form").hide();
-      $(".compatible-form").fadeIn(245, "swing");
-      $(".step-one-next-form").fadeIn(245, "swing");
     } else {
+      $("#truck-form").hide();
       $("#truck-incompatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });
       $(".incompatible-form").fadeIn(245, "swing");
       $(".specialist-form").hide();
+
+      $(".make-incompatable-text").text(currentMake);
+      $(".model-incompatable-text").text(currentModel);
+      $(".year-incompatable-text").text(currentYear);
+      $(".make-incompatable").val(currentMake);
+      $(".model-incompatable").val(currentModel);
+      $(".year-incompatable").val(currentYear);
+      $(".email-incompatable").val(storedEmail);
+      $(".phone-incompatable").val(storedPhone);
+      $(".name-incompatable").val(storedName);
     }
   }
 });

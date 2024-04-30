@@ -1138,13 +1138,18 @@ $(document).ready(function () {
     var currentModel = $("#model-dropdown").val();
     var currentYear = $("#year-dropdown").val();
 
-    // Update the text fields to display the current selections
-    $("#make-selected").text(currentMake || "Placeholder");
-    $("#truck-model-selected").text(currentModel || "Placeholder");
-    $(".year-selected").text(currentYear || "Placeholder");
+    // Update both input fields and text elements to display the current selections
+    $(".make-incompatible-input").val(currentMake); // For input elements
+    $(".make-incompatible-text").text(currentMake); // For text elements
+
+    $(".model-incompatible-input").val(currentModel); // For input elements
+    $(".model-incompatible-text").text(currentModel); // For text elements
+
+    $(".year-incompatible-input").val(currentYear); // For input elements
+    $(".year-incompatible-text").text(currentYear); // For text elements
 
     // Check support status using the current selections
-    isSupporting = checkSupporting(currentMake, currentModel, currentYear);
+    var isSupporting = checkSupporting(currentMake, currentModel, currentYear);
 
     // Store the new 'isSupporting' status
     localStorage.setItem("isSupporting", isSupporting);
@@ -1166,13 +1171,6 @@ $(document).ready(function () {
       });
       $(".incompatible-form").fadeIn(245, "swing");
       $(".specialist-form").hide();
-
-      $(".make-incompatable").text(currentMake);
-      $(".model-incompatable").text(currentModel);
-      $(".year-incompatable").text(currentYear);
-      $(".email-incompatable").text(storedEmail);
-      $(".phone-incompatable").text(storedPhone);
-      $(".name-incompatable").text(storedName);
     }
   }
 });

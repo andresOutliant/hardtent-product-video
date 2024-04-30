@@ -841,17 +841,20 @@ $(document).ready(function () {
           populateDropdown(
             "#make-dropdown",
             getUniqueMakes(truckData),
-            storedMake
+            storedMake,
+            "Select Make"
           );
           populateDropdown(
             "#model-dropdown",
             getUniqueModels(storedMake),
-            storedModel
+            storedModel,
+            "Select Model"
           );
           populateDropdown(
             "#year-dropdown",
             getUniqueYears(storedMake, storedModel),
-            storedYear
+            storedYear,
+            "Select Year"
           );
           $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
             "disabled",

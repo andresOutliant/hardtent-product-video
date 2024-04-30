@@ -368,7 +368,7 @@ $(document).ready(function () {
 
     $(".specialist-form").fadeIn(245, "swing");
     $(".truck-check-container").fadeIn(245, "swing");
-    $("#wf-form-Truck-Compatibility-Form").fadeIn(245, "swing");
+    $("#truck-form").fadeIn(245, "swing");
   });
 
   $(".learn-more-btn").on("click", function (event) {
@@ -1157,13 +1157,13 @@ $(document).ready(function () {
     $(".truck-check-container").fadeOut(245, "swing");
 
     if (isSupporting) {
-      $("#wf-form-Truck-Compatibility-Form").hide();
+      $("#truck-form").hide();
       $("#truck-compatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });
       $(".specialist-form").hide();
     } else {
-      $("#wf-form-Truck-Compatibility-Form").hide();
+      $("#truck-form").hide();
       $("#truck-incompatible").fadeIn(245, "swing", function () {
         $(this).css("display", "flex");
       });

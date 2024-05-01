@@ -692,78 +692,167 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-$(document).on("click", ".model-card", function () {
-  resetSelectedAddOns();
-  var isActive = $(this).hasClass("active");
-  $(".model-card").removeClass("active");
-
-  if (!isActive) {
-    $(this).addClass("active");
+$(document).ready(function () {
+  // Function to show the appropriate slider
+  function showRelevantSlider(modelName) {
+    $("div[data-slider-name]").hide(); // Hide all sliders
+    $('div[data-slider-name="' + modelName + '"]').show(); // Show the relevant slider
   }
 
-  // Update the button state based on active model cards
-  if ($(".model-card.active").length > 0) {
-    $(".forward-button.inactive")
-      .removeClass("inactive")
-      .addClass("send-model");
-    $(this).find(".add-check").fadeIn();
-  } else {
-    $(".forward-button").not(".inactive").addClass("inactive");
-    $(this).find(".add-check").fadeOut();
-  }
+  // Check local storage for a saved model selection or default to 'base'
+  var savedModelName = localStorage.getItem("selectedModelName") || "base";
+  showRelevantSlider(savedModelName);
 
-  var activeModelCard = $(".model-card.active");
-  if (activeModelCard.length) {
-    var modelName = activeModelCard.data("model-name");
-    var modelPrice = parseFloat(activeModelCard.data("model-price"));
-    var startingAtPrice = parseFloat(
-      activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
-        modelPrice
-    );
+  $(document).on("click", ".model-card", function () {
+    resetSelectedAddOns();
+    var isActive = $(this).hasClass("active");
+    $(".model-card").removeClass("active");
 
-    $("#model-selected").text("HardCamp - " + modelName);
+    if (!isActive) {
+      $(this).addClass("active");
+    }
 
-    // Capture the original price from the active model card, fallback to modelPrice if not available
-    var originalPriceText = activeModelCard.find(".starting-at-price").text();
-    var originalPrice = originalPriceText
-      ? parseFloat(originalPriceText.replace(/,/g, ""))
-      : modelPrice;
+    // Update the button state based on active model cards
+    if ($(".model-card.active").length > 0) {
+      $(".forward-button.inactive")
+        .removeClass("inactive")
+        .addClass("send-model");
+      $(this).find(".add-check").fadeIn();
+    } else {
+      $(".forward-button").not(".inactive").addClass("inactive");
+      $(this).find(".add-check").fadeOut();
+    }
 
-    // Update the original price on the webpage
-    $("#original-price").text("$" + formatPrice(originalPrice));
-
-    selectModelTypeAddOns(modelName);
-    console.log(
-      "Model Name:",
-      modelName,
-      "Model Price:",
-      modelPrice,
-      "Original Price:",
-      originalPrice
-    );
-    updateCartFormWithProducts(modelName, 0);
-
-    // Format the price with commas
-    var formattedPrice = formatPrice(modelPrice);
-
-    // Update Subtotal and original prices in UI
-    $("#subtotal").fadeOut(160, function () {
-      $(this)
-        .text("$" + formattedPrice)
-        .fadeIn(160);
-    });
-    $(".original-price").each(function () {
-      var formattedStartingPrice = formatPrice(startingAtPrice);
-      $(this).text(
-        formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+    var activeModelCard = $(".model-card.active");
+    if (activeModelCard.length) {
+      var modelName = activeModelCard.data("model-name");
+      var modelPrice = parseFloat(activeModelCard.data("model-price"));
+      var startingAtPrice = parseFloat(
+        activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+          modelPrice
       );
-    });
-  } else {
-    $("#model-name-input").val("");
-    $("#model-price-input").val("");
-    $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
-  }
+
+      $("#model-selected").text("HardCamp - " + modelName);
+
+      var originalPriceText = activeModelCard.find(".starting-at-price").text();
+      var originalPrice = originalPriceText
+        ? parseFloat(originalPriceText.replace(/,/g, ""))
+        : modelPrice;
+
+      $("#original-price").text("$" + formatPrice(originalPrice));
+
+      selectModelTypeAddOns(modelName);
+      console.log(
+        "Model Name:",
+        modelName,
+        "Model Price:",
+        modelPrice,
+        "Original Price:",
+        originalPrice
+      );
+      updateCartFormWithProducts(modelName, 0);
+
+      var formattedPrice = formatPrice(modelPrice);
+
+      $("#subtotal").fadeOut(160, function () {
+        $(this)
+          .text("$" + formattedPrice)
+          .fadeIn(160);
+      });
+
+      $(".original-price").each(function () {
+        var formattedStartingPrice = formatPrice(startingAtPrice);
+        $(this).text(
+          formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+        );
+      });
+
+      // Save the selected model name to local storage
+      localStorage.setItem("selectedModelName", modelName);
+
+      // Show or hide slider divs based on the selected model name
+      showRelevantSlider(modelName);
+    } else {
+      $("#model-name-input").val("");
+      $("#model-price-input").val("");
+      $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
+      $("div[data-slider-name]").hide(); // Hide all sliders if no model is active
+    }
+  });
 });
+
+// $(document).on("click", ".model-card", function () {
+//   resetSelectedAddOns();
+//   var isActive = $(this).hasClass("active");
+//   $(".model-card").removeClass("active");
+
+//   if (!isActive) {
+//     $(this).addClass("active");
+//   }
+
+//   // Update the button state based on active model cards
+//   if ($(".model-card.active").length > 0) {
+//     $(".forward-button.inactive")
+//       .removeClass("inactive")
+//       .addClass("send-model");
+//     $(this).find(".add-check").fadeIn();
+//   } else {
+//     $(".forward-button").not(".inactive").addClass("inactive");
+//     $(this).find(".add-check").fadeOut();
+//   }
+
+//   var activeModelCard = $(".model-card.active");
+//   if (activeModelCard.length) {
+//     var modelName = activeModelCard.data("model-name");
+//     var modelPrice = parseFloat(activeModelCard.data("model-price"));
+//     var startingAtPrice = parseFloat(
+//       activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+//         modelPrice
+//     );
+
+//     $("#model-selected").text("HardCamp - " + modelName);
+
+//     // Capture the original price from the active model card, fallback to modelPrice if not available
+//     var originalPriceText = activeModelCard.find(".starting-at-price").text();
+//     var originalPrice = originalPriceText
+//       ? parseFloat(originalPriceText.replace(/,/g, ""))
+//       : modelPrice;
+
+//     // Update the original price on the webpage
+//     $("#original-price").text("$" + formatPrice(originalPrice));
+
+//     selectModelTypeAddOns(modelName);
+//     console.log(
+//       "Model Name:",
+//       modelName,
+//       "Model Price:",
+//       modelPrice,
+//       "Original Price:",
+//       originalPrice
+//     );
+//     updateCartFormWithProducts(modelName, 0);
+
+//     // Format the price with commas
+//     var formattedPrice = formatPrice(modelPrice);
+
+//     // Update Subtotal and original prices in UI
+//     $("#subtotal").fadeOut(160, function () {
+//       $(this)
+//         .text("$" + formattedPrice)
+//         .fadeIn(160);
+//     });
+//     $(".original-price").each(function () {
+//       var formattedStartingPrice = formatPrice(startingAtPrice);
+//       $(this).text(
+//         formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+//       );
+//     });
+//   } else {
+//     $("#model-name-input").val("");
+//     $("#model-price-input").val("");
+//     $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
+//   }
+// });
 
 function formatPrice(price) {
   if (!isNaN(price)) {

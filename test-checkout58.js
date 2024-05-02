@@ -989,9 +989,10 @@ $(document).ready(function () {
           $("#year-selected").text(storedYear || "Placeholder");
         } else {
           // Initialize empty dropdowns if no data is stored
-          populateDropdown("#make-dropdown", [], "Make");
-          populateDropdown("#model-dropdown", [], "Model");
-          populateDropdown("#year-dropdown", [], "Year");
+          populateDropdown("#make-dropdown", [], "", "Select Make");
+          populateDropdown("#model-dropdown", [], "", "Select Model");
+          populateDropdown("#year-dropdown", [], "", "Select Year");
+
           populateDropdown("#bed-size-dropdown", [], "Bed Size");
           $(".truck-check").css("opacity", "0.5").prop("disabled", true);
           $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(

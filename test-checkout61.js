@@ -604,9 +604,12 @@ $(document).ready(function () {
       }
     });
 
-    // Optionally, update any UI elements that depend on addOnFlag
     let forwardText = document.getElementById("test-one");
-    forwardText.textContent = buttonLabels[categoryIndex];
+    if (forwardText) {
+      forwardText.textContent = buttonLabels[categoryIndex];
+    } else {
+      console.log('Element with id "test-one" not found');
+    }
   });
 });
 

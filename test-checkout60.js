@@ -577,10 +577,14 @@ $(document).ready(function () {
   $(".included").css("opacity", 1).show();
 
   $(".checkout-adds-button").on("click", function () {
-    // Get the category from the data attribute
     var category = $(this).data("category");
 
-    // Hide and show relevant elements with animation
+    // Calculate the index of the category to update addOnFlag
+    var categoryIndex = categories.indexOf(category);
+    if (categoryIndex !== -1) {
+      window.addOnFlag = categoryIndex; // Update the global addOnFlag
+    }
+
     $(".interior, .exterior, .electric, .accessories, .included")
       .stop()
       .animate({ opacity: 0 }, 250, "swing", function () {
@@ -593,13 +597,16 @@ $(document).ready(function () {
           .animate({ opacity: 1 }, 250, "swing");
       });
 
-    // Remove the active class from all buttons and then add it back to buttons with the same data-category
     $(".checkout-adds-button").removeClass("active");
     $(".checkout-adds-button").each(function () {
       if ($(this).data("category") === category) {
         $(this).addClass("active");
       }
     });
+
+    // Optionally, update any UI elements that depend on addOnFlag
+    let forwardText = document.getElementById("test-one");
+    forwardText.textContent = buttonLabels[categoryIndex];
   });
 });
 
@@ -1002,7 +1009,6 @@ $(document).ready(function () {
 
           var makes = getUniqueMakes(truckData);
           populateDropdown("#make-dropdown", makes, "", "Select Make");
-
         }
 
         $("#make-dropdown").change(function () {

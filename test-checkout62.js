@@ -129,18 +129,18 @@ function selectModelTypeAddOns(modelType) {
     }
 
     //Remove the following SKU=33 addon from Ford F150 2021-2024
-    if (
-      storedMake !== "Ford" &&
-      storedModel !== "F 150" &&
-      storedYear <= 2024 &&
-      storedYear >= 2021 &&
-      sku1 === 33
-    ) {
-      if (types.includes(normalizedModelType)) {
-        $(this).click(); // Trigger click to select and add the add-on
-        $(this).hide();
-      }
-    }
+    // if (
+    //   storedMake !== "Ford" &&
+    //   storedModel !== "F 150" &&
+    //   storedYear <= 2024 &&
+    //   storedYear >= 2021 &&
+    //   sku1 === 33
+    // ) {
+    //   if (types.includes(normalizedModelType)) {
+    //     $(this).click(); // Trigger click to select and add the add-on
+    //     $(this).hide();
+    //   }
+    // }
   });
 }
 

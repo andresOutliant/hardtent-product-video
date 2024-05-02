@@ -347,19 +347,32 @@ $(document).ready(function () {
     // Other code...
   });
 
-  $("#make-dropdown").val(storedMake).prop("disabled", false);
-  $("#model-dropdown").val(storedModel).prop("disabled", false);
-  $("#year-dropdown").val(storedYear).prop("disabled", false);
-  $("#customer_name").val(storedName);
-  $("#customer_email").val(storedEmail);
-  $("#customer_phone").val(storedPhone);
+  //   $("#make-dropdown").val(storedMake).prop("disabled", false);
+  //   $("#model-dropdown").val(storedModel).prop("disabled", false);
+  //   $("#year-dropdown").val(storedYear).prop("disabled", false);
+  //   $("#customer_name").val(storedName);
+  //   $("#customer_email").val(storedEmail);
+  //   $("#customer_phone").val(storedPhone);
 
-  //   console.log("Stored Make:", storedMake);
-  //   console.log("Stored Model:", storedModel);
-  //   console.log("Stored Year:", storedYear);
-  //   console.log("Stored Name:", storedName);
-  //   console.log("Stored Email:", storedEmail);
-  //   console.log("Stored Phone:", storedPhone);
+  // Check if the stored values exist before setting them to the dropdowns and inputs
+  if (storedMake) {
+    $("#make-dropdown").val(storedMake).prop("disabled", false);
+  }
+  if (storedModel) {
+    $("#model-dropdown").val(storedModel).prop("disabled", false);
+  }
+  if (storedYear) {
+    $("#year-dropdown").val(storedYear).prop("disabled", false);
+  }
+  if (storedName) {
+    $("#customer_name").val(storedName);
+  }
+  if (storedEmail) {
+    $("#customer_email").val(storedEmail);
+  }
+  if (storedPhone) {
+    $("#customer_phone").val(storedPhone);
+  }
 
   $(".back-to-step-one").click(function () {
     $(".truck-matched").fadeOut(245, "swing");

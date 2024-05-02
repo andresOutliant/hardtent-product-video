@@ -11,17 +11,6 @@ storedPhone = localStorage.getItem("customer_phone");
 var isSupporting =
   localStorage.getItem("isSupporting") === "true" ? true : false;
 
-// Initialize dropdowns with data if available in localStorage
-if (localStorage.getItem("selectedMake")) {
-  $("#make-dropdown").val(localStorage.getItem("selectedMake")).change();
-}
-if (localStorage.getItem("selectedModel")) {
-  $("#model-dropdown").val(localStorage.getItem("selectedModel")).change();
-}
-if (localStorage.getItem("selectedYear")) {
-  $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
-}
-
 function populateDropdown(dropdownId, options, selectedValue, placeholderText) {
   var dropdown = $(dropdownId);
   dropdown.empty(); // Clears existing options
@@ -347,32 +336,33 @@ $(document).ready(function () {
     // Other code...
   });
 
-  //   $("#make-dropdown").val(storedMake).prop("disabled", false);
-  //   $("#model-dropdown").val(storedModel).prop("disabled", false);
-  //   $("#year-dropdown").val(storedYear).prop("disabled", false);
+  if (storedMake) {
+    $("#make-dropdown").val(storedMake).prop("disabled", false);
+  } else {
+    $("#make-dropdown").prepend(
+      "<option selected disabled>Please select</option>"
+    );
+  }
+
+  if (storedModel) {
+    $("#model-dropdown").val(storedModel).prop("disabled", false);
+  } else {
+    $("#model-dropdown").prepend(
+      "<option selected disabled>Please select</option>"
+    );
+  }
+
+  if (storedYear) {
+    $("#year-dropdown").val(storedYear).prop("disabled", false);
+  } else {
+    $("#year-dropdown").prepend(
+      "<option selected disabled>Please select</option>"
+    );
+  }
+
   //   $("#customer_name").val(storedName);
   //   $("#customer_email").val(storedEmail);
   //   $("#customer_phone").val(storedPhone);
-
-  // Check if the stored values exist before setting them to the dropdowns and inputs
-  if (storedMake) {
-    $("#make-dropdown").val(storedMake).prop("disabled", false);
-  }
-  if (storedModel) {
-    $("#model-dropdown").val(storedModel).prop("disabled", false);
-  }
-  if (storedYear) {
-    $("#year-dropdown").val(storedYear).prop("disabled", false);
-  }
-  if (storedName) {
-    $("#customer_name").val(storedName);
-  }
-  if (storedEmail) {
-    $("#customer_email").val(storedEmail);
-  }
-  if (storedPhone) {
-    $("#customer_phone").val(storedPhone);
-  }
 
   $(".back-to-step-one").click(function () {
     $(".truck-matched").fadeOut(245, "swing");

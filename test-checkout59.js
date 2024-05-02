@@ -1001,7 +1001,8 @@ $(document).ready(function () {
           );
 
           var makes = getUniqueMakes(truckData);
-          populateDropdown("#make-dropdown", makes, "Make");
+          populateDropdown("#make-dropdown", makes, "", "Select Make");
+
         }
 
         $("#make-dropdown").change(function () {

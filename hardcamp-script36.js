@@ -129,18 +129,18 @@ function selectModelTypeAddOns(modelType) {
     }
 
     //Remove the following SKU=33 addon from Ford F150 2021-2024
-    // if (
-    //   storedMake !== "Ford" &&
-    //   storedModel !== "F 150" &&
-    //   storedYear <= 2024 &&
-    //   storedYear >= 2021 &&
-    //   sku1 === 33
-    // ) {
-    //   if (types.includes(normalizedModelType)) {
-    //     $(this).click(); // Trigger click to select and add the add-on
-    //     $(this).hide();
-    //   }
-    // }
+    if (
+      storedMake !== "Ford" &&
+      storedModel !== "F 150" &&
+      storedYear <= 2024 &&
+      storedYear >= 2021 &&
+      sku1 === 33
+    ) {
+      if (types.includes(normalizedModelType)) {
+        $(this).click(); // Trigger click to select and add the add-on
+        $(this).hide();
+      }
+    }
   });
 }
 
@@ -252,36 +252,16 @@ function updateCartFormWithProducts(modelName, modelPrice) {
 }
 
 function updateSubtotal() {
-  var subtotal = 0;
-
-  // Include the original price of the active model card
-  var activeModelCard = $(".model-card.active");
-  if (activeModelCard.length) {
-    var modelPriceText = activeModelCard.find(".model-price").text();
-    // var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-    // subtotal += modelPrice;
-    // commented model price out so it doesnt affect total
-  }
-
-  // Log active products details
-  console.log("Active products:", activeProducts);
+  var model = getModelType(); // Function to get currently active model type
+  var subtotal = getInitialTotalForModel(model); // Function that fetches the initial total for a given model
 
   // Add prices of active products (using their original prices)
   activeProducts.forEach(function (product) {
-    console.log(
-      "Adding product price:",
-      product.price,
-      "Quantity:",
-      product.quantity
-    );
     subtotal += product.price * product.quantity;
   });
 
-  // Always include the Downpayment item
-  // subtotal += 500; // Fixed price for Downpayment
-
-  // Apply a discount of $3000
-  subtotal -= 3000; // Subtract the discount from the subtotal
+  // Apply global discount
+  subtotal -= 3000;
 
   // Add $100 to the subtotal if the price is higher than $15000
   if (subtotal > 15000) {
@@ -295,11 +275,27 @@ function updateSubtotal() {
     maximumFractionDigits: 0,
   });
 
-  console.log("Subtotal calculated:", subtotal);
-
   $("#subtotal").fadeOut(160, function () {
     $(this).text(formattedSubtotal).fadeIn(160);
   });
+}
+
+function getModelType() {
+  // Assuming there is an element with class 'model-card' that has class 'active'
+  var activeModel = document.querySelector(".model-card.active");
+  return activeModel ? activeModel.getAttribute("data-model") : null;
+}
+
+function getInitialTotalForModel(modelType) {
+  // This should interface with your CMS or page data to fetch initial total
+  // For demonstration, let's assume we can get elements containing prices by model type
+  let total = 0;
+  document
+    .querySelectorAll(`.addon-wrapper[data-models*="${modelType}"]`)
+    .forEach((addOn) => {
+      total += parseInt(addOn.querySelector(".add-on-prices").textContent, 10);
+    });
+  return total;
 }
 
 function removeProductFromArray(productElement) {
@@ -319,6 +315,23 @@ function removeProductFromArray(productElement) {
   // console.log("Removed product element from UI for SKU:", productSKU);
 
   updateUI();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  updateInitialTotals(); // Function to set initial values for `.total` and `.subtotal`
+});
+
+function updateInitialTotals() {
+  // Assume function getModelType() returns 'base', 'outfitted', or 'plus'
+  var model = getModelType();
+  var initialTotal = getInitialTotalForModel(model);
+  $(".total").text(
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(initialTotal)
+  );
+  updateSubtotal();
 }
 
 $(document).ready(function () {
@@ -514,47 +527,6 @@ $(document).ready(function () {
     var productElement = $(this).closest(".checkout-adds-wrapper");
     addOrUpdateProduct(productElement); // Update product with new quantity
   });
-
-  // Update subtotal or other UI elements if necessary
-  // updateSubtotal();
-
-  //   function updateSubtotal() {
-  //     var subtotal = 0;
-
-  //     // Include the original price of the active model card
-  //     var activeModelCard = $(".model-card.active");
-  //     if (activeModelCard.length) {
-  //       var modelPriceText = activeModelCard.find(".model-price").text();
-  //       //   var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
-  //       //   subtotal += modelPrice;
-  //       //commented model price out so it doesnt affect total
-  //     }
-
-  //     // Add prices of active products (using their original prices)
-  //     activeProducts.forEach(function (product) {
-  //       subtotal += product.price * product.quantity;
-  //     });
-
-  //     // Always include the Downpayment item
-  //     // subtotal += 500; // Fixed price for Downpayment
-
-  //     // Apply a discount of $3000
-  //     subtotal -= 3000; // Subtract the discount from the subtotal
-
-  //     // Add $100 to the subtotal if the price is higher than $15000
-  //     if (subtotal > 15000) {
-  //       subtotal += 100;
-  //     }
-
-  //     var formattedSubtotal = subtotal.toLocaleString("en-US", {
-  //       style: "currency",
-  //       currency: "USD",
-  //     });
-
-  //     $("#subtotal").fadeOut(160, function () {
-  //       $(this).text(formattedSubtotal).fadeIn(160);
-  //     });
-  //   }
 
   $(".checkout-adds-wrapper").each(function () {
     var $wrapper = $(this);
@@ -797,79 +769,6 @@ $(document).ready(function () {
     return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
   }
 });
-
-// $(document).on("click", ".model-card", function () {
-//   resetSelectedAddOns();
-//   var isActive = $(this).hasClass("active");
-//   $(".model-card").removeClass("active");
-
-//   if (!isActive) {
-//     $(this).addClass("active");
-//   }
-
-//   // Update the button state based on active model cards
-//   if ($(".model-card.active").length > 0) {
-//     $(".forward-button.inactive")
-//       .removeClass("inactive")
-//       .addClass("send-model");
-//     $(this).find(".add-check").fadeIn();
-//   } else {
-//     $(".forward-button").not(".inactive").addClass("inactive");
-//     $(this).find(".add-check").fadeOut();
-//   }
-
-//   var activeModelCard = $(".model-card.active");
-//   if (activeModelCard.length) {
-//     var modelName = activeModelCard.data("model-name");
-//     var modelPrice = parseFloat(activeModelCard.data("model-price"));
-//     var startingAtPrice = parseFloat(
-//       activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
-//         modelPrice
-//     );
-
-//     $("#model-selected").text("HardCamp - " + modelName);
-
-//     // Capture the original price from the active model card, fallback to modelPrice if not available
-//     var originalPriceText = activeModelCard.find(".starting-at-price").text();
-//     var originalPrice = originalPriceText
-//       ? parseFloat(originalPriceText.replace(/,/g, ""))
-//       : modelPrice;
-
-//     // Update the original price on the webpage
-//     $("#original-price").text("$" + formatPrice(originalPrice));
-
-//     selectModelTypeAddOns(modelName);
-//     console.log(
-//       "Model Name:",
-//       modelName,
-//       "Model Price:",
-//       modelPrice,
-//       "Original Price:",
-//       originalPrice
-//     );
-//     updateCartFormWithProducts(modelName, 0);
-
-//     // Format the price with commas
-//     var formattedPrice = formatPrice(modelPrice);
-
-//     // Update Subtotal and original prices in UI
-//     $("#subtotal").fadeOut(160, function () {
-//       $(this)
-//         .text("$" + formattedPrice)
-//         .fadeIn(160);
-//     });
-//     $(".original-price").each(function () {
-//       var formattedStartingPrice = formatPrice(startingAtPrice);
-//       $(this).text(
-//         formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
-//       );
-//     });
-//   } else {
-//     $("#model-name-input").val("");
-//     $("#model-price-input").val("");
-//     $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
-//   }
-// });
 
 function formatPrice(price) {
   if (!isNaN(price)) {

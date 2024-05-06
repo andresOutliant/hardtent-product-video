@@ -11,6 +11,29 @@ storedPhone = localStorage.getItem("customer_phone");
 var isSupporting =
   localStorage.getItem("isSupporting") === "true" ? true : false;
 
+// console.log("Make: " + storedMake);
+// console.log("Model: " + storedModel);
+// console.log("Year: " + storedYear);
+
+// console.log("Customer Name: " + storedName);
+// console.log("Customer Email: " + storedEmail);
+// console.log("Customer Phone: " + storedPhone);
+// console.log("isSupporting " + isSupporting);
+
+var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
+
+var truckInfo = {
+  make: "",
+  model: "",
+  year: "",
+};
+
+var modelName = "";
+var modelPrice = 0;
+
+var activeModelCard = $(".model-card.active");
+var activeProducts = [];
+
 function populateDropdown(dropdownId, options, selectedValue, placeholderText) {
   var dropdown = $(dropdownId);
   dropdown.empty(); // Clears existing options
@@ -37,29 +60,6 @@ function populateDropdown(dropdownId, options, selectedValue, placeholderText) {
   // Enable or disable the dropdown based on the options available
   dropdown.prop("disabled", options.length === 0);
 }
-
-console.log("Make: " + storedMake);
-console.log("Model: " + storedModel);
-console.log("Year: " + storedYear);
-
-console.log("Customer Name: " + storedName);
-console.log("Customer Email: " + storedEmail);
-console.log("Customer Phone: " + storedPhone);
-console.log("isSupporting " + isSupporting);
-
-var zeroPricingEnabled = true; // Set this to false if you want to disable zero pricing
-
-var truckInfo = {
-  make: "",
-  model: "",
-  year: "",
-};
-
-var modelName = "";
-var modelPrice = 0;
-
-var activeModelCard = $(".model-card.active");
-var activeProducts = [];
 
 function updateSelections(id, value) {
   truckInfo[id] = value;
@@ -252,21 +252,41 @@ function updateCartFormWithProducts(modelName, modelPrice) {
 }
 
 function updateSubtotal() {
-  var model = getModelType(); // Function to get currently active model type
-  var subtotal = getInitialTotalForModel(model); // Function that fetches the initial total for a given model
+  var subtotal = 0;
+
+  // Include the original price of the active model card
+  var activeModelCard = $(".model-card.active");
+  if (activeModelCard.length) {
+    var modelPriceText = activeModelCard.find(".model-price").text();
+    // var modelPrice = parseFloat(modelPriceText.replace(/[^0-9.]/g, ""));
+    // subtotal += modelPrice;
+    // commented model price out so it doesnt affect total
+  }
+
+  // Log active products details
+  console.log("Active products:", activeProducts);
 
   // Add prices of active products (using their original prices)
   activeProducts.forEach(function (product) {
+    console.log(
+      "Adding product price:",
+      product.price,
+      "Quantity:",
+      product.quantity
+    );
     subtotal += product.price * product.quantity;
   });
 
-  // Apply global discount
-  subtotal -= 3000;
+  // Always include the Downpayment item
+  // subtotal += 500; // Fixed price for Downpayment
+
+  // Apply a discount of $3000
+  subtotal -= 3000; // Subtract the discount from the subtotal
 
   // Add $100 to the subtotal if the price is higher than $15000
-  if (subtotal > 15000) {
-    subtotal += 100;
-  }
+  //   if (subtotal > 15000) {
+  //     subtotal += 100;
+  //   }
 
   var formattedSubtotal = subtotal.toLocaleString("en-US", {
     style: "currency",
@@ -275,27 +295,11 @@ function updateSubtotal() {
     maximumFractionDigits: 0,
   });
 
+  console.log("Subtotal calculated:", subtotal);
+
   $("#subtotal").fadeOut(160, function () {
     $(this).text(formattedSubtotal).fadeIn(160);
   });
-}
-
-function getModelType() {
-  // Assuming there is an element with class 'model-card' that has class 'active'
-  var activeModel = document.querySelector(".model-card.active");
-  return activeModel ? activeModel.getAttribute("data-model") : null;
-}
-
-function getInitialTotalForModel(modelType) {
-  // This should interface with your CMS or page data to fetch initial total
-  // For demonstration, let's assume we can get elements containing prices by model type
-  let total = 0;
-  document
-    .querySelectorAll(`.addon-wrapper[data-models*="${modelType}"]`)
-    .forEach((addOn) => {
-      total += parseInt(addOn.querySelector(".add-on-prices").textContent, 10);
-    });
-  return total;
 }
 
 function removeProductFromArray(productElement) {
@@ -317,23 +321,6 @@ function removeProductFromArray(productElement) {
   updateUI();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  updateInitialTotals(); // Function to set initial values for `.total` and `.subtotal`
-});
-
-function updateInitialTotals() {
-  // Assume function getModelType() returns 'base', 'outfitted', or 'plus'
-  var model = getModelType();
-  var initialTotal = getInitialTotalForModel(model);
-  $(".total").text(
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(initialTotal)
-  );
-  updateSubtotal();
-}
-
 $(document).ready(function () {
   //   resets the foxy cart on page load
   FC.onLoad = function () {
@@ -345,7 +332,7 @@ $(document).ready(function () {
   };
 
   $("#model-dropdown").change(function () {
-    console.log("Model selected: ", $(this).val());
+    // console.log("Model selected: ", $(this).val());
     // Other code...
   });
 
@@ -372,10 +359,6 @@ $(document).ready(function () {
       "<option selected disabled>Please select</option>"
     );
   }
-
-  //   $("#customer_name").val(storedName);
-  //   $("#customer_email").val(storedEmail);
-  //   $("#customer_phone").val(storedPhone);
 
   $(".back-to-step-one").click(function () {
     $(".truck-matched").fadeOut(245, "swing");
@@ -480,37 +463,8 @@ $(document).ready(function () {
     }, 250); // Delay can be adjusted as needed.
   });
 
-  //   $("#submit-to-foxy").on("click", function (event) {
-  //     // Optionally prevent the default submission to ensure data is copied first.
-  //     event.preventDefault();
-
-  //     // Reference to the hidden Webflow form.
-  //     var webflowForm = $("#wf-form-Build-Info-Pre-Deposit");
-
-  //     // Clear any previously added dynamic inputs in the Webflow form.
-  //     webflowForm.find(".dynamic-input").remove();
-
-  //     // Iterate over the FoxyCart form's inputs, focusing on product details.
-  //     $("#foxy-cart-form .dynamic-input").each(function () {
-  //       // Clone the current element
-  //       var clonedInput = $(this).clone();
-
-  //       // Append the cloned input directly to the Webflow form
-  //       webflowForm.append(clonedInput);
-  //     });
-
-  //     $("#wf-form-Build-Info-Pre-Deposit").submit();
-  //     // Optional: Submit the FoxyCart form or perform other actions as needed, potentially after a delay
-  //     // to ensure the Webflow form submission process initiates or completes.
-  //     setTimeout(function () {
-  //       updateCartFormWithProducts(modelName, modelPrice);
-
-  //       $("#foxy-cart-form").submit();
-  //     }, 250); // Adjust delay as needed based on your application's behavior.
-  //   });
-
   $(".counter-button.up, .counter-button.down").click(function (event) {
-    event.stopPropagation(); // Prevent event from bubbling up
+    event.stopPropagation();
 
     var counterBox = $(this).closest(".counter-box");
     var quantityNumber = counterBox.find(".quantity-number");
@@ -545,7 +499,6 @@ $(document).ready(function () {
 
   // Initially hide all categories except 'included'
   $(".interior, .exterior, .electric, .accessories").css("opacity", 0).hide();
-  // Show 'included' category elements initially
   $(".included").css("opacity", 1).show();
 
   $(".checkout-adds-button").on("click", function () {
@@ -579,8 +532,6 @@ $(document).ready(function () {
     let forwardText = document.getElementById("test-one");
     if (forwardText) {
       forwardText.textContent = buttonLabels[categoryIndex];
-    } else {
-      console.log('Element with id "test-one" not found');
     }
   });
 });
@@ -675,9 +626,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     });
-});
 
-$(document).ready(function () {
   // Declare a global variable to store the selected model name
   var selectedModelName = "Base"; // Default to 'Base' initially
 
@@ -1136,7 +1085,7 @@ $(document).ready(function () {
         (bedSize === undefined || bedSize === null || truck.bedSize == bedSize)
       );
     });
-    console.log("Matching truck data:", result); // Log the result to the console
+    // console.log("Matching truck data:", result); // Log the result to the console
 
     return result ? result.supporting : false;
   }

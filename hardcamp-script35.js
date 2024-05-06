@@ -11,17 +11,6 @@ storedPhone = localStorage.getItem("customer_phone");
 var isSupporting =
   localStorage.getItem("isSupporting") === "true" ? true : false;
 
-// Initialize dropdowns with data if available in localStorage
-if (localStorage.getItem("selectedMake")) {
-  $("#make-dropdown").val(localStorage.getItem("selectedMake")).change();
-}
-if (localStorage.getItem("selectedModel")) {
-  $("#model-dropdown").val(localStorage.getItem("selectedModel")).change();
-}
-if (localStorage.getItem("selectedYear")) {
-  $("#year-dropdown").val(localStorage.getItem("selectedYear")).change();
-}
-
 function populateDropdown(dropdownId, options, selectedValue, placeholderText) {
   var dropdown = $(dropdownId);
   dropdown.empty(); // Clears existing options
@@ -140,18 +129,18 @@ function selectModelTypeAddOns(modelType) {
     }
 
     //Remove the following SKU=33 addon from Ford F150 2021-2024
-    if (
-      storedMake !== "Ford" &&
-      storedModel !== "F 150" &&
-      storedYear <= 2024 &&
-      storedYear >= 2021 &&
-      sku1 === 33
-    ) {
-      if (types.includes(normalizedModelType)) {
-        $(this).click(); // Trigger click to select and add the add-on
-        $(this).hide();
-      }
-    }
+    // if (
+    //   storedMake !== "Ford" &&
+    //   storedModel !== "F 150" &&
+    //   storedYear <= 2024 &&
+    //   storedYear >= 2021 &&
+    //   sku1 === 33
+    // ) {
+    //   if (types.includes(normalizedModelType)) {
+    //     $(this).click(); // Trigger click to select and add the add-on
+    //     $(this).hide();
+    //   }
+    // }
   });
 }
 
@@ -347,19 +336,33 @@ $(document).ready(function () {
     // Other code...
   });
 
-  $("#make-dropdown").val(storedMake).prop("disabled", false);
-  $("#model-dropdown").val(storedModel).prop("disabled", false);
-  $("#year-dropdown").val(storedYear).prop("disabled", false);
-  $("#customer_name").val(storedName);
-  $("#customer_email").val(storedEmail);
-  $("#customer_phone").val(storedPhone);
+  if (storedMake) {
+    $("#make-dropdown").val(storedMake).prop("disabled", false);
+  } else {
+    $("#make-dropdown").prepend(
+      "<option selected disabled>Please select</option>"
+    );
+  }
 
-  //   console.log("Stored Make:", storedMake);
-  //   console.log("Stored Model:", storedModel);
-  //   console.log("Stored Year:", storedYear);
-  //   console.log("Stored Name:", storedName);
-  //   console.log("Stored Email:", storedEmail);
-  //   console.log("Stored Phone:", storedPhone);
+  if (storedModel) {
+    $("#model-dropdown").val(storedModel).prop("disabled", false);
+  } else {
+    $("#model-dropdown").prepend(
+      "<option selected disabled>Please select</option>"
+    );
+  }
+
+  if (storedYear) {
+    $("#year-dropdown").val(storedYear).prop("disabled", false);
+  } else {
+    $("#year-dropdown").prepend(
+      "<option selected disabled>Please select</option>"
+    );
+  }
+
+  //   $("#customer_name").val(storedName);
+  //   $("#customer_email").val(storedEmail);
+  //   $("#customer_phone").val(storedPhone);
 
   $(".back-to-step-one").click(function () {
     $(".truck-matched").fadeOut(245, "swing");
@@ -574,10 +577,14 @@ $(document).ready(function () {
   $(".included").css("opacity", 1).show();
 
   $(".checkout-adds-button").on("click", function () {
-    // Get the category from the data attribute
     var category = $(this).data("category");
 
-    // Hide and show relevant elements with animation
+    // Calculate the index of the category to update addOnFlag
+    var categoryIndex = categories.indexOf(category);
+    if (categoryIndex !== -1) {
+      window.addOnFlag = categoryIndex; // Update the global addOnFlag
+    }
+
     $(".interior, .exterior, .electric, .accessories, .included")
       .stop()
       .animate({ opacity: 0 }, 250, "swing", function () {
@@ -590,13 +597,19 @@ $(document).ready(function () {
           .animate({ opacity: 1 }, 250, "swing");
       });
 
-    // Remove the active class from all buttons and then add it back to buttons with the same data-category
     $(".checkout-adds-button").removeClass("active");
     $(".checkout-adds-button").each(function () {
       if ($(this).data("category") === category) {
         $(this).addClass("active");
       }
     });
+
+    let forwardText = document.getElementById("test-one");
+    if (forwardText) {
+      forwardText.textContent = buttonLabels[categoryIndex];
+    } else {
+      console.log('Element with id "test-one" not found');
+    }
   });
 });
 
@@ -692,78 +705,171 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-$(document).on("click", ".model-card", function () {
-  resetSelectedAddOns();
-  var isActive = $(this).hasClass("active");
-  $(".model-card").removeClass("active");
+$(document).ready(function () {
+  // Declare a global variable to store the selected model name
+  var selectedModelName = "Base"; // Default to 'Base' initially
 
-  if (!isActive) {
-    $(this).addClass("active");
-  }
+  // Initially show the base slider
+  showRelevantSlider(selectedModelName);
 
-  // Update the button state based on active model cards
-  if ($(".model-card.active").length > 0) {
-    $(".forward-button.inactive")
-      .removeClass("inactive")
-      .addClass("send-model");
-    $(this).find(".add-check").fadeIn();
-  } else {
-    $(".forward-button").not(".inactive").addClass("inactive");
-    $(this).find(".add-check").fadeOut();
-  }
+  $(document).on("click", ".model-card", function () {
+    resetSelectedAddOns();
+    var isActive = $(this).hasClass("active");
+    $(".model-card").removeClass("active");
 
-  var activeModelCard = $(".model-card.active");
-  if (activeModelCard.length) {
-    var modelName = activeModelCard.data("model-name");
-    var modelPrice = parseFloat(activeModelCard.data("model-price"));
-    var startingAtPrice = parseFloat(
-      activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
-        modelPrice
-    );
+    if (!isActive) {
+      $(this).addClass("active");
+    }
 
-    $("#model-selected").text("HardCamp - " + modelName);
+    // Update the button state based on active model cards
+    if ($(".model-card.active").length > 0) {
+      $(".forward-button.inactive")
+        .removeClass("inactive")
+        .addClass("send-model");
+      $(this).find(".add-check").fadeIn();
+    } else {
+      $(".forward-button").not(".inactive").addClass("inactive");
+      $(this).find(".add-check").fadeOut();
+    }
 
-    // Capture the original price from the active model card, fallback to modelPrice if not available
-    var originalPriceText = activeModelCard.find(".starting-at-price").text();
-    var originalPrice = originalPriceText
-      ? parseFloat(originalPriceText.replace(/,/g, ""))
-      : modelPrice;
-
-    // Update the original price on the webpage
-    $("#original-price").text("$" + formatPrice(originalPrice));
-
-    selectModelTypeAddOns(modelName);
-    console.log(
-      "Model Name:",
-      modelName,
-      "Model Price:",
-      modelPrice,
-      "Original Price:",
-      originalPrice
-    );
-    updateCartFormWithProducts(modelName, 0);
-
-    // Format the price with commas
-    var formattedPrice = formatPrice(modelPrice);
-
-    // Update Subtotal and original prices in UI
-    $("#subtotal").fadeOut(160, function () {
-      $(this)
-        .text("$" + formattedPrice)
-        .fadeIn(160);
-    });
-    $(".original-price").each(function () {
-      var formattedStartingPrice = formatPrice(startingAtPrice);
-      $(this).text(
-        formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+    var activeModelCard = $(".model-card.active");
+    if (activeModelCard.length) {
+      var modelName = activeModelCard.data("model-name");
+      var modelPrice = parseFloat(activeModelCard.data("model-price"));
+      var startingAtPrice = parseFloat(
+        activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+          modelPrice
       );
-    });
-  } else {
-    $("#model-name-input").val("");
-    $("#model-price-input").val("");
-    $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
+
+      selectedModelName = modelName; // Store the selected model name globally
+      localStorage.setItem("selectedModelName", modelName);
+
+      showRelevantSlider(modelName); // Show the relevant slider
+
+      $("#model-selected").text("HardCamp - " + modelName);
+
+      var originalPriceText = activeModelCard.find(".starting-at-price").text();
+      var originalPrice = originalPriceText
+        ? parseFloat(originalPriceText.replace(/,/g, ""))
+        : modelPrice;
+
+      $("#original-price").text("$" + formatPrice(originalPrice));
+
+      selectModelTypeAddOns(modelName);
+      console.log(
+        "Model Name:",
+        modelName,
+        "Model Price:",
+        modelPrice,
+        "Original Price:",
+        originalPrice
+      );
+      updateCartFormWithProducts(modelName, 0);
+
+      var formattedPrice = formatPrice(modelPrice);
+
+      $("#subtotal").fadeOut(160, function () {
+        $(this)
+          .text("$" + formattedPrice)
+          .fadeIn(160);
+      });
+
+      $(".original-price").each(function () {
+        var formattedStartingPrice = formatPrice(startingAtPrice);
+        $(this).text(
+          formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+        );
+      });
+    } else {
+      $("#model-name-input").val("");
+      $("#model-price-input").val("");
+      $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
+      showRelevantSlider("Base"); // Default to base slider when no model is active
+    }
+  });
+
+  function showRelevantSlider(modelName) {
+    $("div[data-slider-name]").hide(); // Hide all sliders first
+    $("div[data-slider-name='" + modelName + "']").show(); // Show the slider matching the model name
+  }
+
+  function formatPrice(price) {
+    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
   }
 });
+
+// $(document).on("click", ".model-card", function () {
+//   resetSelectedAddOns();
+//   var isActive = $(this).hasClass("active");
+//   $(".model-card").removeClass("active");
+
+//   if (!isActive) {
+//     $(this).addClass("active");
+//   }
+
+//   // Update the button state based on active model cards
+//   if ($(".model-card.active").length > 0) {
+//     $(".forward-button.inactive")
+//       .removeClass("inactive")
+//       .addClass("send-model");
+//     $(this).find(".add-check").fadeIn();
+//   } else {
+//     $(".forward-button").not(".inactive").addClass("inactive");
+//     $(this).find(".add-check").fadeOut();
+//   }
+
+//   var activeModelCard = $(".model-card.active");
+//   if (activeModelCard.length) {
+//     var modelName = activeModelCard.data("model-name");
+//     var modelPrice = parseFloat(activeModelCard.data("model-price"));
+//     var startingAtPrice = parseFloat(
+//       activeModelCard.find(".starting-at-price").text().replace(/,/g, "") ||
+//         modelPrice
+//     );
+
+//     $("#model-selected").text("HardCamp - " + modelName);
+
+//     // Capture the original price from the active model card, fallback to modelPrice if not available
+//     var originalPriceText = activeModelCard.find(".starting-at-price").text();
+//     var originalPrice = originalPriceText
+//       ? parseFloat(originalPriceText.replace(/,/g, ""))
+//       : modelPrice;
+
+//     // Update the original price on the webpage
+//     $("#original-price").text("$" + formatPrice(originalPrice));
+
+//     selectModelTypeAddOns(modelName);
+//     console.log(
+//       "Model Name:",
+//       modelName,
+//       "Model Price:",
+//       modelPrice,
+//       "Original Price:",
+//       originalPrice
+//     );
+//     updateCartFormWithProducts(modelName, 0);
+
+//     // Format the price with commas
+//     var formattedPrice = formatPrice(modelPrice);
+
+//     // Update Subtotal and original prices in UI
+//     $("#subtotal").fadeOut(160, function () {
+//       $(this)
+//         .text("$" + formattedPrice)
+//         .fadeIn(160);
+//     });
+//     $(".original-price").each(function () {
+//       var formattedStartingPrice = formatPrice(startingAtPrice);
+//       $(this).text(
+//         formattedStartingPrice ? "$" + formattedStartingPrice : "N/A"
+//       );
+//     });
+//   } else {
+//     $("#model-name-input").val("");
+//     $("#model-price-input").val("");
+//     $("#original-price").text("N/A"); // Ensure original price is reset if no model card is active
+//   }
+// });
 
 function formatPrice(price) {
   if (!isNaN(price)) {
@@ -893,9 +999,10 @@ $(document).ready(function () {
           $("#year-selected").text(storedYear || "Placeholder");
         } else {
           // Initialize empty dropdowns if no data is stored
-          populateDropdown("#make-dropdown", [], "Make");
-          populateDropdown("#model-dropdown", [], "Model");
-          populateDropdown("#year-dropdown", [], "Year");
+          populateDropdown("#make-dropdown", [], "", "Select Make");
+          populateDropdown("#model-dropdown", [], "", "Select Model");
+          populateDropdown("#year-dropdown", [], "", "Select Year");
+
           populateDropdown("#bed-size-dropdown", [], "Bed Size");
           $(".truck-check").css("opacity", "0.5").prop("disabled", true);
           $("#model-dropdown, #year-dropdown, #bed-size-dropdown").prop(
@@ -904,7 +1011,7 @@ $(document).ready(function () {
           );
 
           var makes = getUniqueMakes(truckData);
-          populateDropdown("#make-dropdown", makes, "Make");
+          populateDropdown("#make-dropdown", makes, "", "Select Make");
         }
 
         $("#make-dropdown").change(function () {
